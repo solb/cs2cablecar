@@ -63,10 +63,12 @@ class Board(object):
         __init__
         Constructs and returns an instance of Board
         """
-        self.board=[[Tile() for _ in range(8)] for _ in range(8)] #REV.B
+        emptyTile=Tile()
+        self.board=[[emptyTile for _ in range(8)] for _ in range(8)] #REV.B
+        powerPlace=PowerStation()
         for row in [self.board[3], self.board[4]]:
             for col in [3, 4]:
-                row[col]=PowerStation() #place the power stations in the center of the board
+                row[col]=powerPlace #place the power stations in the center of the board
         self.cars=Cars()
     
     def _linkTileSide(self, newResident, neighboringRow, neighboringCol, side):
@@ -272,7 +274,7 @@ class Tile(object):
         """
         return 'Tile '+self.type+' rotation '+str(self.rotation)
 
-class OuterStations(Tile): #TODO needs to be re-implemented as a group of independent objects
+class OuterStations(Tile):
     """
     OuterStations: lst(ConnectedTile)
     Represents a group of *8* of the cable car stations that surround the playing board.
@@ -290,7 +292,8 @@ class OuterStations(Tile): #TODO needs to be re-implemented as a group of indepe
         Tile.__init__(self)
         self.type='os'
         self.rotation=rotation
-        self.borderedTiles=[Tile() for _ in range(8)] #REV.B
+        emptyTile=Tile()
+        self.borderedTiles=[emptyTile for _ in range(8)] #REV.B
     
     def addTrack(self, neighbor, substation):
         """

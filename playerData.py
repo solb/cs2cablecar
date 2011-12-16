@@ -361,7 +361,7 @@ class ConnectedTile(Tile): #TODO since we only have to follow paths one way (fro
     ConnectedTile: * List(Tile) * List(int)
     Represents one of the playable track pieces.
         borderingTiles - a list of the adjacent tiles (length 4)
-        internalConnections - a list of the tile-specific exit points for all entrance points (length 8)
+        internalConnections - a list of the tile-specific exit points for all entrance points (length 4)
     """
     __slots__=('borderingTiles', 'internalConnections')
     
@@ -378,15 +378,15 @@ class ConnectedTile(Tile): #TODO since we only have to follow paths one way (fro
         """
         _rotate: List(int) * int
         Fixes a specific instance's connections, accounting for both the tile's type and its rotation.
-            connectionsTemplate - the tile-specific internalConnections version for an unrotated instance (length 8)
+            connectionsTemplate - the tile-specific internalConnections version for an unrotated instance (length 4)
             rotation - this instance's rotation (0-3)
         pre: internalConnections is an empty list (length 0).
         """
         self.rotation=rotation
-        firstIndex=-2*rotation%len(connectionsTemplate)
-        for oldIndex in range(firstIndex, len(connectionsTemplate))+range(firstIndex):
-            newIndex=len(self.internalConnections)
-            self.internalConnections.append((newIndex+connectionsTemplate[oldIndex]-oldIndex)%len(connectionsTemplate))
+        firstIndex=-rotation%len(connectionsTemplate) #start rotation indicies from the end
+        for oldIndex in range(firstIndex, len(connectionsTemplate))+range(firstIndex): #go from the calculated start to the list's end, then loop from the beginning
+            newIndex=len(self.internalConnections) #we'll be adding an index at the list's end
+            self.internalConnections.append((newIndex+connectionsTemplate[oldIndex]-oldIndex)%len(connectionsTemplate)) #cycle the *differences* between each index and its target
     
     def addBorderingTile(self, neighbor, side):
         """
@@ -398,22 +398,22 @@ class ConnectedTile(Tile): #TODO since we only have to follow paths one way (fro
         """
         self.borderingTiles[side]=neighbor
         if isinstance(neighbor, ConnectedTile):
-            neighbor.borderingTiles[(side-2)%4]=self #make the connection mutual
+            neighbor.borderingTiles[(side-2)%len(self.borderingTiles)]=self #make the connection mutual
     
     def _entryPoint(self, source):
         """
         _entryPoint: Tile -> int
-        Calculates the slot at which the tile source enters this one (0-7).
+        Calculates the side at which the tile source enters this one (0-3).
             source - the tile whose path is being followed
         pre: source is in borderingTiles.
         """
-        return self.borderingTiles.index(source)*2
+        return self.borderingTiles.index(source)
     
     def _exitPoint(self, entryPoint):
         """
         _exitPoint: int -> int
-        Calculates the slot from which the streetcar arriving at entryPoint will emerge (0-7).
-            entryPoint - the slot at which this tile has been entered (0-7)
+        Calculates the side from which the streetcar arriving at entryPoint will emerge (0-3).
+            entryPoint - the slot at which this tile has been entered (0-3)
         """
         return self.internalConnections[entryPoint]
     
@@ -423,7 +423,7 @@ class ConnectedTile(Tile): #TODO since we only have to follow paths one way (fro
         Determines to which other tile this tile's path will lead if one is to start from the source tile.
             source - the tile from where wants to trace the path
         """
-        return self.borderingTiles[self._exitPoint(self._entryPoint(source))/2]
+        return self.borderingTiles[self._exitPoint(self._entryPoint(source))]
     
     def routeComplete(self, caller): #REV.B
         """
@@ -458,7 +458,7 @@ class TileA(ConnectedTile):
         """
         ConnectedTile.__init__(self)
         self.type='a'
-        self._rotate([1, 0, 7, 6, 5, 4, 3, 2], rotation)
+        self._rotate([0, 3, 2, 1], rotation)
 
 class TileB(ConnectedTile):
     def __init__(self, rotation):
@@ -469,7 +469,7 @@ class TileB(ConnectedTile):
         """
         ConnectedTile.__init__(self)
         self.type='b'
-        self._rotate([3, 4, 7, 0, 1, 6, 5, 2], rotation)
+        self._rotate([1, 3, 0, 2], rotation)
 
 class TileC(ConnectedTile):
     def __init__(self, rotation):
@@ -480,7 +480,7 @@ class TileC(ConnectedTile):
         """
         ConnectedTile.__init__(self)
         self.type='c'
-        self._rotate([3, 4, 5, 0, 1, 2, 7, 6], rotation)
+        self._rotate([1, 2, 0, 3], rotation)
 
 class TileD(ConnectedTile):
     def __init__(self, rotation):
@@ -491,7 +491,7 @@ class TileD(ConnectedTile):
         """
         ConnectedTile.__init__(self)
         self.type='d'
-        self._rotate([1, 0, 7, 4, 3, 6, 5, 2], rotation)
+        self._rotate([0, 3, 1, 2], rotation)
 
 class TileE(ConnectedTile):
     def __init__(self, rotation):
@@ -502,7 +502,7 @@ class TileE(ConnectedTile):
         """
         ConnectedTile.__init__(self)
         self.type='e'
-        self._rotate([1, 0, 3, 2, 7, 6, 5, 4], rotation)
+        self._rotate([0, 1, 3, 2], rotation)
 
 class TileF(ConnectedTile):
     def __init__(self, rotation):
@@ -513,7 +513,7 @@ class TileF(ConnectedTile):
         """
         ConnectedTile.__init__(self)
         self.type='f'
-        self._rotate([5, 4, 7, 6, 1, 0, 3, 2], rotation)
+        self._rotate([2, 3, 0, 1], rotation)
 
 class TileG(ConnectedTile):
     def __init__(self, rotation):
@@ -524,7 +524,7 @@ class TileG(ConnectedTile):
         """
         ConnectedTile.__init__(self)
         self.type='g'
-        self._rotate([1, 0, 3, 2, 5, 4, 7, 6], rotation)
+        self._rotate([0, 1, 2, 3], rotation)
 
 class TileH(ConnectedTile):
     def __init__(self, rotation):
@@ -535,7 +535,7 @@ class TileH(ConnectedTile):
         """
         ConnectedTile.__init__(self)
         self.type='h'
-        self._rotate([7, 2, 1, 4, 3, 6, 5, 0], rotation)
+        self._rotate([3, 0, 1, 2], rotation)
 
 class TileI(ConnectedTile):
     def __init__(self, rotation):
@@ -546,7 +546,7 @@ class TileI(ConnectedTile):
         """
         ConnectedTile.__init__(self)
         self.type='i'
-        self._rotate([3, 6, 5, 0, 7, 2, 1, 4], rotation)
+        self._rotate([1, 2, 3, 0], rotation)
 
 class TileJ(ConnectedTile):
     def __init__(self, rotation):
@@ -557,4 +557,4 @@ class TileJ(ConnectedTile):
         """
         ConnectedTile.__init__(self)
         self.type='j'
-        self._rotate([7, 6, 5, 4, 3, 2, 1, 0], rotation)
+        self._rotate([3, 2, 1, 0], rotation)

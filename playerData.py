@@ -64,7 +64,7 @@ class Board(object):
         Constructs and returns an instance of Board
         """
         emptyTile=Tile()
-        self.board=[[emptyTile for _ in range(8)] for _ in range(8)] #REV.B
+        self.board=[[emptyTile for _ in range(8)] for _ in range(8)]
         powerPlace=PowerStation()
         for row in [self.board[3], self.board[4]]:
             for col in [3, 4]:
@@ -106,7 +106,7 @@ class Board(object):
         self._linkTileSide(resident, row, column-1, 3) #link with the below tile
         return True
     
-    def lookupTile(self, row, column): #REV.B
+    def lookupTile(self, row, column):
         """
         lookupTile: int * int -> ConnectedTile or None
         Returns the ConnectedTile or PowerStation at the coordinates (row,column), or None if there is no tile there
@@ -120,7 +120,7 @@ class Board(object):
         else:
             return None
     
-    def lookupTrack(self, whichStation): #REV.B
+    def lookupTrack(self, whichStation):
         """
         lookupTrack: int -> ConnectedTile or None
         Returns the ConnectedTile attached to the specified cable car station, or None if there's nothing attached
@@ -133,7 +133,7 @@ class Board(object):
         else:
             return None
     
-    def routeIsComplete(self, whichStation): #REV.B
+    def routeIsComplete(self, whichStation):
         """
         routeIsComplete: int -> bool
         Checks whether the route originating at the specified cable car station is actually connected to anything at the other end
@@ -141,7 +141,7 @@ class Board(object):
         """
         return bool(self.cars.routeComplete(whichStation-1))
     
-    def calculateTrackScore(self, whichStation): #REV.B
+    def calculateTrackScore(self, whichStation):
         """
         calculateTrackScore: int -> int
         Returns the score of the route originating at the specified cable car station
@@ -162,7 +162,7 @@ class Cars(object):
         __init__
         Constructs and returns an instance of Cars
         """
-        self.stations=[OuterStations(rotation) for rotation in range(4)] #REV.B
+        self.stations=[OuterStations(rotation) for rotation in range(4)]
     
     def layTrack(self, neighbor, side, station):
         """
@@ -176,7 +176,7 @@ class Cars(object):
             station=7-station #reverse numbering scheme
         self.stations[side].addTrack(neighbor, station)
     
-    def _terminal(self, station): #REV.B
+    def _terminal(self, station):
         """
         _terminal: int -> OuterStations
         Returns the terminal containing the desired cable car station (on which side of the board that station is located)
@@ -194,7 +194,7 @@ class Cars(object):
         """
         return self._terminal(car).lookupSource(car%8)
     
-    def routeComplete(self, track): #REV.B
+    def routeComplete(self, track):
         """
         routeComplete: int -> bool
         Checks whether the route originating at the specified cable car station is actually connected to anything at the other end
@@ -203,7 +203,7 @@ class Cars(object):
         """
         return self.rideTrack(track).routeComplete(self._terminal(track))
     
-    def calculateScore(self, track): #REV.B
+    def calculateScore(self, track):
         """
         calculateScore: int -> int
         Returns the score of the route originating at the specified cable car station
@@ -243,7 +243,7 @@ class Tile(object):
         """
         return self.rotation
     
-    def routeComplete(self, _): #REV.B
+    def routeComplete(self, _):
         """
         routeComplete: any -> bool
         This helper method is used to determine whether each Tile represents the end of its track, and if so, it returns whether it represents an ending that leaves the track complete.  This default implementation always replies that the route is incomplete.
@@ -251,7 +251,7 @@ class Tile(object):
         """
         return False
     
-    def tabulateScore(self, _, runningScore): #REV.B
+    def tabulateScore(self, _, runningScore):
         """
         tabulateScore: any * int -> int
         This helper method is used to determine each track's total score.  This particular default always returns the running score without incrementing it.
@@ -260,7 +260,7 @@ class Tile(object):
         """
         return runningScore
     
-    def __nonzero__(self): #REV.B
+    def __nonzero__(self):
         """
         __nonzero__: -> bool
         This method indicates whether this Tile is a permanent, unmovable occupant of its spot.  This default implementation always replies that this Tile may be replaced with another.
@@ -293,7 +293,7 @@ class OuterStations(Tile):
         self.type='os'
         self.rotation=rotation
         emptyTile=Tile()
-        self.borderedTiles=[emptyTile for _ in range(8)] #REV.B
+        self.borderedTiles=[emptyTile for _ in range(8)]
     
     def addTrack(self, neighbor, substation):
         """
@@ -313,7 +313,7 @@ class OuterStations(Tile):
         """
         return self.borderedTiles[substation]
     
-    def routeComplete(self, _): #REV.B
+    def routeComplete(self, _):
         """
         routeComplete: any -> bool
         This helper method is used to determine whether each Tile represents the end of its track, and if so, it returns whether it represents an ending that leaves the track complete.  This override always replies that the route is complete.
@@ -335,7 +335,7 @@ class PowerStation(Tile):
         self.type='ps'
         self.rotation=0
     
-    def routeComplete(self, _): #REV.B
+    def routeComplete(self, _):
         """
         routeComplete: any -> bool
         This helper method is used to determine whether each Tile represents the end of its track, and if so, it returns whether it represents an ending that leaves the track complete.  This override always replies that the route is complete.
@@ -343,7 +343,7 @@ class PowerStation(Tile):
         """
         return True
     
-    def tabulateScore(self, _, runningScore): #REV.B
+    def tabulateScore(self, _, runningScore):
         """
         tabulateScore: any * int -> int
         This helper method is used to determine each track's total score.  This override always returns twice the running score in order to award the deserved 2x bonus.
@@ -352,14 +352,14 @@ class PowerStation(Tile):
         """
         return runningScore*2
     
-    def __nonzero__(self): #REV.B
+    def __nonzero__(self):
         """
         __nonzero__: -> bool
         This method indicates whether this Tile is a permanent, unmovable occupant of its spot.  This override always replies that this Tile may not be replaced.
         """
         return True
 
-class ConnectedTile(Tile): #TODO since we only have to follow paths one way (from False to True), we could just store the four sides and their destinations in internalConnections!
+class ConnectedTile(Tile):
     """
     ConnectedTile: * List(Tile) * List(int)
     Represents one of the playable track pieces.
@@ -428,7 +428,7 @@ class ConnectedTile(Tile): #TODO since we only have to follow paths one way (fro
         """
         return self.borderingTiles[self._exitPoint(self._entryPoint(source))]
     
-    def routeComplete(self, caller): #REV.B
+    def routeComplete(self, caller):
         """
         routeComplete: Tile -> bool
         This helper method is used to determine whether each Tile represents the end of its track, and if so, it returns whether it represents an ending that leaves the track complete.  This override always recurses to the destination Tile's implementation of this method and returns the result of that call.
@@ -436,7 +436,7 @@ class ConnectedTile(Tile): #TODO since we only have to follow paths one way (fro
         """
         return self.lookupDestination(caller).routeComplete(self)
     
-    def tabulateScore(self, caller, runningScore): #REV.B
+    def tabulateScore(self, caller, runningScore):
         """
         tabulateScore: Tile * int -> int
         This helper method is used to determine each track's total score.  This override always recurses to the destination Tile's implementation of this method, incrementing the score by 1, and returns the result of that call.
@@ -445,7 +445,7 @@ class ConnectedTile(Tile): #TODO since we only have to follow paths one way (fro
         """
         return self.lookupDestination(caller).tabulateScore(self, runningScore+1)
     
-    def __nonzero__(self): #REV.B
+    def __nonzero__(self):
         """
         __nonzero__: -> bool
         This method indicates whether this Tile is a permanent, unmovable occupant of its spot.  This override always replies that this Tile may not be replaced.

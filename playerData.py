@@ -139,7 +139,7 @@ class Board(object):
         Checks whether the route originating at the specified cable car station is actually connected to anything at the other end
             whichStation - the cable car station (1-32)
         """
-        return bool(self.cars.routeComplete(whichStation-1))
+        return self.cars.routeComplete(whichStation-1)
     
     def calculateTrackScore(self, whichStation):
         """

@@ -1,5 +1,6 @@
 #!/bin/sh
 
+#deprecated
 if [ "$1" = "" ] ; then
     echo 'USAGE: pushhack <CS username>'
 elif git push ; then

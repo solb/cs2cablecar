@@ -4,7 +4,7 @@ Cable Car: Student Computer Player
 A sample class you may use to hold your state data
 Author: Adam Oest (amo9149@rit.edu)
 Author: Solomon Boucher (slb1566@rit.edu)
-Author: YOUR NAME HERE (your email address)
+Author: Brad Bensch (brb7020@rit.edu)
 Author: YOUR NAME HERE (your email address)
 """
 

@@ -7,7 +7,7 @@ Cable Car: Student Computer Player
 Complete these function stubs in order to implement your AI.
 Author: Adam Oest (amo9149@rit.edu)
 Author: Solomon Boucher (slb1566@rit.edu)
-Author: YOUR NAME HERE (your email address)
+Author: Brad Bensch (brb7020@rit.edu)
 Author: YOUR NAME HERE (your email address)
 """
 

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if git push ; then
+    ssh $1@glados.cs.rit.edu 'cd home/stu3/s5/slb1566/Courses/242/proj-repo
+    find . -type d -exec chmod 770 {} \;
+    find . -type f -exec chmod 660 {} \;'
+fi

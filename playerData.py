@@ -7,6 +7,7 @@ Author: Solomon Boucher (slb1566@rit.edu)
 Author: Brad Bensch (brb7020@rit.edu)
 Author: YOUR NAME HERE (your email address)
 """
+from copy import deepcopy
 
 class PlayerData(object):
     """A sample class for your player data"""
@@ -71,7 +72,7 @@ class Board(object):
                 row[col]=powerPlace #place the power stations in the center of the board
         self.cars=Cars()
     
-    def _linkTileSide(self, newResident, neighboringRow, neighboringCol, side):
+    def _linkTileSide(self, newResident, neighboringRow, neighboringCol, side, makePermanent=True):
         """
         _linkTileSide: ConnectedTile * int * int * int
         Links a newly-placed tile with the surrounding tiles
@@ -79,31 +80,35 @@ class Board(object):
             neighboringRow - the r-coordinate of the existing tile with which to link (0-7)
             neighboringCol - the c-coordinate of the existing tile with which to link (0-7)
             side - which side of newResident this (r,c) location is on (0-3)
+            makePermanent - whether to create mutual, unbreakable links; alternative is to solely modify the provided tile
         """
         if neighboringRow<0 or neighboringRow>=len(self.board): #newResident on the top or bottom board edge
-            self.cars.layTrack(newResident, side, neighboringCol) #link station to this tile
+            self.cars.layTrack(newResident, side, neighboringCol, makePermanent) #link station to this tile
         elif neighboringCol<0 or neighboringCol>=len(self.board[neighboringRow]): #on the left or right edge
-            self.cars.layTrack(newResident, side, neighboringRow) #link station to this tile
+            self.cars.layTrack(newResident, side, neighboringRow, makePermanent) #link station to this tile
         else: #not on the edge of the board
-            newResident.addBorderingTile(self.board[neighboringRow][neighboringCol], side) #link with another ConectedTile
+            newResident.addBorderingTile(self.board[neighboringRow][neighboringCol], side, makePermanent) #link with another ConectedTile
     
-    def addTile(self, resident, row, column):
+    def addTile(self, resident, row, column, makePermanent=True):
         """
         addTile: ConnectedTile * int * int -> bool
         Places a new tile on the board, returning whether the operation succeeded (didn't clash with an existing tile)
             resident - the new tile to be placed
             row - the r-coordinate (0-7)
             column - the c-coordinate (0-7)
+            makePermanent - whether to create mutual, unbreakable links; alternative is to solely modify the provided tile
         pre: This must be a valid move!
         """
-        if self.board[row][column]:
+        if self.board[row][column]: #there's already something there!
             return False
         
-        self.board[row][column]=resident
-        self._linkTileSide(resident, row-1, column, 0) #link with the above tile
-        self._linkTileSide(resident, row, column+1, 1) #link with the right tile
-        self._linkTileSide(resident, row+1, column, 2) #link with the left tile
-        self._linkTileSide(resident, row, column-1, 3) #link with the below tile
+        if makePermanent:
+            self.board[row][column]=resident
+        
+        self._linkTileSide(resident, row-1, column, 0, makePermanent) #link with the above tile
+        self._linkTileSide(resident, row, column+1, 1, makePermanent) #link with the right tile
+        self._linkTileSide(resident, row+1, column, 2, makePermanent) #link with the left tile
+        self._linkTileSide(resident, row, column-1, 3, makePermanent) #link with the below tile
         return True
     
     def lookupTile(self, row, column):
@@ -148,6 +153,77 @@ class Board(object):
             whichStation - the cable car station (1-32)
         """
         return self.cars.calculateScore(whichStation-1)
+    
+    def _sideConnectsToEdge(self, newTile, side):
+        """
+        _sideConnectsToEdge: ConnectedTile * int -> bool
+        Checks whether the specified side of this tile connects to the edge of the board
+            newTile - the proposed new tile
+            side - which side of newTile we're starting from (0-3)
+        """
+        return isinstance(newTile.lookupDestination(side), OuterStations) #connects to an edge
+    
+    def _sideConnectsToPlayerPlacedTile(self, newTile, side):
+        """
+        _sideConnectsToPlayerPlacedTile: ConnectedTile * int -> bool
+        Checks whether the specified side of this tile connects to a tile placed by a player
+            newTile - the proposed new tile
+            side - which side of newTile we're starting from (0-3)
+        """
+        return isinstance(newTile.lookupDestination(side), ConnectedTile) #connects to an edge
+    
+    def validPlacement(self, tile, row, column):
+        """
+        validPlacement: ConnectedTile * int * int -> bool
+        Returns whether or not the specified tile may be placed at the proposed coordinates
+            tile - the tile to be placed
+            row - isn't it obvious? (0-7)
+            column - likewise (0-7)
+        """
+        tile=deepcopy(tile)
+        
+        if not self.addTile(tile, row, column, False): #unoccupied location
+            return False
+        
+        atLeastOneOccupiedSide=False
+        
+        if row-1<0: #on the top edge of the board
+            if self._sideConnectsToEdge(tile, 0): #edge connects back to another station w/o leaving tile
+                return False
+            else:
+                atLeastOneOccupiedSide=True
+        else: #not on top edge
+            if not atLeastOneOccupiedSide and self._sideConnectsToPlayerPlacedTile(tile, 0):
+                atLeastOneOccupiedSide=True
+        
+        if column+1>=len(self.board[row]): #on the right edge of the board
+            if self._sideConnectsToEdge(tile, 1): #edge connects back to another station w/o leaving tile
+                return False
+            else:
+                atLeastOneOccupiedSide=True
+        else: #not on right edge
+            if not atLeastOneOccupiedSide and self._sideConnectsToPlayerPlacedTile(tile, 1):
+                atLeastOneOccupiedSide=True
+        
+        if row+1>=len(self.board): #on the bottom edge of the board
+            if self._sideConnectsToEdge(tile, 2): #edge connects back to another station w/o leaving tile
+                return False
+            else:
+                atLeastOneOccupiedSide=True
+        else: #not on bottom edge
+            if not atLeastOneOccupiedSide and self._sideConnectsToPlayerPlacedTile(tile, 2):
+                atLeastOneOccupiedSide=True
+        
+        if column-1<0: #on the top edge of the board
+            if self._sideConnectsToEdge(tile, 3): #edge connects back to another station w/o leaving tile
+                return False
+            else:
+                atLeastOneOccupiedSide=True
+        else: #not on top edge
+            if not atLeastOneOccupiedSide and self._sideConnectsToPlayerPlacedTile(tile, 3):
+                atLeastOneOccupiedSide=True
+        
+        return atLeastOneOccupiedSide
 
 class Cars(object):
     """
@@ -164,17 +240,18 @@ class Cars(object):
         """
         self.stations=[OuterStations(rotation) for rotation in range(4)]
     
-    def layTrack(self, neighbor, side, station):
+    def layTrack(self, neighbor, side, station, rememberTile=True):
         """
         layTrack: ConnectedTile * int * int
         Links a ConnectedTile that's being placed on the edge of the board to the appropriate OuterStations
             neighbor - the ConnectedTile that's being added on the edge of the board
             side - the ID of the correct OuterStations object
             station - the cable car station to which the link should be made (0-31)
+            rememberTile - whether to retain the reference to this tile; alternative is to only tell the tile about us
         """
         if side/2: #bottom or left group of cable car stations
             station=7-station #reverse numbering scheme
-        self.stations[side].addTrack(neighbor, station)
+        self.stations[side].addTrack(neighbor, station, rememberTile)
     
     def _terminal(self, station):
         """
@@ -295,14 +372,16 @@ class OuterStations(Tile):
         emptyTile=Tile()
         self.borderedTiles=[emptyTile for _ in range(8)]
     
-    def addTrack(self, neighbor, substation):
+    def addTrack(self, neighbor, substation, rememberTile=True):
         """
         addTrack: ConnectedTile * int
         Adds a ConnectedTile that is being placed on this edge of the board
             neighbor - the ConnectedTile to be linked
             substation - the index of the station to which the tile should be linked (0-7)
+            rememberTile - whether to retain the reference to this tile; alternative is to only tell the tile about us
         """
-        self.borderedTiles[substation]=neighbor
+        if rememberTile:
+            self.borderedTiles[substation]=neighbor
         neighbor.addBorderingTile(self, self.rotation) #make connection mutual
     
     def lookupSource(self, substation):
@@ -391,17 +470,26 @@ class ConnectedTile(Tile):
             newIndex=len(self.internalConnections) #we'll be adding an index at the list's end
             self.internalConnections.append((newIndex+connectionsTemplate[oldIndex]-oldIndex)%len(connectionsTemplate)) #cycle the *differences* between each index and its target
     
-    def addBorderingTile(self, neighbor, side):
+    def addBorderingTile(self, neighbor, side, mutualConnection=True):
         """
         addBorderingTile: Tile, int
         Links this tile with that lying on the specified side.
             neighbor - the tile with which this one should be linked (a two-way link will only be created if this is a ConnectedTile)
             side - on which side of this tile neighbor is sitting (0-3)
+            mutualConnection - whether to connect both ways iff neighbor is a ConnectedTile
         pre: neighbor is not in borderingTiles.
         """
         self.borderingTiles[side]=neighbor
-        if isinstance(neighbor, ConnectedTile):
+        if mutualConnection and isinstance(neighbor, ConnectedTile):
             neighbor.borderingTiles[(side-2)%len(self.borderingTiles)]=self #make the connection mutual
+    
+    def neighborOnSide(self, side):
+        """
+        hasNeighborOnSide: int -> Tile
+        Fetches the tile bordering the specified side of this one
+            side - the side of this tile to check (0-3)
+        """
+        return self.borderingTiles[side]
     
     def _entryPoint(self, source):
         """
@@ -422,11 +510,14 @@ class ConnectedTile(Tile):
     
     def lookupDestination(self, source):
         """
-        lookupDestination: Tile -> Tile
-        Determines to which other tile this tile's path will lead if one is to start from the source tile.
-            source - the tile from where wants to trace the path
+        lookupDestination: (Tile or int) -> Tile
+        Determines to which other tile this tile's path will lead if one is to start from specified neighboring tile or side of this tile.
+            source - the neighboring tile from where wants to trace the path or side of this tile from where one wants to start (0-3)
         """
-        return self.borderingTiles[self._exitPoint(self._entryPoint(source))]
+        if isinstance(source, Tile):
+            return self.borderingTiles[self._exitPoint(self._entryPoint(source))]
+        else:
+            return self.borderingTiles[self._exitPoint(source)]
     
     def routeComplete(self, caller):
         """

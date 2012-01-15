@@ -68,6 +68,8 @@ def move(playerData):
     tileName = None # a-j
     rotation = None # 0-3 (0 = north, 1 = east, 2 = south, 3 = west)
     
+    
+    
     return playerData, PlayerMove(playerId, position, tileName, rotation)
 
 def move_info(playerData, playerMove, nextTile):
@@ -92,28 +94,11 @@ def move_info(playerData, playerMove, nextTile):
     
     playerData.logger.write("move_info() called")
     
-    if playerMove.tileName=='a':
-        tile=TileA(playerMove.rotation)
-    elif playerMove.tileName=='b':
-        tile=TileB(playerMove.rotation)
-    elif playerMove.tileName=='c':
-        tile=TileC(playerMove.rotation)
-    elif playerMove.tileName=='d':
-        tile=TileD(playerMove.rotation)
-    elif playerMove.tileName=='e':
-        tile=TileE(playerMove.rotation)
-    elif playerMove.tileName=='f':
-        tile=TileF(playerMove.rotation)
-    elif playerMove.tileName=='g':
-        tile=TileG(playerMove.rotation)
-    elif playerMove.tileName=='h':
-        tile=TileH(playerMove.rotation)
-    elif playerMove.tileName=='i':
-        tile=TileI(playerMove.rotation)
-    else:
-        tile=TileJ(playerMove.rotation)
-    
-    playerData.board.addTile(tile, playerMove.position[0], playerMove.position[1])
+    if playerMove: #we're looking at someone else's move
+        playerData.board.addTile(playerData.makeTile(playerMove.tileName, playerMove.rotation), playerMove.position[0], playerMove.position[1]) #keep track of this tile's location
+    else: #we're up!
+        playerData.currentTile=nextTile
+        playerData.updateOurStations() #keep tabs on the tracks on which we're working
     
     return playerData
 

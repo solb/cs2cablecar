@@ -151,15 +151,20 @@ class Board(object):
         __init__
         Constructs and returns an instance of Board
         """
-        self.board=[[Tile() for _ in range(8)] for _ in range(8)]
-        for row in [self.board[3], self.board[4]]:
-            for col in [3, 4]:
-                row[col]=PowerStation() #place the power stations in the center of the board
         self.cars=Cars()
+        
+        self.board=[[None for _ in range(8)] for _ in range(8)]
+        for row in range(len(self.board)):
+            for col in range(len(self.board[row])):
+                for side in range(4):
+                    if (row==3 or row==4) and (col==3 or col==4):
+                        self.board[row][col]=PowerStation()
+                    else:
+                        self.addTile(Tile(), row, col)
     
     def _linkTileSide(self, newResident, neighboringRow, neighboringCol, side, makePermanent=True):
         """
-        _linkTileSide: ConnectedTile * int * int * int
+        _linkTileSide: Tile * int * int * int
         Links a newly-placed tile with the surrounding tiles
             newResident - the new tile to be linked
             neighboringRow - the r-coordinate of the existing tile with which to link (0-7)
@@ -171,12 +176,12 @@ class Board(object):
             self.cars.layTrack(newResident, side, neighboringCol, makePermanent) #link station to this tile
         elif neighboringCol<0 or neighboringCol>=len(self.board[neighboringRow]): #on the left or right edge
             self.cars.layTrack(newResident, side, neighboringRow, makePermanent) #link station to this tile
-        else: #not on the edge of the board
+        elif isinstance(newResident, ConnectedTile): #not on the edge of the board and may be linked
             newResident.addBorderingTile(self.board[neighboringRow][neighboringCol], side, makePermanent) #link with another ConectedTile
     
     def addTile(self, resident, row, column, makePermanent=True):
         """
-        addTile: ConnectedTile * int * int -> bool
+        addTile: Tile * int * int -> bool
         Places a new tile on the board, returning whether the operation succeeded (didn't clash with an existing tile)
             resident - the new tile to be placed
             row - the r-coordinate (0-7)
@@ -227,10 +232,9 @@ class Board(object):
     
     def lookupTileCoordinates(self, tile):
         """
-        lookupTileCoordinates: Tile -> tuple(int)
+        lookupTileCoordinates: Tile -> tuple(int) or None
         Returns the coordinates at which the supplied tile is located, or None if it isn't located.
             tile - the Tile being sought
-        NOTE/TODO: This will currently successfully operate on a call to lookupTile(...), but will NOT work reliably on a call to lookupTrack(...).  This is a known issue, but no fix is in the works (yet).
         """
         for row in range(len(self.board)):
             if tile in self.board[row]:
@@ -349,8 +353,8 @@ class Cars(object):
     
     def layTrack(self, neighbor, side, station, rememberTile=True):
         """
-        layTrack: ConnectedTile * int * int
-        Links a ConnectedTile that's being placed on the edge of the board to the appropriate OuterStations
+        layTrack: Tile * int * int
+        Links a Tile that's being placed on the edge of the board to the appropriate OuterStations
             neighbor - the ConnectedTile that's being added on the edge of the board
             side - the ID of the correct OuterStations object
             station - the cable car station to which the link should be made *(0-31)*
@@ -499,15 +503,17 @@ class OuterStations(Tile):
     
     def addTrack(self, neighbor, substation, rememberTile=True):
         """
-        addTrack: ConnectedTile * int
-        Adds a ConnectedTile that is being placed on this edge of the board
+        addTrack: Tile * int
+        Adds a Tile that is being placed on this edge of the board
             neighbor - the ConnectedTile to be linked
             substation - the index of the station to which the tile should be linked (0-7)
             rememberTile - whether to retain the reference to this tile; alternative is to only tell the tile about us
         """
         if rememberTile:
-            self.borderedTiles[substation]=neighbor
-        neighbor.addBorderingTile(self, self.rotation) #make connection mutual
+            self.borderedTiles[substation]=neighbor #make this edge remember new tile
+        
+        if isinstance(neighbor, ConnectedTile):
+            neighbor.addBorderingTile(self, self.rotation) #make new tile remember this edge
     
     def lookupSource(self, substation):
         """

@@ -151,12 +151,10 @@ class Board(object):
         __init__
         Constructs and returns an instance of Board
         """
-        emptyTile=Tile()
-        self.board=[[emptyTile for _ in range(8)] for _ in range(8)]
-        powerPlace=PowerStation()
+        self.board=[[Tile() for _ in range(8)] for _ in range(8)]
         for row in [self.board[3], self.board[4]]:
             for col in [3, 4]:
-                row[col]=powerPlace #place the power stations in the center of the board
+                row[col]=PowerStation() #place the power stations in the center of the board
         self.cars=Cars()
     
     def _linkTileSide(self, newResident, neighboringRow, neighboringCol, side, makePermanent=True):
@@ -198,32 +196,46 @@ class Board(object):
         self._linkTileSide(resident, row, column-1, 3, makePermanent) #link with the below tile
         return True
     
-    def lookupTile(self, row, column):
+    def lookupTile(self, row, column, giveEmpty=False):
         """
         lookupTile: int * int -> ConnectedTile or None
         Returns the ConnectedTile or PowerStation at the coordinates (row,column), or None if there is no tile there
             row - the row (0-7)
             column - the colum (0-7)
+            giveEmpty - whether to return the tile even if it's just a placeholder
         """
         tile=self.board[row][column]
         
-        if tile:
+        if tile or giveEmpty:
             return tile
         else:
             return None
     
-    def lookupTrack(self, whichStation):
+    def lookupTrack(self, whichStation, giveEmpty=False):
         """
         lookupTrack: int -> ConnectedTile or None
         Returns the ConnectedTile attached to the specified cable car station, or None if there's nothing attached
             whichStation - the cable car station (1-32)
+            giveEmpty - whether to return the tile even if it's just a placeholder
         """
         track=self.cars.rideTrack(whichStation-1)
         
-        if track:
+        if track or giveEmpty:
             return track
         else:
             return None
+    
+    def lookupTileCoordinates(self, tile):
+        """
+        lookupTileCoordinates: Tile -> tuple(int)
+        Returns the coordinates at which the supplied tile is located, or None if it isn't located.
+            tile - the Tile being sought
+        NOTE/TODO: This will currently successfully operate on a call to lookupTile(...), but will NOT work reliably on a call to lookupTrack(...).  This is a known issue, but no fix is in the works (yet).
+        """
+        for row in range(len(self.board)):
+            if tile in self.board[row]:
+                return row, self.board[row].index(tile)
+        return None
     
     def routeIsComplete(self, whichStation):
         """
@@ -240,6 +252,14 @@ class Board(object):
             whichStation - the cable car station (1-32)
         """
         return self.cars.calculateScore(whichStation-1)
+    
+    def followRoute(self, whichStation):
+        """
+        followRoute: int -> tuple(Tile, int)
+        Returns the tile to which this route connects and to which side of that tile it is linked
+            whichStation - the cable car station (1-32)
+        """
+        return self.cars.followRoute(whichStation-1)
     
     def _sideConnectsToEdge(self, newTile, side):
         """
@@ -333,8 +353,9 @@ class Cars(object):
         Links a ConnectedTile that's being placed on the edge of the board to the appropriate OuterStations
             neighbor - the ConnectedTile that's being added on the edge of the board
             side - the ID of the correct OuterStations object
-            station - the cable car station to which the link should be made (0-31)
+            station - the cable car station to which the link should be made *(0-31)*
             rememberTile - whether to retain the reference to this tile; alternative is to only tell the tile about us
+        NOTE: At this level, the cable car station is represented using a 0-based indexing system; this contrasts with the 1-based scheme used at all levels higher!
         """
         if side/2: #bottom or left group of cable car stations
             station=7-station #reverse numbering scheme
@@ -375,6 +396,15 @@ class Cars(object):
         NOTE: At this level, the cable car station is represented using a 0-based indexing system; this contrasts with the 1-based scheme used at all levels higher!
         """
         return self.rideTrack(track).tabulateScore(self._terminal(track), 0)
+    
+    def followRoute(self, track):
+        """
+        followRoute: int -> tuple(Tile, int)
+        Returns the tile to which this track connects and to which side of that tile it is linked
+            track - the cable car station *(0-31)*
+        NOTE: At this level, the cable car station is represented using a 0-based indexing system; this contrasts with the 1-based scheme used at all levels higher!
+        """
+        return self.rideTrack(track).followRoute(track/8)
 
 class Tile(object):
     """
@@ -423,6 +453,14 @@ class Tile(object):
             runningScore - the running score
         """
         return runningScore
+    
+    def followRoute(self, entryPoint):
+        """
+        followRoute: int -> tuple(Tile, int)
+        This helper method is used to fetch the tile at the end of a track, as well as the side of this tile on which the rest of the track is.  This default returns a reference to this tile.
+            entryPoint - this side of this tile on which the track enters (0-3)
+        """
+        return self, entryPoint
     
     def __nonzero__(self):
         """
@@ -622,6 +660,15 @@ class ConnectedTile(Tile):
             runningScore - the running score
         """
         return self.lookupDestination(caller).tabulateScore(self, runningScore+1)
+    
+    def followRoute(self, entryPoint):
+        """
+        followRoute: int -> tuple(Tile, int)
+        This helper method is used to fetch the tile at the end of a track, as well as the side of this tile on which the rest of the track is.  This override recurses to the destination Tile's implementation and returns that method's result.
+            entryPoint - this side of this tile on which the track enters (0-3)
+        """
+        exit=self._exitPoint(entryPoint)
+        return self.neighborOnSide(exit).followRoute((exit-2)%len(self.borderingTiles))
     
     def __nonzero__(self):
         """

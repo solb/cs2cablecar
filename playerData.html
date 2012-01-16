@@ -83,14 +83,25 @@ pre:&nbsp;This&nbsp;must&nbsp;be&nbsp;a&nbsp;valid&nbsp;move!</tt></dd></dl>
 Returns&nbsp;the&nbsp;score&nbsp;of&nbsp;the&nbsp;route&nbsp;originating&nbsp;at&nbsp;the&nbsp;specified&nbsp;cable&nbsp;car&nbsp;station<br>
 &nbsp;&nbsp;&nbsp;&nbsp;whichStation&nbsp;-&nbsp;the&nbsp;cable&nbsp;car&nbsp;station&nbsp;(1-32)</tt></dd></dl>
 
-<dl><dt><a name="Board-lookupTile"><strong>lookupTile</strong></a>(self, row, column)</dt><dd><tt>lookupTile:&nbsp;int&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;<a href="#ConnectedTile">ConnectedTile</a>&nbsp;or&nbsp;None<br>
+<dl><dt><a name="Board-followRoute"><strong>followRoute</strong></a>(self, whichStation)</dt><dd><tt>followRoute:&nbsp;int&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
+Returns&nbsp;the&nbsp;tile&nbsp;to&nbsp;which&nbsp;this&nbsp;route&nbsp;connects&nbsp;and&nbsp;to&nbsp;which&nbsp;side&nbsp;of&nbsp;that&nbsp;tile&nbsp;it&nbsp;is&nbsp;linked<br>
+&nbsp;&nbsp;&nbsp;&nbsp;whichStation&nbsp;-&nbsp;the&nbsp;cable&nbsp;car&nbsp;station&nbsp;(1-32)</tt></dd></dl>
+
+<dl><dt><a name="Board-lookupTile"><strong>lookupTile</strong></a>(self, row, column, giveEmpty<font color="#909090">=False</font>)</dt><dd><tt>lookupTile:&nbsp;int&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;<a href="#ConnectedTile">ConnectedTile</a>&nbsp;or&nbsp;None<br>
 Returns&nbsp;the&nbsp;<a href="#ConnectedTile">ConnectedTile</a>&nbsp;or&nbsp;<a href="#PowerStation">PowerStation</a>&nbsp;at&nbsp;the&nbsp;coordinates&nbsp;(row,column),&nbsp;or&nbsp;None&nbsp;if&nbsp;there&nbsp;is&nbsp;no&nbsp;tile&nbsp;there<br>
 &nbsp;&nbsp;&nbsp;&nbsp;row&nbsp;-&nbsp;the&nbsp;row&nbsp;(0-7)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;column&nbsp;-&nbsp;the&nbsp;colum&nbsp;(0-7)</tt></dd></dl>
+&nbsp;&nbsp;&nbsp;&nbsp;column&nbsp;-&nbsp;the&nbsp;colum&nbsp;(0-7)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;giveEmpty&nbsp;-&nbsp;whether&nbsp;to&nbsp;return&nbsp;the&nbsp;tile&nbsp;even&nbsp;if&nbsp;it's&nbsp;just&nbsp;a&nbsp;placeholder</tt></dd></dl>
 
-<dl><dt><a name="Board-lookupTrack"><strong>lookupTrack</strong></a>(self, whichStation)</dt><dd><tt>lookupTrack:&nbsp;int&nbsp;-&gt;&nbsp;<a href="#ConnectedTile">ConnectedTile</a>&nbsp;or&nbsp;None<br>
+<dl><dt><a name="Board-lookupTileCoordinates"><strong>lookupTileCoordinates</strong></a>(self, tile)</dt><dd><tt>lookupTileCoordinates:&nbsp;<a href="#Tile">Tile</a>&nbsp;-&gt;&nbsp;tuple(int)<br>
+Returns&nbsp;the&nbsp;coordinates&nbsp;at&nbsp;which&nbsp;the&nbsp;supplied&nbsp;tile&nbsp;is&nbsp;located,&nbsp;or&nbsp;None&nbsp;if&nbsp;it&nbsp;isn't&nbsp;located.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tile&nbsp;-&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;being&nbsp;sought<br>
+NOTE/TODO:&nbsp;This&nbsp;will&nbsp;currently&nbsp;successfully&nbsp;operate&nbsp;on&nbsp;a&nbsp;call&nbsp;to&nbsp;<a href="#Board-lookupTile">lookupTile</a>(...),&nbsp;but&nbsp;will&nbsp;NOT&nbsp;work&nbsp;reliably&nbsp;on&nbsp;a&nbsp;call&nbsp;to&nbsp;<a href="#Board-lookupTrack">lookupTrack</a>(...).&nbsp;&nbsp;This&nbsp;is&nbsp;a&nbsp;known&nbsp;issue,&nbsp;but&nbsp;no&nbsp;fix&nbsp;is&nbsp;in&nbsp;the&nbsp;works&nbsp;(yet).</tt></dd></dl>
+
+<dl><dt><a name="Board-lookupTrack"><strong>lookupTrack</strong></a>(self, whichStation, giveEmpty<font color="#909090">=False</font>)</dt><dd><tt>lookupTrack:&nbsp;int&nbsp;-&gt;&nbsp;<a href="#ConnectedTile">ConnectedTile</a>&nbsp;or&nbsp;None<br>
 Returns&nbsp;the&nbsp;<a href="#ConnectedTile">ConnectedTile</a>&nbsp;attached&nbsp;to&nbsp;the&nbsp;specified&nbsp;cable&nbsp;car&nbsp;station,&nbsp;or&nbsp;None&nbsp;if&nbsp;there's&nbsp;nothing&nbsp;attached<br>
-&nbsp;&nbsp;&nbsp;&nbsp;whichStation&nbsp;-&nbsp;the&nbsp;cable&nbsp;car&nbsp;station&nbsp;(1-32)</tt></dd></dl>
+&nbsp;&nbsp;&nbsp;&nbsp;whichStation&nbsp;-&nbsp;the&nbsp;cable&nbsp;car&nbsp;station&nbsp;(1-32)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;giveEmpty&nbsp;-&nbsp;whether&nbsp;to&nbsp;return&nbsp;the&nbsp;tile&nbsp;even&nbsp;if&nbsp;it's&nbsp;just&nbsp;a&nbsp;placeholder</tt></dd></dl>
 
 <dl><dt><a name="Board-routeIsComplete"><strong>routeIsComplete</strong></a>(self, whichStation)</dt><dd><tt>routeIsComplete:&nbsp;int&nbsp;-&gt;&nbsp;bool<br>
 Checks&nbsp;whether&nbsp;the&nbsp;route&nbsp;originating&nbsp;at&nbsp;the&nbsp;specified&nbsp;cable&nbsp;car&nbsp;station&nbsp;is&nbsp;actually&nbsp;connected&nbsp;to&nbsp;anything&nbsp;at&nbsp;the&nbsp;other&nbsp;end<br>
@@ -128,12 +139,18 @@ Returns&nbsp;the&nbsp;score&nbsp;of&nbsp;the&nbsp;route&nbsp;originating&nbsp;at
 &nbsp;&nbsp;&nbsp;&nbsp;track&nbsp;-&nbsp;the&nbsp;cable&nbsp;car&nbsp;station&nbsp;*(0-31)*<br>
 NOTE:&nbsp;At&nbsp;this&nbsp;level,&nbsp;the&nbsp;cable&nbsp;car&nbsp;station&nbsp;is&nbsp;represented&nbsp;using&nbsp;a&nbsp;0-based&nbsp;indexing&nbsp;system;&nbsp;this&nbsp;contrasts&nbsp;with&nbsp;the&nbsp;1-based&nbsp;scheme&nbsp;used&nbsp;at&nbsp;all&nbsp;levels&nbsp;higher!</tt></dd></dl>
 
+<dl><dt><a name="Cars-followRoute"><strong>followRoute</strong></a>(self, track)</dt><dd><tt>followRoute:&nbsp;int&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
+Returns&nbsp;the&nbsp;tile&nbsp;to&nbsp;which&nbsp;this&nbsp;track&nbsp;connects&nbsp;and&nbsp;to&nbsp;which&nbsp;side&nbsp;of&nbsp;that&nbsp;tile&nbsp;it&nbsp;is&nbsp;linked<br>
+&nbsp;&nbsp;&nbsp;&nbsp;track&nbsp;-&nbsp;the&nbsp;cable&nbsp;car&nbsp;station&nbsp;*(0-31)*<br>
+NOTE:&nbsp;At&nbsp;this&nbsp;level,&nbsp;the&nbsp;cable&nbsp;car&nbsp;station&nbsp;is&nbsp;represented&nbsp;using&nbsp;a&nbsp;0-based&nbsp;indexing&nbsp;system;&nbsp;this&nbsp;contrasts&nbsp;with&nbsp;the&nbsp;1-based&nbsp;scheme&nbsp;used&nbsp;at&nbsp;all&nbsp;levels&nbsp;higher!</tt></dd></dl>
+
 <dl><dt><a name="Cars-layTrack"><strong>layTrack</strong></a>(self, neighbor, side, station, rememberTile<font color="#909090">=True</font>)</dt><dd><tt>layTrack:&nbsp;<a href="#ConnectedTile">ConnectedTile</a>&nbsp;*&nbsp;int&nbsp;*&nbsp;int<br>
 Links&nbsp;a&nbsp;<a href="#ConnectedTile">ConnectedTile</a>&nbsp;that's&nbsp;being&nbsp;placed&nbsp;on&nbsp;the&nbsp;edge&nbsp;of&nbsp;the&nbsp;board&nbsp;to&nbsp;the&nbsp;appropriate&nbsp;<a href="#OuterStations">OuterStations</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;neighbor&nbsp;-&nbsp;the&nbsp;<a href="#ConnectedTile">ConnectedTile</a>&nbsp;that's&nbsp;being&nbsp;added&nbsp;on&nbsp;the&nbsp;edge&nbsp;of&nbsp;the&nbsp;board<br>
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;the&nbsp;ID&nbsp;of&nbsp;the&nbsp;correct&nbsp;<a href="#OuterStations">OuterStations</a>&nbsp;<a href="__builtin__.html#object">object</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;station&nbsp;-&nbsp;the&nbsp;cable&nbsp;car&nbsp;station&nbsp;to&nbsp;which&nbsp;the&nbsp;link&nbsp;should&nbsp;be&nbsp;made&nbsp;(0-31)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;rememberTile&nbsp;-&nbsp;whether&nbsp;to&nbsp;retain&nbsp;the&nbsp;reference&nbsp;to&nbsp;this&nbsp;tile;&nbsp;alternative&nbsp;is&nbsp;to&nbsp;only&nbsp;tell&nbsp;the&nbsp;tile&nbsp;about&nbsp;us</tt></dd></dl>
+&nbsp;&nbsp;&nbsp;&nbsp;station&nbsp;-&nbsp;the&nbsp;cable&nbsp;car&nbsp;station&nbsp;to&nbsp;which&nbsp;the&nbsp;link&nbsp;should&nbsp;be&nbsp;made&nbsp;*(0-31)*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;rememberTile&nbsp;-&nbsp;whether&nbsp;to&nbsp;retain&nbsp;the&nbsp;reference&nbsp;to&nbsp;this&nbsp;tile;&nbsp;alternative&nbsp;is&nbsp;to&nbsp;only&nbsp;tell&nbsp;the&nbsp;tile&nbsp;about&nbsp;us<br>
+NOTE:&nbsp;At&nbsp;this&nbsp;level,&nbsp;the&nbsp;cable&nbsp;car&nbsp;station&nbsp;is&nbsp;represented&nbsp;using&nbsp;a&nbsp;0-based&nbsp;indexing&nbsp;system;&nbsp;this&nbsp;contrasts&nbsp;with&nbsp;the&nbsp;1-based&nbsp;scheme&nbsp;used&nbsp;at&nbsp;all&nbsp;levels&nbsp;higher!</tt></dd></dl>
 
 <dl><dt><a name="Cars-rideTrack"><strong>rideTrack</strong></a>(self, car)</dt><dd><tt>rideTrack:&nbsp;int&nbsp;-&gt;&nbsp;<a href="#Tile">Tile</a><br>
 Returns&nbsp;the&nbsp;first&nbsp;tile&nbsp;of&nbsp;the&nbsp;track&nbsp;initiating&nbsp;at&nbsp;the&nbsp;specified&nbsp;cable&nbsp;car&nbsp;station<br>
@@ -180,6 +197,10 @@ Links&nbsp;this&nbsp;tile&nbsp;with&nbsp;that&nbsp;lying&nbsp;on&nbsp;the&nbsp;s
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;on&nbsp;which&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;neighbor&nbsp;is&nbsp;sitting&nbsp;(0-3)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;mutualConnection&nbsp;-&nbsp;whether&nbsp;to&nbsp;connect&nbsp;both&nbsp;ways&nbsp;iff&nbsp;neighbor&nbsp;is&nbsp;a&nbsp;<a href="#ConnectedTile">ConnectedTile</a><br>
 pre:&nbsp;neighbor&nbsp;is&nbsp;not&nbsp;in&nbsp;borderingTiles.</tt></dd></dl>
+
+<dl><dt><a name="ConnectedTile-followRoute"><strong>followRoute</strong></a>(self, entryPoint)</dt><dd><tt>followRoute:&nbsp;int&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
+This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;fetch&nbsp;the&nbsp;tile&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;a&nbsp;track,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;rest&nbsp;of&nbsp;the&nbsp;track&nbsp;is.&nbsp;&nbsp;This&nbsp;override&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;and&nbsp;returns&nbsp;that&nbsp;method's&nbsp;result.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;entryPoint&nbsp;-&nbsp;this&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;track&nbsp;enters&nbsp;(0-3)</tt></dd></dl>
 
 <dl><dt><a name="ConnectedTile-lookupDestination"><strong>lookupDestination</strong></a>(self, source)</dt><dd><tt>lookupDestination:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;<a href="#Tile">Tile</a><br>
 Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;path&nbsp;will&nbsp;lead&nbsp;if&nbsp;one&nbsp;is&nbsp;to&nbsp;start&nbsp;from&nbsp;specified&nbsp;neighboring&nbsp;tile&nbsp;or&nbsp;side&nbsp;of&nbsp;this&nbsp;tile.<br>
@@ -269,6 +290,10 @@ This&nbsp;method&nbsp;indicates&nbsp;whether&nbsp;this&nbsp;<a href="#Tile">Tile
 
 <dl><dt><a name="OuterStations-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>__repr__:&nbsp;-&gt;&nbsp;str<br>
 Returns&nbsp;the&nbsp;tile's&nbsp;type&nbsp;and&nbsp;rotation.&nbsp;&nbsp;This&nbsp;function&nbsp;is&nbsp;intended&nbsp;primarily&nbsp;for&nbsp;debugging&nbsp;purposes.</tt></dd></dl>
+
+<dl><dt><a name="OuterStations-followRoute"><strong>followRoute</strong></a>(self, entryPoint)</dt><dd><tt>followRoute:&nbsp;int&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
+This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;fetch&nbsp;the&nbsp;tile&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;a&nbsp;track,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;rest&nbsp;of&nbsp;the&nbsp;track&nbsp;is.&nbsp;&nbsp;This&nbsp;default&nbsp;returns&nbsp;a&nbsp;reference&nbsp;to&nbsp;this&nbsp;tile.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;entryPoint&nbsp;-&nbsp;this&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;track&nbsp;enters&nbsp;(0-3)</tt></dd></dl>
 
 <dl><dt><a name="OuterStations-getRotation"><strong>getRotation</strong></a>(self)</dt><dd><tt>getRotation:&nbsp;-&gt;&nbsp;int<br>
 Returns&nbsp;the&nbsp;tile's&nbsp;rotation&nbsp;(0-3)</tt></dd></dl>
@@ -379,6 +404,10 @@ Methods inherited from <a href="playerData.html#Tile">Tile</a>:<br>
 <dl><dt><a name="PowerStation-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>__repr__:&nbsp;-&gt;&nbsp;str<br>
 Returns&nbsp;the&nbsp;tile's&nbsp;type&nbsp;and&nbsp;rotation.&nbsp;&nbsp;This&nbsp;function&nbsp;is&nbsp;intended&nbsp;primarily&nbsp;for&nbsp;debugging&nbsp;purposes.</tt></dd></dl>
 
+<dl><dt><a name="PowerStation-followRoute"><strong>followRoute</strong></a>(self, entryPoint)</dt><dd><tt>followRoute:&nbsp;int&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
+This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;fetch&nbsp;the&nbsp;tile&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;a&nbsp;track,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;rest&nbsp;of&nbsp;the&nbsp;track&nbsp;is.&nbsp;&nbsp;This&nbsp;default&nbsp;returns&nbsp;a&nbsp;reference&nbsp;to&nbsp;this&nbsp;tile.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;entryPoint&nbsp;-&nbsp;this&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;track&nbsp;enters&nbsp;(0-3)</tt></dd></dl>
+
 <dl><dt><a name="PowerStation-getRotation"><strong>getRotation</strong></a>(self)</dt><dd><tt>getRotation:&nbsp;-&gt;&nbsp;int<br>
 Returns&nbsp;the&nbsp;tile's&nbsp;rotation&nbsp;(0-3)</tt></dd></dl>
 
@@ -412,6 +441,10 @@ This&nbsp;method&nbsp;indicates&nbsp;whether&nbsp;this&nbsp;<a href="#Tile">Tile
 
 <dl><dt><a name="Tile-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>__repr__:&nbsp;-&gt;&nbsp;str<br>
 Returns&nbsp;the&nbsp;tile's&nbsp;type&nbsp;and&nbsp;rotation.&nbsp;&nbsp;This&nbsp;function&nbsp;is&nbsp;intended&nbsp;primarily&nbsp;for&nbsp;debugging&nbsp;purposes.</tt></dd></dl>
+
+<dl><dt><a name="Tile-followRoute"><strong>followRoute</strong></a>(self, entryPoint)</dt><dd><tt>followRoute:&nbsp;int&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
+This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;fetch&nbsp;the&nbsp;tile&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;a&nbsp;track,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;rest&nbsp;of&nbsp;the&nbsp;track&nbsp;is.&nbsp;&nbsp;This&nbsp;default&nbsp;returns&nbsp;a&nbsp;reference&nbsp;to&nbsp;this&nbsp;tile.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;entryPoint&nbsp;-&nbsp;this&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;track&nbsp;enters&nbsp;(0-3)</tt></dd></dl>
 
 <dl><dt><a name="Tile-getRotation"><strong>getRotation</strong></a>(self)</dt><dd><tt>getRotation:&nbsp;-&gt;&nbsp;int<br>
 Returns&nbsp;the&nbsp;tile's&nbsp;rotation&nbsp;(0-3)</tt></dd></dl>
@@ -472,6 +505,10 @@ Links&nbsp;this&nbsp;tile&nbsp;with&nbsp;that&nbsp;lying&nbsp;on&nbsp;the&nbsp;s
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;on&nbsp;which&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;neighbor&nbsp;is&nbsp;sitting&nbsp;(0-3)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;mutualConnection&nbsp;-&nbsp;whether&nbsp;to&nbsp;connect&nbsp;both&nbsp;ways&nbsp;iff&nbsp;neighbor&nbsp;is&nbsp;a&nbsp;<a href="#ConnectedTile">ConnectedTile</a><br>
 pre:&nbsp;neighbor&nbsp;is&nbsp;not&nbsp;in&nbsp;borderingTiles.</tt></dd></dl>
+
+<dl><dt><a name="TileA-followRoute"><strong>followRoute</strong></a>(self, entryPoint)</dt><dd><tt>followRoute:&nbsp;int&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
+This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;fetch&nbsp;the&nbsp;tile&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;a&nbsp;track,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;rest&nbsp;of&nbsp;the&nbsp;track&nbsp;is.&nbsp;&nbsp;This&nbsp;override&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;and&nbsp;returns&nbsp;that&nbsp;method's&nbsp;result.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;entryPoint&nbsp;-&nbsp;this&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;track&nbsp;enters&nbsp;(0-3)</tt></dd></dl>
 
 <dl><dt><a name="TileA-lookupDestination"><strong>lookupDestination</strong></a>(self, source)</dt><dd><tt>lookupDestination:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;<a href="#Tile">Tile</a><br>
 Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;path&nbsp;will&nbsp;lead&nbsp;if&nbsp;one&nbsp;is&nbsp;to&nbsp;start&nbsp;from&nbsp;specified&nbsp;neighboring&nbsp;tile&nbsp;or&nbsp;side&nbsp;of&nbsp;this&nbsp;tile.<br>
@@ -552,6 +589,10 @@ Links&nbsp;this&nbsp;tile&nbsp;with&nbsp;that&nbsp;lying&nbsp;on&nbsp;the&nbsp;s
 &nbsp;&nbsp;&nbsp;&nbsp;mutualConnection&nbsp;-&nbsp;whether&nbsp;to&nbsp;connect&nbsp;both&nbsp;ways&nbsp;iff&nbsp;neighbor&nbsp;is&nbsp;a&nbsp;<a href="#ConnectedTile">ConnectedTile</a><br>
 pre:&nbsp;neighbor&nbsp;is&nbsp;not&nbsp;in&nbsp;borderingTiles.</tt></dd></dl>
 
+<dl><dt><a name="TileB-followRoute"><strong>followRoute</strong></a>(self, entryPoint)</dt><dd><tt>followRoute:&nbsp;int&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
+This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;fetch&nbsp;the&nbsp;tile&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;a&nbsp;track,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;rest&nbsp;of&nbsp;the&nbsp;track&nbsp;is.&nbsp;&nbsp;This&nbsp;override&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;and&nbsp;returns&nbsp;that&nbsp;method's&nbsp;result.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;entryPoint&nbsp;-&nbsp;this&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;track&nbsp;enters&nbsp;(0-3)</tt></dd></dl>
+
 <dl><dt><a name="TileB-lookupDestination"><strong>lookupDestination</strong></a>(self, source)</dt><dd><tt>lookupDestination:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;<a href="#Tile">Tile</a><br>
 Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;path&nbsp;will&nbsp;lead&nbsp;if&nbsp;one&nbsp;is&nbsp;to&nbsp;start&nbsp;from&nbsp;specified&nbsp;neighboring&nbsp;tile&nbsp;or&nbsp;side&nbsp;of&nbsp;this&nbsp;tile.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;source&nbsp;-&nbsp;the&nbsp;neighboring&nbsp;tile&nbsp;from&nbsp;where&nbsp;wants&nbsp;to&nbsp;trace&nbsp;the&nbsp;path&nbsp;or&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;from&nbsp;where&nbsp;one&nbsp;wants&nbsp;to&nbsp;start&nbsp;(0-3)</tt></dd></dl>
@@ -630,6 +671,10 @@ Links&nbsp;this&nbsp;tile&nbsp;with&nbsp;that&nbsp;lying&nbsp;on&nbsp;the&nbsp;s
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;on&nbsp;which&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;neighbor&nbsp;is&nbsp;sitting&nbsp;(0-3)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;mutualConnection&nbsp;-&nbsp;whether&nbsp;to&nbsp;connect&nbsp;both&nbsp;ways&nbsp;iff&nbsp;neighbor&nbsp;is&nbsp;a&nbsp;<a href="#ConnectedTile">ConnectedTile</a><br>
 pre:&nbsp;neighbor&nbsp;is&nbsp;not&nbsp;in&nbsp;borderingTiles.</tt></dd></dl>
+
+<dl><dt><a name="TileC-followRoute"><strong>followRoute</strong></a>(self, entryPoint)</dt><dd><tt>followRoute:&nbsp;int&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
+This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;fetch&nbsp;the&nbsp;tile&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;a&nbsp;track,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;rest&nbsp;of&nbsp;the&nbsp;track&nbsp;is.&nbsp;&nbsp;This&nbsp;override&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;and&nbsp;returns&nbsp;that&nbsp;method's&nbsp;result.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;entryPoint&nbsp;-&nbsp;this&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;track&nbsp;enters&nbsp;(0-3)</tt></dd></dl>
 
 <dl><dt><a name="TileC-lookupDestination"><strong>lookupDestination</strong></a>(self, source)</dt><dd><tt>lookupDestination:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;<a href="#Tile">Tile</a><br>
 Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;path&nbsp;will&nbsp;lead&nbsp;if&nbsp;one&nbsp;is&nbsp;to&nbsp;start&nbsp;from&nbsp;specified&nbsp;neighboring&nbsp;tile&nbsp;or&nbsp;side&nbsp;of&nbsp;this&nbsp;tile.<br>
@@ -710,6 +755,10 @@ Links&nbsp;this&nbsp;tile&nbsp;with&nbsp;that&nbsp;lying&nbsp;on&nbsp;the&nbsp;s
 &nbsp;&nbsp;&nbsp;&nbsp;mutualConnection&nbsp;-&nbsp;whether&nbsp;to&nbsp;connect&nbsp;both&nbsp;ways&nbsp;iff&nbsp;neighbor&nbsp;is&nbsp;a&nbsp;<a href="#ConnectedTile">ConnectedTile</a><br>
 pre:&nbsp;neighbor&nbsp;is&nbsp;not&nbsp;in&nbsp;borderingTiles.</tt></dd></dl>
 
+<dl><dt><a name="TileD-followRoute"><strong>followRoute</strong></a>(self, entryPoint)</dt><dd><tt>followRoute:&nbsp;int&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
+This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;fetch&nbsp;the&nbsp;tile&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;a&nbsp;track,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;rest&nbsp;of&nbsp;the&nbsp;track&nbsp;is.&nbsp;&nbsp;This&nbsp;override&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;and&nbsp;returns&nbsp;that&nbsp;method's&nbsp;result.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;entryPoint&nbsp;-&nbsp;this&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;track&nbsp;enters&nbsp;(0-3)</tt></dd></dl>
+
 <dl><dt><a name="TileD-lookupDestination"><strong>lookupDestination</strong></a>(self, source)</dt><dd><tt>lookupDestination:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;<a href="#Tile">Tile</a><br>
 Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;path&nbsp;will&nbsp;lead&nbsp;if&nbsp;one&nbsp;is&nbsp;to&nbsp;start&nbsp;from&nbsp;specified&nbsp;neighboring&nbsp;tile&nbsp;or&nbsp;side&nbsp;of&nbsp;this&nbsp;tile.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;source&nbsp;-&nbsp;the&nbsp;neighboring&nbsp;tile&nbsp;from&nbsp;where&nbsp;wants&nbsp;to&nbsp;trace&nbsp;the&nbsp;path&nbsp;or&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;from&nbsp;where&nbsp;one&nbsp;wants&nbsp;to&nbsp;start&nbsp;(0-3)</tt></dd></dl>
@@ -788,6 +837,10 @@ Links&nbsp;this&nbsp;tile&nbsp;with&nbsp;that&nbsp;lying&nbsp;on&nbsp;the&nbsp;s
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;on&nbsp;which&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;neighbor&nbsp;is&nbsp;sitting&nbsp;(0-3)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;mutualConnection&nbsp;-&nbsp;whether&nbsp;to&nbsp;connect&nbsp;both&nbsp;ways&nbsp;iff&nbsp;neighbor&nbsp;is&nbsp;a&nbsp;<a href="#ConnectedTile">ConnectedTile</a><br>
 pre:&nbsp;neighbor&nbsp;is&nbsp;not&nbsp;in&nbsp;borderingTiles.</tt></dd></dl>
+
+<dl><dt><a name="TileE-followRoute"><strong>followRoute</strong></a>(self, entryPoint)</dt><dd><tt>followRoute:&nbsp;int&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
+This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;fetch&nbsp;the&nbsp;tile&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;a&nbsp;track,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;rest&nbsp;of&nbsp;the&nbsp;track&nbsp;is.&nbsp;&nbsp;This&nbsp;override&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;and&nbsp;returns&nbsp;that&nbsp;method's&nbsp;result.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;entryPoint&nbsp;-&nbsp;this&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;track&nbsp;enters&nbsp;(0-3)</tt></dd></dl>
 
 <dl><dt><a name="TileE-lookupDestination"><strong>lookupDestination</strong></a>(self, source)</dt><dd><tt>lookupDestination:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;<a href="#Tile">Tile</a><br>
 Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;path&nbsp;will&nbsp;lead&nbsp;if&nbsp;one&nbsp;is&nbsp;to&nbsp;start&nbsp;from&nbsp;specified&nbsp;neighboring&nbsp;tile&nbsp;or&nbsp;side&nbsp;of&nbsp;this&nbsp;tile.<br>
@@ -868,6 +921,10 @@ Links&nbsp;this&nbsp;tile&nbsp;with&nbsp;that&nbsp;lying&nbsp;on&nbsp;the&nbsp;s
 &nbsp;&nbsp;&nbsp;&nbsp;mutualConnection&nbsp;-&nbsp;whether&nbsp;to&nbsp;connect&nbsp;both&nbsp;ways&nbsp;iff&nbsp;neighbor&nbsp;is&nbsp;a&nbsp;<a href="#ConnectedTile">ConnectedTile</a><br>
 pre:&nbsp;neighbor&nbsp;is&nbsp;not&nbsp;in&nbsp;borderingTiles.</tt></dd></dl>
 
+<dl><dt><a name="TileF-followRoute"><strong>followRoute</strong></a>(self, entryPoint)</dt><dd><tt>followRoute:&nbsp;int&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
+This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;fetch&nbsp;the&nbsp;tile&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;a&nbsp;track,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;rest&nbsp;of&nbsp;the&nbsp;track&nbsp;is.&nbsp;&nbsp;This&nbsp;override&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;and&nbsp;returns&nbsp;that&nbsp;method's&nbsp;result.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;entryPoint&nbsp;-&nbsp;this&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;track&nbsp;enters&nbsp;(0-3)</tt></dd></dl>
+
 <dl><dt><a name="TileF-lookupDestination"><strong>lookupDestination</strong></a>(self, source)</dt><dd><tt>lookupDestination:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;<a href="#Tile">Tile</a><br>
 Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;path&nbsp;will&nbsp;lead&nbsp;if&nbsp;one&nbsp;is&nbsp;to&nbsp;start&nbsp;from&nbsp;specified&nbsp;neighboring&nbsp;tile&nbsp;or&nbsp;side&nbsp;of&nbsp;this&nbsp;tile.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;source&nbsp;-&nbsp;the&nbsp;neighboring&nbsp;tile&nbsp;from&nbsp;where&nbsp;wants&nbsp;to&nbsp;trace&nbsp;the&nbsp;path&nbsp;or&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;from&nbsp;where&nbsp;one&nbsp;wants&nbsp;to&nbsp;start&nbsp;(0-3)</tt></dd></dl>
@@ -946,6 +1003,10 @@ Links&nbsp;this&nbsp;tile&nbsp;with&nbsp;that&nbsp;lying&nbsp;on&nbsp;the&nbsp;s
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;on&nbsp;which&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;neighbor&nbsp;is&nbsp;sitting&nbsp;(0-3)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;mutualConnection&nbsp;-&nbsp;whether&nbsp;to&nbsp;connect&nbsp;both&nbsp;ways&nbsp;iff&nbsp;neighbor&nbsp;is&nbsp;a&nbsp;<a href="#ConnectedTile">ConnectedTile</a><br>
 pre:&nbsp;neighbor&nbsp;is&nbsp;not&nbsp;in&nbsp;borderingTiles.</tt></dd></dl>
+
+<dl><dt><a name="TileG-followRoute"><strong>followRoute</strong></a>(self, entryPoint)</dt><dd><tt>followRoute:&nbsp;int&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
+This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;fetch&nbsp;the&nbsp;tile&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;a&nbsp;track,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;rest&nbsp;of&nbsp;the&nbsp;track&nbsp;is.&nbsp;&nbsp;This&nbsp;override&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;and&nbsp;returns&nbsp;that&nbsp;method's&nbsp;result.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;entryPoint&nbsp;-&nbsp;this&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;track&nbsp;enters&nbsp;(0-3)</tt></dd></dl>
 
 <dl><dt><a name="TileG-lookupDestination"><strong>lookupDestination</strong></a>(self, source)</dt><dd><tt>lookupDestination:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;<a href="#Tile">Tile</a><br>
 Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;path&nbsp;will&nbsp;lead&nbsp;if&nbsp;one&nbsp;is&nbsp;to&nbsp;start&nbsp;from&nbsp;specified&nbsp;neighboring&nbsp;tile&nbsp;or&nbsp;side&nbsp;of&nbsp;this&nbsp;tile.<br>
@@ -1026,6 +1087,10 @@ Links&nbsp;this&nbsp;tile&nbsp;with&nbsp;that&nbsp;lying&nbsp;on&nbsp;the&nbsp;s
 &nbsp;&nbsp;&nbsp;&nbsp;mutualConnection&nbsp;-&nbsp;whether&nbsp;to&nbsp;connect&nbsp;both&nbsp;ways&nbsp;iff&nbsp;neighbor&nbsp;is&nbsp;a&nbsp;<a href="#ConnectedTile">ConnectedTile</a><br>
 pre:&nbsp;neighbor&nbsp;is&nbsp;not&nbsp;in&nbsp;borderingTiles.</tt></dd></dl>
 
+<dl><dt><a name="TileH-followRoute"><strong>followRoute</strong></a>(self, entryPoint)</dt><dd><tt>followRoute:&nbsp;int&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
+This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;fetch&nbsp;the&nbsp;tile&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;a&nbsp;track,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;rest&nbsp;of&nbsp;the&nbsp;track&nbsp;is.&nbsp;&nbsp;This&nbsp;override&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;and&nbsp;returns&nbsp;that&nbsp;method's&nbsp;result.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;entryPoint&nbsp;-&nbsp;this&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;track&nbsp;enters&nbsp;(0-3)</tt></dd></dl>
+
 <dl><dt><a name="TileH-lookupDestination"><strong>lookupDestination</strong></a>(self, source)</dt><dd><tt>lookupDestination:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;<a href="#Tile">Tile</a><br>
 Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;path&nbsp;will&nbsp;lead&nbsp;if&nbsp;one&nbsp;is&nbsp;to&nbsp;start&nbsp;from&nbsp;specified&nbsp;neighboring&nbsp;tile&nbsp;or&nbsp;side&nbsp;of&nbsp;this&nbsp;tile.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;source&nbsp;-&nbsp;the&nbsp;neighboring&nbsp;tile&nbsp;from&nbsp;where&nbsp;wants&nbsp;to&nbsp;trace&nbsp;the&nbsp;path&nbsp;or&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;from&nbsp;where&nbsp;one&nbsp;wants&nbsp;to&nbsp;start&nbsp;(0-3)</tt></dd></dl>
@@ -1105,6 +1170,10 @@ Links&nbsp;this&nbsp;tile&nbsp;with&nbsp;that&nbsp;lying&nbsp;on&nbsp;the&nbsp;s
 &nbsp;&nbsp;&nbsp;&nbsp;mutualConnection&nbsp;-&nbsp;whether&nbsp;to&nbsp;connect&nbsp;both&nbsp;ways&nbsp;iff&nbsp;neighbor&nbsp;is&nbsp;a&nbsp;<a href="#ConnectedTile">ConnectedTile</a><br>
 pre:&nbsp;neighbor&nbsp;is&nbsp;not&nbsp;in&nbsp;borderingTiles.</tt></dd></dl>
 
+<dl><dt><a name="TileI-followRoute"><strong>followRoute</strong></a>(self, entryPoint)</dt><dd><tt>followRoute:&nbsp;int&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
+This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;fetch&nbsp;the&nbsp;tile&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;a&nbsp;track,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;rest&nbsp;of&nbsp;the&nbsp;track&nbsp;is.&nbsp;&nbsp;This&nbsp;override&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;and&nbsp;returns&nbsp;that&nbsp;method's&nbsp;result.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;entryPoint&nbsp;-&nbsp;this&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;track&nbsp;enters&nbsp;(0-3)</tt></dd></dl>
+
 <dl><dt><a name="TileI-lookupDestination"><strong>lookupDestination</strong></a>(self, source)</dt><dd><tt>lookupDestination:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;<a href="#Tile">Tile</a><br>
 Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;path&nbsp;will&nbsp;lead&nbsp;if&nbsp;one&nbsp;is&nbsp;to&nbsp;start&nbsp;from&nbsp;specified&nbsp;neighboring&nbsp;tile&nbsp;or&nbsp;side&nbsp;of&nbsp;this&nbsp;tile.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;source&nbsp;-&nbsp;the&nbsp;neighboring&nbsp;tile&nbsp;from&nbsp;where&nbsp;wants&nbsp;to&nbsp;trace&nbsp;the&nbsp;path&nbsp;or&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;from&nbsp;where&nbsp;one&nbsp;wants&nbsp;to&nbsp;start&nbsp;(0-3)</tt></dd></dl>
@@ -1183,6 +1252,10 @@ Links&nbsp;this&nbsp;tile&nbsp;with&nbsp;that&nbsp;lying&nbsp;on&nbsp;the&nbsp;s
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;on&nbsp;which&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;neighbor&nbsp;is&nbsp;sitting&nbsp;(0-3)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;mutualConnection&nbsp;-&nbsp;whether&nbsp;to&nbsp;connect&nbsp;both&nbsp;ways&nbsp;iff&nbsp;neighbor&nbsp;is&nbsp;a&nbsp;<a href="#ConnectedTile">ConnectedTile</a><br>
 pre:&nbsp;neighbor&nbsp;is&nbsp;not&nbsp;in&nbsp;borderingTiles.</tt></dd></dl>
+
+<dl><dt><a name="TileJ-followRoute"><strong>followRoute</strong></a>(self, entryPoint)</dt><dd><tt>followRoute:&nbsp;int&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
+This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;fetch&nbsp;the&nbsp;tile&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;a&nbsp;track,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;rest&nbsp;of&nbsp;the&nbsp;track&nbsp;is.&nbsp;&nbsp;This&nbsp;override&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;and&nbsp;returns&nbsp;that&nbsp;method's&nbsp;result.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;entryPoint&nbsp;-&nbsp;this&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;track&nbsp;enters&nbsp;(0-3)</tt></dd></dl>
 
 <dl><dt><a name="TileJ-lookupDestination"><strong>lookupDestination</strong></a>(self, source)</dt><dd><tt>lookupDestination:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;<a href="#Tile">Tile</a><br>
 Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;path&nbsp;will&nbsp;lead&nbsp;if&nbsp;one&nbsp;is&nbsp;to&nbsp;start&nbsp;from&nbsp;specified&nbsp;neighboring&nbsp;tile&nbsp;or&nbsp;side&nbsp;of&nbsp;this&nbsp;tile.<br>

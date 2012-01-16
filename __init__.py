@@ -45,6 +45,15 @@ def init(playerId, numPlayers, startTile, logger, arg = "None"):
     # This is how you print out your data to standard output (not logged)
     print(playerData)
     
+    #These lines were just for testing board.lookupTileCoordinates(...), and may be safely removed:
+    #playerData.board.addTile(TileH(0), 4, 0)
+    #playerData.board.addTile(TileC(0), 5, 0)
+    #playerData.board.addTile(TileJ(1), 5, 1)
+    #playerData.board.addTile(TileA(3), 6, 0)
+    #playerData.board.addTile(TileG(2), 6, 1)
+    #print(playerData.board.calculateTrackScore(28))
+    #print(playerData.board.lookupTileCoordinates(playerData.board.followRoute(28)[0]))
+    
     return playerData
 
 def move(playerData):  

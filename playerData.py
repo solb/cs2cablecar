@@ -265,24 +265,6 @@ class Board(object):
         """
         return self.cars.followRoute(whichStation-1)
     
-    def _sideConnectsToEdge(self, newTile, side):
-        """
-        _sideConnectsToEdge: ConnectedTile * int -> bool
-        Checks whether the specified side of this tile connects to the edge of the board
-            newTile - the proposed new tile
-            side - which side of newTile we're starting from (0-3)
-        """
-        return isinstance(newTile.lookupDestination(side), OuterStations) #connects to an edge
-    
-    def _sideConnectsToPlayerPlacedTile(self, newTile, side):
-        """
-        _sideConnectsToPlayerPlacedTile: ConnectedTile * int -> bool
-        Checks whether the specified side of this tile connects to a tile placed by a player
-            newTile - the proposed new tile
-            side - which side of newTile we're starting from (0-3)
-        """
-        return isinstance(newTile.lookupDestination(side), ConnectedTile) #connects to an edge
-    
     def validPlacement(self, tile, row, column):
         """
         validPlacement: ConnectedTile * int * int -> bool
@@ -292,46 +274,15 @@ class Board(object):
             column - likewise (0-7)
         """
         tile=deepcopy(tile)
-        
-        if not self.addTile(tile, row, column, False): #unoccupied location
+        if not self.addTile(tile, row, column, False): #location already occupied
             return False
         
         atLeastOneOccupiedSide=False
-        
-        if row-1<0: #on the top edge of the board
-            if self._sideConnectsToEdge(tile, 0): #edge connects back to another station w/o leaving tile
+        for side in range(4):
+            neighbor=tile.neighborOnSide(side)
+            if isinstance(neighbor, OuterStations) and isinstance(tile.lookupDestination(neighbor), OuterStations): #this tile would "short out" this station
                 return False
-            else:
-                atLeastOneOccupiedSide=True
-        else: #not on top edge
-            if not atLeastOneOccupiedSide and self._sideConnectsToPlayerPlacedTile(tile, 0):
-                atLeastOneOccupiedSide=True
-        
-        if column+1>=len(self.board[row]): #on the right edge of the board
-            if self._sideConnectsToEdge(tile, 1): #edge connects back to another station w/o leaving tile
-                return False
-            else:
-                atLeastOneOccupiedSide=True
-        else: #not on right edge
-            if not atLeastOneOccupiedSide and self._sideConnectsToPlayerPlacedTile(tile, 1):
-                atLeastOneOccupiedSide=True
-        
-        if row+1>=len(self.board): #on the bottom edge of the board
-            if self._sideConnectsToEdge(tile, 2): #edge connects back to another station w/o leaving tile
-                return False
-            else:
-                atLeastOneOccupiedSide=True
-        else: #not on bottom edge
-            if not atLeastOneOccupiedSide and self._sideConnectsToPlayerPlacedTile(tile, 2):
-                atLeastOneOccupiedSide=True
-        
-        if column-1<0: #on the top edge of the board
-            if self._sideConnectsToEdge(tile, 3): #edge connects back to another station w/o leaving tile
-                return False
-            else:
-                atLeastOneOccupiedSide=True
-        else: #not on top edge
-            if not atLeastOneOccupiedSide and self._sideConnectsToPlayerPlacedTile(tile, 3):
+            elif isinstance(neighbor, OuterStations) or isinstance(neighbor, ConnectedTile): #this tile is connected to either an edge or a player-placed tile
                 atLeastOneOccupiedSide=True
         
         return atLeastOneOccupiedSide

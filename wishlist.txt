@@ -1,4 +1,3 @@
 This file contains records of the things that are working but could be improved.
 
 "Assignee"  Task
-Sol         clean up Board.validPlacement(...)

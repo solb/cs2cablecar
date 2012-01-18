@@ -1,3 +1,4 @@
 This file contains records of the things that are working but could be improved.
 
 "Assignee"  Task
+Us          Beef up the AI so that we actually win reliably!

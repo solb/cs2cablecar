@@ -45,14 +45,6 @@ def init(playerId, numPlayers, startTile, logger, arg = "None"):
     # This is how you print out your data to standard output (not logged)
     print(playerData)
     
-    #These lines illustrate how to find out the coordinates where a specified track ends, and may be safely removed:
-    #playerData.board.addTile(TileH(0), 4, 0)
-    #playerData.board.addTile(TileC(0), 5, 0)
-    #playerData.board.addTile(TileJ(1), 5, 1)
-    #playerData.board.addTile(TileA(3), 6, 0)
-    #playerData.board.addTile(TileG(2), 6, 1)
-    #print(playerData.board.lookupTileCoordinates(playerData.board.followRoute(28)[0])) #where does track 28 end?
-    
     return playerData
 
 def move(playerData):  
@@ -69,16 +61,29 @@ def move(playerData):
     """
     
     playerData.logger.write("move() called")
-
-    # Populate these values
-    playerId = None # 0-5
-    position = None # (row, column)
-    tileName = None # a-j
-    rotation = None # 0-3 (0 = north, 1 = east, 2 = south, 3 = west)
     
+    for highScoringTrack in playerData.ourRemainingStations: #attempt 1: put it where we want
+        row, column=playerData.board.lookupTileCoordinates(playerData.board.followRoute(stationId(highScoringTrack))[0]) #where could we place the tile to extend this route?
+        for rotation in range(4):
+            tile=playerData.makeTile(rotation=rotation) #make one of whatever type of tile we've been given
+            if playerData.board.validPlacement(tile, row, column):
+                playerData.board.addTile(tile, row, column)
+                return playerData, PlayerMove(playerData.playerId, (row, column), playerData.currentTile, rotation)
     
+    unoccupiedCoordinates=[]
+    for row in range(8): #where are the vacancies on the board?
+        for column in range(8):
+            if not playerData.board.lookupTile(row, column): #there's nothing here
+                unoccupiedCoordinates.append((row, column))
     
-    return playerData, PlayerMove(playerId, position, tileName, rotation)
+    for location in unoccupiedCoordinates: #attempt 2: put wherever it's valid
+        for rotation in range(4):
+            tile=playerData.makeTile(rotation=rotation)
+            if playerData.board.validPlacement(tile, location[0], location[1]):
+                playerData.board.addTile(tile, location[0], location[1])
+                return playerData, PlayerMove(playerData.playerId, (location[0], location[1]), playerData.currentTile, rotation)
+    
+    return playerData, PlayerMove(playerData.playerId, (unoccupiedCoordinates[0][0], unoccupiedCoordinates[0][1]), playerData.currentTile, rotation) #final attempt: stick it somewhere it shouldn't be
 
 def move_info(playerData, playerMove, nextTile):
     """The engine calls this function to notify you of:
@@ -102,11 +107,12 @@ def move_info(playerData, playerMove, nextTile):
     
     playerData.logger.write("move_info() called")
     
-    if playerMove: #we're looking at someone else's move
-        playerData.board.addTile(playerData.makeTile(playerMove.tileName, playerMove.rotation), playerMove.position[0], playerMove.position[1]) #keep track of this tile's location
-    else: #we're up!
+    if not playerMove: #here's our next tile
         playerData.currentTile=nextTile
-        playerData.updateOurStations() #keep tabs on the tracks on which we're working
+    else: #we're looking at someone else's move
+        playerData.board.addTile(playerData.makeTile(playerMove.tileName, playerMove.rotation), playerMove.position[0], playerMove.position[1]) #keep track of this tile's location
+        if playerMove.playerId==(playerData.playerId-1)%playerData.numPlayers: #we'll be up next
+            playerData.updateOurStations()
     
     return playerData
 

@@ -83,6 +83,7 @@ def move(playerData):
                 playerData.board.addTile(tile, location[0], location[1])
                 return playerData, PlayerMove(playerData.playerId, (location[0], location[1]), playerData.currentTile, rotation)
     
+    playerData.board.addTile(playerData.makeTile(), unoccupiedCoordinates[0][0], unoccupiedCoordinates[0][1], rotation)
     return playerData, PlayerMove(playerData.playerId, (unoccupiedCoordinates[0][0], unoccupiedCoordinates[0][1]), playerData.currentTile, rotation) #final attempt: stick it somewhere it shouldn't be
 
 def move_info(playerData, playerMove, nextTile):

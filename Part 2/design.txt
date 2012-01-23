@@ -1,19 +1,47 @@
 Team name: GroupA
-
 Author: Solomon Boucher (slb1566@rit.edu)
 Author: Brad Bensch (brb7020@rit.edu)
 
+Humble Beginnings
+=================
 Sol's design was chosen to be the base of the remainder of the project due to neatness & organization
 
-Added lookupTileCoordinates to be able to locate a specific tile on the board, returning its current coordinates.
+The Data Structures
+===================
+    File Structure
+    --------------
+    - board.py - Stores the board state (see: Storing the Board, Changes to the Board, & board.html)
+    - playerData.py - Stores the AI information (see: Storing the AI's Crap & playerData.html)
+    - __init__.py - The init(...), move_info(...), and move(...) implmentations
+    
+    Storing the Board
+    -----------------
+    The board storage system consists of multiple encapsulated levels of objects.  At the highest level is a Board object containing a two-dimensional list of Tiles--representing the playing board--and a Cars object--representing the cable cars and any tracks that reach the edge of the board.  The Board class also provides an addTile(...) method that takes a ConnectedTile object, a row, and a column and places this new tile on the playing board at the specified coordinates.  A lookupTile(...) method taking a row and column facilitates random access to the contained Tile objects, while a lookupTrack(...) method taking a car number facilitates sequential access to those Tiles that currently form either complete or incomplete tracks.  The routeIsComplete(...) and calculateTrackScore(...) methods' functions are intuitively obvious, and are implemented in the Tile class and its descendants using recursion and polymorphism.
+    At the next level down, a Cars object contains four OuterStations objects, each of which represents eight of the cable car stations.  The former object handles the conversion from the size-32 numbering system used by the game engine to the size-8 numbering systems used at all lower levels, while the latter provides facilities for adding tiles that are on the board's border and for retrieving such tiles thereafter.
+    Another class, Tile, serves as an abstract for OuterStations, PowerStation, and ConnectedTile.  Any Tile stores a type and a rotation, and provides methods for retrieving these quantities.  A PowerStation simply defines these values in its constructor, while ConnectedTile adds borderingTiles--a list of length 4 storing the tile's neighbors--and internalConnections--a list of length 8 storing the tile's particular internal linkages.  It also provides methods to add neighboring tiles and look up one neighbor using another as a key.  Underlying code handles rotating a template to obtain internalConnections in increments of 90 degrees.
+    The classes TileA, TileB, TileC, TileD, TileE, TileF, TileG, TileH, TileI, and TileJ all extend ConnetedTile and define their own distinct values for type and internalConnections.  These classes' constructors each accept a rotation to customize each instance's internalConnections list.
+    In order to add an element to the board, the player code provides its instance of the Board class with a new instance of one of ConnectedTile's child classes.  The Board then adds a tile to its two-dimensional array and calls an internal method four times, once for each of the four adjacent tiles that may or may not be present; each time, this method does either one of the following:  If the neighbor would be off the board, it uses the Cars object's layTrack(...) method to lookup the appropriate OuterStations object and mutually link an index of its list with the new ConnectedTile.  Otherwise, the newly-added ConnectedTile's addBorderingTile(...) method is invoked to either link it bidirectionally with a neighboring ConnectedTile or unidirectionally to a PowerStation.
+    
+    Changes to Board in this Revision
+    ---------------------------------
+    A validPlacement(...) method was implemented in the Board class in order to allow move validation; this necessitated the modification of the addTile(...) method and its helpers in order to support temporarily attaching a tile to the board for the purpose of checking its new neighbors.  Since addTile(...) permits any tile placement that doesn't explicitly overwrite an existing tile, it is expected that one will always perform a test call to validPlacement(...) before committing a given move to the game state.  Implementing the methods in this way facilitates handling of the situation where there are no strictly valid moves left, and we must "make it fit."
+    A followRoute(...) method was implemented in Board to allow obtaining the tile at the extreme end of a given route.  A lookupTileCoordinates(...) method was also added to the Board class, allowing one to obtain the current coordinates of a tile on the board.  Together, these methods may be used to find the coordinates at which a tile should be placed in order to extend a given track by passing the results of a call to the former method into a call the latter.
+    
+    Storing the AI's Crap
+    ---------------------
+    A design decision was made to separate the AI's state information from our memory of the board; as such, all structures related to the latter were spun off into the board.py file and documented separately in board.html.  That data relating to the AI's decision-making, however, is stored directly in the playerData.py file, documented thoroughly in playerData.html.  The data stored here is likely to change a lot in the very near future, but currently there is a list named ourRemainingStations that stores both the IDs and the scores of those of our stations that have not yet been completed.  The global functions stationId(...) and stationScore(...) are used to determine these respective facts about each of the stations in this list.  The list is updated just before each of our turns by a call to the updateOurStations(...) method.
+    Although the trackOwner(...) method is not used in the current implementation, it was added in order to later facilitate taking out our anger on a player whom we don't like.
 
-Added a followRoute function which finds the end of a route.
-addTile's makePermanent links a tile to the board without permanently placing it on the board.
-validPlacement is a function that takes the tile and location and checks if the movement is valid.
+The AI
+======
+    File Structure
+    --------------
+    __init__.py - The AI (no pydoc available; sorry)
+    
+    What it Does (or "Making Our Move")
+    -----------------------------------
+    The move_info(...) function's activities are currently confined to remembering our current tile, keeping track of our opponents' moves, and refreshing our memory of ourRemainingStations.  In order to make a move, our move(...) function attempts to build onto our current longest incomplete track in each rotation, then tries all our other incomplete tracks in descending order by their scores.  If that is unsuccessful, we place the tile in the first valid location.  If all else fails, we place it in the first unoccupied location.
 
-trackOwner was added to playerData to keep track of who owns which tracks, not currently used; implemented for later strategy.
-updateOurStations is a list that stores our stations that are not complete and what their scores are; is updated during move info right before our turn.
-
+Testing
+=======
 Tested both randomly generated tiles with no errors and begin/end with invalid tiles. No errors occurred.
-
-#submission as part2.zip from one member

@@ -1,0 +1,760 @@
+2012-01-23 10:01:08.155000: ENGINE starting
+2012-01-23 10:01:08.163000: ENGINE loaded player module: BadComputer as player 0
+2012-01-23 10:01:08.166000: ENGINE loaded player module: groupPlayer as player 1
+2012-01-23 10:01:08.166000: ENGINE initializing
+2012-01-23 10:01:08.698000: ENGINE calling init() for player 0
+2012-01-23 10:01:08.699000: ENGINE calling init() for player 1
+2012-01-23 10:01:08.700000: Player 1 starting up
+2012-01-23 10:01:08.700000: ENGINE initializing UI
+2012-01-23 10:01:09.167000: ENGINE processing move # 1
+2012-01-23 10:01:09.167000: ENGINE getting next move from player 0
+2012-01-23 10:01:09.169000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (0, 1)
+	tileName: d
+	rotation: 2
+2012-01-23 10:01:09.169000: ENGINE has validated player 0's move
+2012-01-23 10:01:09.169000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:09.169000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:09.169000: move_info() called
+2012-01-23 10:01:09.169000: ENGINE finished with next move
+2012-01-23 10:01:09.226000: ENGINE processing move # 2
+2012-01-23 10:01:09.227000: ENGINE getting next move from player 1
+2012-01-23 10:01:09.227000: move() called
+2012-01-23 10:01:09.228000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (0, 0)
+	tileName: j
+	rotation: 1
+2012-01-23 10:01:09.228000: ENGINE has validated player 1's move
+2012-01-23 10:01:09.228000: ENGINE notifying player 0 of last move by player 1
+2012-01-23 10:01:09.228000: ENGINE notifying player 1 of own next move info
+2012-01-23 10:01:09.228000: move_info() called
+2012-01-23 10:01:09.228000: ENGINE finished with next move
+2012-01-23 10:01:09.284000: ENGINE processing move # 3
+2012-01-23 10:01:09.284000: ENGINE getting next move from player 0
+2012-01-23 10:01:09.286000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (6, 7)
+	tileName: b
+	rotation: 2
+2012-01-23 10:01:09.286000: ENGINE has validated player 0's move
+2012-01-23 10:01:09.286000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:09.286000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:09.286000: move_info() called
+2012-01-23 10:01:09.286000: ENGINE finished with next move
+2012-01-23 10:01:09.333000: ENGINE processing move # 4
+2012-01-23 10:01:09.333000: ENGINE getting next move from player 1
+2012-01-23 10:01:09.333000: move() called
+2012-01-23 10:01:09.334000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (1, 0)
+	tileName: h
+	rotation: 0
+2012-01-23 10:01:09.334000: ENGINE has validated player 1's move
+2012-01-23 10:01:09.334000: ENGINE notifying player 0 of last move by player 1
+2012-01-23 10:01:09.334000: ENGINE notifying player 1 of own next move info
+2012-01-23 10:01:09.334000: move_info() called
+2012-01-23 10:01:09.334000: ENGINE finished with next move
+2012-01-23 10:01:09.382000: ENGINE processing move # 5
+2012-01-23 10:01:09.382000: ENGINE getting next move from player 0
+2012-01-23 10:01:09.384000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (7, 4)
+	tileName: e
+	rotation: 3
+2012-01-23 10:01:09.384000: ENGINE has validated player 0's move
+2012-01-23 10:01:09.384000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:09.384000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:09.384000: move_info() called
+2012-01-23 10:01:09.384000: ENGINE finished with next move
+2012-01-23 10:01:09.432000: ENGINE processing move # 6
+2012-01-23 10:01:09.432000: ENGINE getting next move from player 1
+2012-01-23 10:01:09.433000: move() called
+2012-01-23 10:01:09.434000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (7, 5)
+	tileName: d
+	rotation: 0
+2012-01-23 10:01:09.434000: ENGINE has validated player 1's move
+2012-01-23 10:01:09.434000: ENGINE notifying player 0 of last move by player 1
+2012-01-23 10:01:09.434000: ENGINE notifying player 1 of own next move info
+2012-01-23 10:01:09.434000: move_info() called
+2012-01-23 10:01:09.434000: ENGINE finished with next move
+2012-01-23 10:01:09.482000: ENGINE processing move # 7
+2012-01-23 10:01:09.482000: ENGINE getting next move from player 0
+2012-01-23 10:01:09.484000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (0, 5)
+	tileName: b
+	rotation: 2
+2012-01-23 10:01:09.484000: ENGINE has validated player 0's move
+2012-01-23 10:01:09.484000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:09.484000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:09.484000: move_info() called
+2012-01-23 10:01:09.484000: ENGINE finished with next move
+2012-01-23 10:01:09.532000: ENGINE processing move # 8
+2012-01-23 10:01:09.532000: ENGINE getting next move from player 1
+2012-01-23 10:01:09.533000: move() called
+2012-01-23 10:01:09.534000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (1, 5)
+	tileName: a
+	rotation: 0
+2012-01-23 10:01:09.534000: ENGINE has validated player 1's move
+2012-01-23 10:01:09.534000: ENGINE notifying player 0 of last move by player 1
+2012-01-23 10:01:09.534000: ENGINE notifying player 1 of own next move info
+2012-01-23 10:01:09.534000: move_info() called
+2012-01-23 10:01:09.534000: ENGINE finished with next move
+2012-01-23 10:01:09.582000: ENGINE processing move # 9
+2012-01-23 10:01:09.582000: ENGINE getting next move from player 0
+2012-01-23 10:01:09.584000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (1, 7)
+	tileName: d
+	rotation: 3
+2012-01-23 10:01:09.585000: ENGINE has validated player 0's move
+2012-01-23 10:01:09.585000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:09.585000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:09.585000: move_info() called
+2012-01-23 10:01:09.585000: ENGINE finished with next move
+2012-01-23 10:01:09.632000: ENGINE processing move # 10
+2012-01-23 10:01:09.632000: ENGINE getting next move from player 1
+2012-01-23 10:01:09.633000: move() called
+2012-01-23 10:01:09.634000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (0, 4)
+	tileName: b
+	rotation: 0
+2012-01-23 10:01:09.634000: ENGINE has validated player 1's move
+2012-01-23 10:01:09.634000: ENGINE notifying player 0 of last move by player 1
+2012-01-23 10:01:09.634000: ENGINE notifying player 1 of own next move info
+2012-01-23 10:01:09.634000: move_info() called
+2012-01-23 10:01:09.634000: ENGINE finished with next move
+2012-01-23 10:01:09.682000: ENGINE processing move # 11
+2012-01-23 10:01:09.682000: ENGINE getting next move from player 0
+2012-01-23 10:01:09.684000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (3, 7)
+	tileName: b
+	rotation: 2
+2012-01-23 10:01:09.684000: ENGINE has validated player 0's move
+2012-01-23 10:01:09.684000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:09.684000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:09.684000: move_info() called
+2012-01-23 10:01:09.684000: ENGINE finished with next move
+2012-01-23 10:01:09.732000: ENGINE processing move # 12
+2012-01-23 10:01:09.732000: ENGINE getting next move from player 1
+2012-01-23 10:01:09.733000: move() called
+2012-01-23 10:01:09.734000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (0, 3)
+	tileName: b
+	rotation: 0
+2012-01-23 10:01:09.734000: ENGINE has validated player 1's move
+2012-01-23 10:01:09.734000: ENGINE notifying player 0 of last move by player 1
+2012-01-23 10:01:09.734000: ENGINE notifying player 1 of own next move info
+2012-01-23 10:01:09.734000: move_info() called
+2012-01-23 10:01:09.734000: ENGINE finished with next move
+2012-01-23 10:01:09.782000: ENGINE processing move # 13
+2012-01-23 10:01:09.782000: ENGINE getting next move from player 0
+2012-01-23 10:01:09.784000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (2, 7)
+	tileName: b
+	rotation: 0
+2012-01-23 10:01:09.784000: ENGINE has validated player 0's move
+2012-01-23 10:01:09.784000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:09.784000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:09.784000: move_info() called
+2012-01-23 10:01:09.784000: ENGINE finished with next move
+2012-01-23 10:01:09.832000: ENGINE processing move # 14
+2012-01-23 10:01:09.832000: ENGINE getting next move from player 1
+2012-01-23 10:01:09.834000: move() called
+2012-01-23 10:01:09.834000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (0, 2)
+	tileName: e
+	rotation: 1
+2012-01-23 10:01:09.835000: ENGINE has validated player 1's move
+2012-01-23 10:01:09.835000: ENGINE notifying player 0 of last move by player 1
+2012-01-23 10:01:09.835000: ENGINE notifying player 1 of own next move info
+2012-01-23 10:01:09.835000: move_info() called
+2012-01-23 10:01:09.835000: ENGINE finished with next move
+2012-01-23 10:01:09.882000: ENGINE processing move # 15
+2012-01-23 10:01:09.882000: ENGINE getting next move from player 0
+2012-01-23 10:01:09.884000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (0, 7)
+	tileName: b
+	rotation: 1
+2012-01-23 10:01:09.884000: ENGINE has validated player 0's move
+2012-01-23 10:01:09.884000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:09.884000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:09.884000: move_info() called
+2012-01-23 10:01:09.884000: ENGINE finished with next move
+2012-01-23 10:01:09.932000: ENGINE processing move # 16
+2012-01-23 10:01:09.932000: ENGINE getting next move from player 1
+2012-01-23 10:01:09.933000: move() called
+2012-01-23 10:01:09.934000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (1, 3)
+	tileName: f
+	rotation: 0
+2012-01-23 10:01:09.934000: ENGINE has validated player 1's move
+2012-01-23 10:01:09.934000: ENGINE notifying player 0 of last move by player 1
+2012-01-23 10:01:09.934000: ENGINE notifying player 1 of own next move info
+2012-01-23 10:01:09.934000: move_info() called
+2012-01-23 10:01:09.934000: ENGINE finished with next move
+2012-01-23 10:01:09.983000: ENGINE processing move # 17
+2012-01-23 10:01:09.983000: ENGINE getting next move from player 0
+2012-01-23 10:01:09.985000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (2, 6)
+	tileName: e
+	rotation: 3
+2012-01-23 10:01:09.985000: ENGINE has validated player 0's move
+2012-01-23 10:01:09.985000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:09.985000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:09.985000: move_info() called
+2012-01-23 10:01:09.985000: ENGINE finished with next move
+2012-01-23 10:01:10.032000: ENGINE processing move # 18
+2012-01-23 10:01:10.032000: ENGINE getting next move from player 1
+2012-01-23 10:01:10.033000: move() called
+2012-01-23 10:01:10.034000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (2, 3)
+	tileName: c
+	rotation: 0
+2012-01-23 10:01:10.034000: ENGINE has validated player 1's move
+2012-01-23 10:01:10.034000: ENGINE notifying player 0 of last move by player 1
+2012-01-23 10:01:10.034000: ENGINE notifying player 1 of own next move info
+2012-01-23 10:01:10.034000: move_info() called
+2012-01-23 10:01:10.034000: ENGINE finished with next move
+2012-01-23 10:01:10.082000: ENGINE processing move # 19
+2012-01-23 10:01:10.082000: ENGINE getting next move from player 0
+2012-01-23 10:01:10.084000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (7, 6)
+	tileName: h
+	rotation: 0
+2012-01-23 10:01:10.084000: ENGINE has validated player 0's move
+2012-01-23 10:01:10.084000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:10.084000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:10.084000: move_info() called
+2012-01-23 10:01:10.085000: ENGINE finished with next move
+2012-01-23 10:01:10.132000: ENGINE processing move # 20
+2012-01-23 10:01:10.133000: ENGINE getting next move from player 1
+2012-01-23 10:01:10.134000: move() called
+2012-01-23 10:01:10.134000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (2, 4)
+	tileName: f
+	rotation: 0
+2012-01-23 10:01:10.134000: ENGINE has validated player 1's move
+2012-01-23 10:01:10.134000: ENGINE notifying player 0 of last move by player 1
+2012-01-23 10:01:10.134000: ENGINE notifying player 1 of own next move info
+2012-01-23 10:01:10.134000: move_info() called
+2012-01-23 10:01:10.134000: ENGINE finished with next move
+2012-01-23 10:01:10.183000: ENGINE processing move # 21
+2012-01-23 10:01:10.183000: ENGINE getting next move from player 0
+2012-01-23 10:01:10.185000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (6, 0)
+	tileName: e
+	rotation: 1
+2012-01-23 10:01:10.185000: ENGINE has validated player 0's move
+2012-01-23 10:01:10.185000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:10.185000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:10.185000: move_info() called
+2012-01-23 10:01:10.185000: ENGINE finished with next move
+2012-01-23 10:01:10.233000: ENGINE processing move # 22
+2012-01-23 10:01:10.233000: ENGINE getting next move from player 1
+2012-01-23 10:01:10.234000: move() called
+2012-01-23 10:01:10.235000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (2, 5)
+	tileName: d
+	rotation: 0
+2012-01-23 10:01:10.235000: ENGINE has validated player 1's move
+2012-01-23 10:01:10.235000: ENGINE notifying player 0 of last move by player 1
+2012-01-23 10:01:10.235000: ENGINE notifying player 1 of own next move info
+2012-01-23 10:01:10.235000: move_info() called
+2012-01-23 10:01:10.235000: ENGINE finished with next move
+2012-01-23 10:01:10.282000: ENGINE processing move # 23
+2012-01-23 10:01:10.282000: ENGINE getting next move from player 0
+2012-01-23 10:01:10.284000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (7, 1)
+	tileName: c
+	rotation: 1
+2012-01-23 10:01:10.284000: ENGINE has validated player 0's move
+2012-01-23 10:01:10.284000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:10.284000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:10.284000: move_info() called
+2012-01-23 10:01:10.284000: ENGINE finished with next move
+2012-01-23 10:01:10.332000: ENGINE processing move # 24
+2012-01-23 10:01:10.332000: ENGINE getting next move from player 1
+2012-01-23 10:01:10.333000: move() called
+2012-01-23 10:01:10.334000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (3, 5)
+	tileName: c
+	rotation: 0
+2012-01-23 10:01:10.334000: ENGINE has validated player 1's move
+2012-01-23 10:01:10.334000: ENGINE notifying player 0 of last move by player 1
+2012-01-23 10:01:10.334000: ENGINE notifying player 1 of own next move info
+2012-01-23 10:01:10.334000: move_info() called
+2012-01-23 10:01:10.334000: ENGINE finished with next move
+2012-01-23 10:01:10.382000: ENGINE processing move # 25
+2012-01-23 10:01:10.382000: ENGINE getting next move from player 0
+2012-01-23 10:01:10.384000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (4, 7)
+	tileName: e
+	rotation: 2
+2012-01-23 10:01:10.384000: ENGINE has validated player 0's move
+2012-01-23 10:01:10.384000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:10.384000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:10.384000: move_info() called
+2012-01-23 10:01:10.384000: ENGINE finished with next move
+2012-01-23 10:01:10.432000: ENGINE processing move # 26
+2012-01-23 10:01:10.432000: ENGINE getting next move from player 1
+2012-01-23 10:01:10.433000: move() called
+2012-01-23 10:01:10.434000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (3, 6)
+	tileName: a
+	rotation: 0
+2012-01-23 10:01:10.435000: ENGINE has validated player 1's move
+2012-01-23 10:01:10.435000: ENGINE notifying player 0 of last move by player 1
+2012-01-23 10:01:10.435000: ENGINE notifying player 1 of own next move info
+2012-01-23 10:01:10.435000: move_info() called
+2012-01-23 10:01:10.435000: ENGINE finished with next move
+2012-01-23 10:01:10.482000: ENGINE processing move # 27
+2012-01-23 10:01:10.482000: ENGINE getting next move from player 0
+2012-01-23 10:01:10.484000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (4, 6)
+	tileName: a
+	rotation: 1
+2012-01-23 10:01:10.484000: ENGINE has validated player 0's move
+2012-01-23 10:01:10.484000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:10.484000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:10.484000: move_info() called
+2012-01-23 10:01:10.484000: ENGINE finished with next move
+2012-01-23 10:01:10.532000: ENGINE processing move # 28
+2012-01-23 10:01:10.532000: ENGINE getting next move from player 1
+2012-01-23 10:01:10.533000: move() called
+2012-01-23 10:01:10.534000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (1, 4)
+	tileName: d
+	rotation: 0
+2012-01-23 10:01:10.534000: ENGINE has validated player 1's move
+2012-01-23 10:01:10.534000: ENGINE notifying player 0 of last move by player 1
+2012-01-23 10:01:10.534000: ENGINE notifying player 1 of own next move info
+2012-01-23 10:01:10.534000: move_info() called
+2012-01-23 10:01:10.534000: ENGINE finished with next move
+2012-01-23 10:01:10.582000: ENGINE processing move # 29
+2012-01-23 10:01:10.582000: ENGINE getting next move from player 0
+2012-01-23 10:01:10.584000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (0, 6)
+	tileName: d
+	rotation: 2
+2012-01-23 10:01:10.584000: ENGINE has validated player 0's move
+2012-01-23 10:01:10.584000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:10.584000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:10.584000: move_info() called
+2012-01-23 10:01:10.584000: ENGINE finished with next move
+2012-01-23 10:01:10.632000: ENGINE processing move # 30
+2012-01-23 10:01:10.632000: ENGINE getting next move from player 1
+2012-01-23 10:01:10.633000: move() called
+2012-01-23 10:01:10.634000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (7, 7)
+	tileName: b
+	rotation: 0
+2012-01-23 10:01:10.634000: ENGINE has validated player 1's move
+2012-01-23 10:01:10.634000: ENGINE notifying player 0 of last move by player 1
+2012-01-23 10:01:10.634000: ENGINE notifying player 1 of own next move info
+2012-01-23 10:01:10.634000: move_info() called
+2012-01-23 10:01:10.634000: ENGINE finished with next move
+2012-01-23 10:01:10.682000: ENGINE processing move # 31
+2012-01-23 10:01:10.682000: ENGINE getting next move from player 0
+2012-01-23 10:01:10.684000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (5, 6)
+	tileName: b
+	rotation: 1
+2012-01-23 10:01:10.684000: ENGINE has validated player 0's move
+2012-01-23 10:01:10.684000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:10.684000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:10.684000: move_info() called
+2012-01-23 10:01:10.684000: ENGINE finished with next move
+2012-01-23 10:01:10.732000: ENGINE processing move # 32
+2012-01-23 10:01:10.732000: ENGINE getting next move from player 1
+2012-01-23 10:01:10.733000: move() called
+2012-01-23 10:01:10.734000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (6, 6)
+	tileName: b
+	rotation: 0
+2012-01-23 10:01:10.734000: ENGINE has validated player 1's move
+2012-01-23 10:01:10.734000: ENGINE notifying player 0 of last move by player 1
+2012-01-23 10:01:10.734000: ENGINE notifying player 1 of own next move info
+2012-01-23 10:01:10.734000: move_info() called
+2012-01-23 10:01:10.734000: ENGINE finished with next move
+2012-01-23 10:01:10.783000: ENGINE processing move # 33
+2012-01-23 10:01:10.783000: ENGINE getting next move from player 0
+2012-01-23 10:01:10.785000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (4, 0)
+	tileName: c
+	rotation: 3
+2012-01-23 10:01:10.785000: ENGINE has validated player 0's move
+2012-01-23 10:01:10.785000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:10.785000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:10.785000: move_info() called
+2012-01-23 10:01:10.785000: ENGINE finished with next move
+2012-01-23 10:01:10.832000: ENGINE processing move # 34
+2012-01-23 10:01:10.832000: ENGINE getting next move from player 1
+2012-01-23 10:01:10.833000: move() called
+2012-01-23 10:01:10.834000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (5, 5)
+	tileName: e
+	rotation: 0
+2012-01-23 10:01:10.834000: ENGINE has validated player 1's move
+2012-01-23 10:01:10.834000: ENGINE notifying player 0 of last move by player 1
+2012-01-23 10:01:10.834000: ENGINE notifying player 1 of own next move info
+2012-01-23 10:01:10.834000: move_info() called
+2012-01-23 10:01:10.835000: ENGINE finished with next move
+2012-01-23 10:01:10.882000: ENGINE processing move # 35
+2012-01-23 10:01:10.882000: ENGINE getting next move from player 0
+2012-01-23 10:01:10.884000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (4, 5)
+	tileName: c
+	rotation: 0
+2012-01-23 10:01:10.884000: ENGINE has validated player 0's move
+2012-01-23 10:01:10.884000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:10.884000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:10.884000: move_info() called
+2012-01-23 10:01:10.884000: ENGINE finished with next move
+2012-01-23 10:01:10.933000: ENGINE processing move # 36
+2012-01-23 10:01:10.933000: ENGINE getting next move from player 1
+2012-01-23 10:01:10.934000: move() called
+2012-01-23 10:01:10.934000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (5, 7)
+	tileName: d
+	rotation: 0
+2012-01-23 10:01:10.935000: ENGINE has validated player 1's move
+2012-01-23 10:01:10.935000: ENGINE notifying player 0 of last move by player 1
+2012-01-23 10:01:10.935000: ENGINE notifying player 1 of own next move info
+2012-01-23 10:01:10.935000: move_info() called
+2012-01-23 10:01:10.935000: ENGINE finished with next move
+2012-01-23 10:01:10.984000: ENGINE processing move # 37
+2012-01-23 10:01:10.984000: ENGINE getting next move from player 0
+2012-01-23 10:01:10.985000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (5, 0)
+	tileName: j
+	rotation: 1
+2012-01-23 10:01:10.985000: ENGINE has validated player 0's move
+2012-01-23 10:01:10.985000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:10.985000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:10.985000: move_info() called
+2012-01-23 10:01:10.986000: ENGINE finished with next move
+2012-01-23 10:01:11.032000: ENGINE processing move # 38
+2012-01-23 10:01:11.032000: ENGINE getting next move from player 1
+2012-01-23 10:01:11.033000: move() called
+2012-01-23 10:01:11.037000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (1, 1)
+	tileName: g
+	rotation: 0
+2012-01-23 10:01:11.037000: ENGINE has validated player 1's move
+2012-01-23 10:01:11.037000: ENGINE notifying player 0 of last move by player 1
+2012-01-23 10:01:11.037000: ENGINE notifying player 1 of own next move info
+2012-01-23 10:01:11.037000: move_info() called
+2012-01-23 10:01:11.037000: ENGINE finished with next move
+2012-01-23 10:01:11.084000: ENGINE processing move # 39
+2012-01-23 10:01:11.084000: ENGINE getting next move from player 0
+2012-01-23 10:01:11.085000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (2, 2)
+	tileName: i
+	rotation: 0
+2012-01-23 10:01:11.085000: ENGINE has validated player 0's move
+2012-01-23 10:01:11.085000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:11.085000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:11.085000: move_info() called
+2012-01-23 10:01:11.085000: ENGINE finished with next move
+2012-01-23 10:01:11.132000: ENGINE processing move # 40
+2012-01-23 10:01:11.132000: ENGINE getting next move from player 1
+2012-01-23 10:01:11.133000: move() called
+2012-01-23 10:01:11.134000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (3, 0)
+	tileName: c
+	rotation: 1
+2012-01-23 10:01:11.135000: ENGINE has validated player 1's move
+2012-01-23 10:01:11.135000: ENGINE notifying player 0 of last move by player 1
+2012-01-23 10:01:11.135000: ENGINE notifying player 1 of own next move info
+2012-01-23 10:01:11.135000: move_info() called
+2012-01-23 10:01:11.135000: ENGINE finished with next move
+2012-01-23 10:01:11.182000: ENGINE processing move # 41
+2012-01-23 10:01:11.182000: ENGINE getting next move from player 0
+2012-01-23 10:01:11.184000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (2, 1)
+	tileName: j
+	rotation: 0
+2012-01-23 10:01:11.184000: ENGINE has validated player 0's move
+2012-01-23 10:01:11.184000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:11.184000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:11.184000: move_info() called
+2012-01-23 10:01:11.184000: ENGINE finished with next move
+2012-01-23 10:01:11.233000: ENGINE processing move # 42
+2012-01-23 10:01:11.233000: ENGINE getting next move from player 1
+2012-01-23 10:01:11.234000: move() called
+2012-01-23 10:01:11.235000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (7, 2)
+	tileName: f
+	rotation: 0
+2012-01-23 10:01:11.235000: ENGINE has validated player 1's move
+2012-01-23 10:01:11.235000: ENGINE notifying player 0 of last move by player 1
+2012-01-23 10:01:11.235000: ENGINE notifying player 1 of own next move info
+2012-01-23 10:01:11.235000: move_info() called
+2012-01-23 10:01:11.235000: ENGINE finished with next move
+2012-01-23 10:01:11.282000: ENGINE processing move # 43
+2012-01-23 10:01:11.282000: ENGINE getting next move from player 0
+2012-01-23 10:01:11.284000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (7, 0)
+	tileName: j
+	rotation: 0
+2012-01-23 10:01:11.284000: ENGINE has validated player 0's move
+2012-01-23 10:01:11.284000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:11.284000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:11.284000: move_info() called
+2012-01-23 10:01:11.284000: ENGINE finished with next move
+2012-01-23 10:01:11.332000: ENGINE processing move # 44
+2012-01-23 10:01:11.332000: ENGINE getting next move from player 1
+2012-01-23 10:01:11.333000: move() called
+2012-01-23 10:01:11.334000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (7, 3)
+	tileName: c
+	rotation: 0
+2012-01-23 10:01:11.334000: ENGINE has validated player 1's move
+2012-01-23 10:01:11.334000: ENGINE notifying player 0 of last move by player 1
+2012-01-23 10:01:11.334000: ENGINE notifying player 1 of own next move info
+2012-01-23 10:01:11.334000: move_info() called
+2012-01-23 10:01:11.334000: ENGINE finished with next move
+2012-01-23 10:01:11.382000: ENGINE processing move # 45
+2012-01-23 10:01:11.382000: ENGINE getting next move from player 0
+2012-01-23 10:01:11.384000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (6, 5)
+	tileName: e
+	rotation: 2
+2012-01-23 10:01:11.384000: ENGINE has validated player 0's move
+2012-01-23 10:01:11.384000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:11.384000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:11.384000: move_info() called
+2012-01-23 10:01:11.384000: ENGINE finished with next move
+2012-01-23 10:01:11.432000: ENGINE processing move # 46
+2012-01-23 10:01:11.433000: ENGINE getting next move from player 1
+2012-01-23 10:01:11.433000: move() called
+2012-01-23 10:01:11.434000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (6, 2)
+	tileName: e
+	rotation: 0
+2012-01-23 10:01:11.434000: ENGINE has validated player 1's move
+2012-01-23 10:01:11.434000: ENGINE notifying player 0 of last move by player 1
+2012-01-23 10:01:11.434000: ENGINE notifying player 1 of own next move info
+2012-01-23 10:01:11.434000: move_info() called
+2012-01-23 10:01:11.434000: ENGINE finished with next move
+2012-01-23 10:01:11.482000: ENGINE processing move # 47
+2012-01-23 10:01:11.482000: ENGINE getting next move from player 0
+2012-01-23 10:01:11.483000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (6, 3)
+	tileName: f
+	rotation: 0
+2012-01-23 10:01:11.483000: ENGINE has validated player 0's move
+2012-01-23 10:01:11.483000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:11.483000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:11.484000: move_info() called
+2012-01-23 10:01:11.484000: ENGINE finished with next move
+2012-01-23 10:01:11.532000: ENGINE processing move # 48
+2012-01-23 10:01:11.532000: ENGINE getting next move from player 1
+2012-01-23 10:01:11.533000: move() called
+2012-01-23 10:01:11.534000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (6, 1)
+	tileName: i
+	rotation: 0
+2012-01-23 10:01:11.535000: ENGINE has validated player 1's move
+2012-01-23 10:01:11.535000: ENGINE notifying player 0 of last move by player 1
+2012-01-23 10:01:11.535000: ENGINE notifying player 1 of own next move info
+2012-01-23 10:01:11.535000: move_info() called
+2012-01-23 10:01:11.535000: ENGINE finished with next move
+2012-01-23 10:01:11.582000: ENGINE processing move # 49
+2012-01-23 10:01:11.582000: ENGINE getting next move from player 0
+2012-01-23 10:01:11.583000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (3, 1)
+	tileName: c
+	rotation: 3
+2012-01-23 10:01:11.584000: ENGINE has validated player 0's move
+2012-01-23 10:01:11.584000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:11.584000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:11.584000: move_info() called
+2012-01-23 10:01:11.584000: ENGINE finished with next move
+2012-01-23 10:01:11.632000: ENGINE processing move # 50
+2012-01-23 10:01:11.632000: ENGINE getting next move from player 1
+2012-01-23 10:01:11.633000: move() called
+2012-01-23 10:01:11.634000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (5, 1)
+	tileName: b
+	rotation: 0
+2012-01-23 10:01:11.634000: ENGINE has validated player 1's move
+2012-01-23 10:01:11.634000: ENGINE notifying player 0 of last move by player 1
+2012-01-23 10:01:11.634000: ENGINE notifying player 1 of own next move info
+2012-01-23 10:01:11.634000: move_info() called
+2012-01-23 10:01:11.634000: ENGINE finished with next move
+2012-01-23 10:01:11.682000: ENGINE processing move # 51
+2012-01-23 10:01:11.682000: ENGINE getting next move from player 0
+2012-01-23 10:01:11.684000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (4, 1)
+	tileName: b
+	rotation: 2
+2012-01-23 10:01:11.684000: ENGINE has validated player 0's move
+2012-01-23 10:01:11.684000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:11.684000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:11.684000: move_info() called
+2012-01-23 10:01:11.684000: ENGINE finished with next move
+2012-01-23 10:01:11.732000: ENGINE processing move # 52
+2012-01-23 10:01:11.732000: ENGINE getting next move from player 1
+2012-01-23 10:01:11.733000: move() called
+2012-01-23 10:01:11.734000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (2, 0)
+	tileName: b
+	rotation: 0
+2012-01-23 10:01:11.734000: ENGINE has validated player 1's move
+2012-01-23 10:01:11.734000: ENGINE notifying player 0 of last move by player 1
+2012-01-23 10:01:11.734000: ENGINE notifying player 1 of own next move info
+2012-01-23 10:01:11.734000: move_info() called
+2012-01-23 10:01:11.734000: ENGINE finished with next move
+2012-01-23 10:01:11.782000: ENGINE processing move # 53
+2012-01-23 10:01:11.782000: ENGINE getting next move from player 0
+2012-01-23 10:01:11.784000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (5, 4)
+	tileName: g
+	rotation: 0
+2012-01-23 10:01:11.784000: ENGINE has validated player 0's move
+2012-01-23 10:01:11.784000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:11.784000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:11.784000: move_info() called
+2012-01-23 10:01:11.784000: ENGINE finished with next move
+2012-01-23 10:01:11.833000: ENGINE processing move # 54
+2012-01-23 10:01:11.833000: ENGINE getting next move from player 1
+2012-01-23 10:01:11.834000: move() called
+2012-01-23 10:01:11.835000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (1, 2)
+	tileName: b
+	rotation: 0
+2012-01-23 10:01:11.835000: ENGINE has validated player 1's move
+2012-01-23 10:01:11.835000: ENGINE notifying player 0 of last move by player 1
+2012-01-23 10:01:11.835000: ENGINE notifying player 1 of own next move info
+2012-01-23 10:01:11.836000: move_info() called
+2012-01-23 10:01:11.836000: ENGINE finished with next move
+2012-01-23 10:01:11.882000: ENGINE processing move # 55
+2012-01-23 10:01:11.882000: ENGINE getting next move from player 0
+2012-01-23 10:01:11.883000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (4, 2)
+	tileName: j
+	rotation: 0
+2012-01-23 10:01:11.884000: ENGINE has validated player 0's move
+2012-01-23 10:01:11.884000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:11.884000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:11.884000: move_info() called
+2012-01-23 10:01:11.884000: ENGINE finished with next move
+2012-01-23 10:01:11.932000: ENGINE processing move # 56
+2012-01-23 10:01:11.932000: ENGINE getting next move from player 1
+2012-01-23 10:01:11.933000: move() called
+2012-01-23 10:01:11.934000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (1, 6)
+	tileName: a
+	rotation: 0
+2012-01-23 10:01:11.935000: ENGINE has validated player 1's move
+2012-01-23 10:01:11.935000: ENGINE notifying player 0 of last move by player 1
+2012-01-23 10:01:11.935000: ENGINE notifying player 1 of own next move info
+2012-01-23 10:01:11.935000: move_info() called
+2012-01-23 10:01:11.935000: ENGINE finished with next move
+2012-01-23 10:01:11.982000: ENGINE processing move # 57
+2012-01-23 10:01:11.982000: ENGINE getting next move from player 0
+2012-01-23 10:01:11.983000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (5, 3)
+	tileName: d
+	rotation: 1
+2012-01-23 10:01:11.984000: ENGINE has validated player 0's move
+2012-01-23 10:01:11.984000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:11.984000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:11.984000: move_info() called
+2012-01-23 10:01:11.984000: ENGINE finished with next move
+2012-01-23 10:01:12.032000: ENGINE processing move # 58
+2012-01-23 10:01:12.032000: ENGINE getting next move from player 1
+2012-01-23 10:01:12.033000: move() called
+2012-01-23 10:01:12.033000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (3, 2)
+	tileName: b
+	rotation: 0
+2012-01-23 10:01:12.034000: ENGINE has validated player 1's move
+2012-01-23 10:01:12.034000: ENGINE notifying player 0 of last move by player 1
+2012-01-23 10:01:12.034000: ENGINE notifying player 1 of own next move info
+2012-01-23 10:01:12.034000: move_info() called
+2012-01-23 10:01:12.034000: ENGINE finished with next move
+2012-01-23 10:01:12.082000: ENGINE processing move # 59
+2012-01-23 10:01:12.082000: ENGINE getting next move from player 0
+2012-01-23 10:01:12.084000: ENGINE validating player 0 move. PlayerMove:
+	playerId: 0
+	position: (6, 4)
+	tileName: j
+	rotation: 0
+2012-01-23 10:01:12.084000: ENGINE has validated player 0's move
+2012-01-23 10:01:12.084000: ENGINE notifying player 0 of own next move info
+2012-01-23 10:01:12.084000: ENGINE notifying player 1 of last move by player 0
+2012-01-23 10:01:12.084000: move_info() called
+2012-01-23 10:01:12.084000: ENGINE finished with next move
+2012-01-23 10:01:12.132000: ENGINE processing move # 60
+2012-01-23 10:01:12.132000: ENGINE getting next move from player 1
+2012-01-23 10:01:12.133000: move() called
+2012-01-23 10:01:12.134000: ENGINE validating player 1 move. PlayerMove:
+	playerId: 1
+	position: (5, 2)
+	tileName: b
+	rotation: 0
+2012-01-23 10:01:12.135000: ENGINE has validated player 1's move
+2012-01-23 10:01:12.135000: ENGINE detects the game is over.
+2012-01-23 10:01:12.135000: ENGINE Player 0 (BadComputer) has won with a score of 106
+2012-01-23 10:01:12.135000: ENGINE notifying player 1 that game is over
+2012-01-23 10:01:12.135000: ENGINE saving game history to 01-23-12_10-01-12_history.data
+2012-01-23 10:01:12.135000: ENGINE finished with next move
+2012-01-23 10:01:13.673000: ENGINE shutting down

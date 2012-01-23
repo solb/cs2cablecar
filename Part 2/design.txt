@@ -1,0 +1,19 @@
+Team name: GroupA
+
+Author: Solomon Boucher (slb1566@rit.edu)
+Author: Brad Bensch (brb7020@rit.edu)
+
+Sol's design was chosen to be the base of the remainder of the project due to neatness & organization
+
+Added lookupTileCoordinates to be able to locate a specific tile on the board, returning its current coordinates.
+
+Added a followRoute function which finds the end of a route.
+addTile's makePermanent links a tile to the board without permanently placing it on the board.
+validPlacement is a function that takes the tile and location and checks if the movement is valid.
+
+trackOwner was added to playerData to keep track of who owns which tracks, not currently used; implemented for later strategy.
+updateOurStations is a list that stores our stations that are not complete and what their scores are; is updated during move info right before our turn.
+
+Tested both randomly generated tiles with no errors and begin/end with invalid tiles. No errors occurred.
+
+#submission as part2.zip from one member

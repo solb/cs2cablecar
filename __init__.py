@@ -110,6 +110,8 @@ def move_info(playerData, playerMove, nextTile):
     
     if not playerMove: #here's our next tile
         playerData.currentTile=nextTile
+        if playerData.numPlayers==1: #this world is not big enough for more than one of us
+            playerData.updateOurStations()
     else: #we're looking at someone else's move
         playerData.board.addTile(playerData.makeTile(playerMove.tileName, playerMove.rotation), playerMove.position[0], playerMove.position[1]) #keep track of this tile's location
         if playerMove.playerId==(playerData.playerId-1)%playerData.numPlayers: #we'll be up next

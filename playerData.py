@@ -1,11 +1,10 @@
 """
 Cable Car: Student Computer Player
 
-A sample class you may use to hold your state data
+A modified sample class we have chosen to use to hold our state data
 Author: Adam Oest (amo9149@rit.edu)
 Author: Solomon Boucher (slb1566@rit.edu)
 Author: Brad Bensch (brb7020@rit.edu)
-Author: YOUR NAME HERE (your email address)
 """
 from board import *
 

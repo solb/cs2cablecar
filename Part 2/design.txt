@@ -29,7 +29,7 @@ The Data Structures
     
     Storing the AI's Crap
     ---------------------
-    A design decision was made to separate the AI's state information from our memory of the board; as such, all structures related to the latter were spun off into the board.py file and documented separately in board.html.  That data relating to the AI's decision-making, however, is stored directly in the playerData.py file, documented thoroughly in playerData.html.  The data stored here is likely to change a lot in the very near future, but currently there is a list named ourRemainingStations that stores both the IDs and the scores of those of our stations that have not yet been completed.  The global functions stationId(...) and stationScore(...) are used to determine these respective facts about each of the stations in this list.  The list is updated just before each of our turns by a call to the updateOurStations(...) method.
+    A design decision was made to separate the AI's state information from our memory of the board; as such, all structures related to the latter were spun off into the board.py file and documented separately in board.html.  That data relating to the AI's decision-making, however, is stored directly in the playerData.py file, documented thoroughly in playerData.html.  The data stored here is likely to change a lot in the very near future, but currently there is a list named ourRemainingStations that stores both the IDs and the scores of those of our stations that have not yet been completed.  The global functions stationId(...) and stationScore(...) are used to determine these respective facts about each of the stations in this list.  The list is updated just before each of our turns by a call to the updateOurStations() method.
     Although the trackOwner(...) method is not used in the current implementation, it was added in order to later facilitate taking out our anger on a player whom we don't like.
 
 The AI
@@ -44,4 +44,4 @@ The AI
 
 Testing
 =======
-Tested both randomly generated tiles with no errors and begin/end with invalid tiles. No errors occurred.
+First tested games of randomly-generated tiles, then tried setting the first or last to invalid tiles.  During multi-player games, no bugs were detected; however, when we tested running a game as the only player, we found a problem in move_info(...) where we had forgotten to call playerData.updateOurStations(), causing a quite reliable and rather exciting "'NoneType' object is not iterable" error to be thrown in move(...).

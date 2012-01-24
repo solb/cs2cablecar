@@ -4,11 +4,10 @@ from playerData import *
 """
 Cable Car: Student Computer Player
 
-Complete these function stubs in order to implement your AI.
+TODO: Win against BadComputer!
 Author: Adam Oest (amo9149@rit.edu)
 Author: Solomon Boucher (slb1566@rit.edu)
 Author: Brad Bensch (brb7020@rit.edu)
-Author: YOUR NAME HERE (your email address)
 """
 
 def init(playerId, numPlayers, startTile, logger, arg = "None"):
@@ -110,12 +109,11 @@ def move_info(playerData, playerMove, nextTile):
     
     if not playerMove: #here's our next tile
         playerData.currentTile=nextTile
-        if playerData.numPlayers==1: #this world is not big enough for more than one of us
-            playerData.updateOurStations()
     else: #we're looking at someone else's move
         playerData.board.addTile(playerData.makeTile(playerMove.tileName, playerMove.rotation), playerMove.position[0], playerMove.position[1]) #keep track of this tile's location
-        if playerMove.playerId==(playerData.playerId-1)%playerData.numPlayers: #we'll be up next
-            playerData.updateOurStations()
+    
+    if playerData.numPlayers==1 or playerMove.playerId==(playerData.playerId-1)%playerData.numPlayers: #we're either all alone or we'll be up next
+        playerData.updateOurStations() #keep watch on our progress and score
     
     return playerData
 

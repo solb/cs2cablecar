@@ -112,7 +112,7 @@ def move_info(playerData, playerMove, nextTile):
     else: #we're looking at someone else's move
         playerData.board.addTile(playerData.makeTile(playerMove.tileName, playerMove.rotation), playerMove.position[0], playerMove.position[1]) #keep track of this tile's location
     
-    if playerData.numPlayers==1 or playerMove.playerId==(playerData.playerId-1)%playerData.numPlayers: #we're either all alone or we'll be up next
+    if playerData.numPlayers==1 or (playerMove and playerMove.playerId==(playerData.playerId-1)%playerData.numPlayers): #we're either all alone or we'll be up next
         playerData.updateOurStations() #keep watch on our progress and score
     
     return playerData

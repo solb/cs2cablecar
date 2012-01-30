@@ -97,7 +97,7 @@ class PlayerData(object):
         else:
             return TileJ(rotation)
     
-    def trackOwner(self, trackId):
+    def trackOwner(self, trackId): #TODO this is wrong for some numbers of players!
         """
         trackOwner: int -> int
         Returns the player ID of the owner of the track with the specified track ID.

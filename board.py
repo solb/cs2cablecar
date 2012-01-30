@@ -435,14 +435,6 @@ class ConnectedTile(Tile):
         if mutualConnection and isinstance(neighbor, ConnectedTile):
             neighbor.borderingTiles[(side-2)%len(self.borderingTiles)]=self #make the connection mutual
     
-    def neighborOnSide(self, side):
-        """
-        hasNeighborOnSide: int -> Tile
-        Fetches the tile bordering the specified side of this one
-            side - the side of this tile to check (0-3)
-        """
-        return self.borderingTiles[side]
-    
     def _entryPoint(self, source):
         """
         _entryPoint: Tile -> int
@@ -454,11 +446,30 @@ class ConnectedTile(Tile):
     
     def _exitPoint(self, entryPoint):
         """
-        _exitPoint: int -> int
-        Calculates the side from which the streetcar arriving at entryPoint will emerge (0-3).
-            entryPoint - the slot at which this tile has been entered (0-3)
+        _exitPoint: (Tile or int) -> int
+        Calculates the side from which the streetcar arriving from or at entryPoint will emerge (0-3).
+            entryPoint - the neighboring tile or slot at which this tile has been entered (0-3)
         """
-        return self.internalConnections[entryPoint]
+        if isinstance(entryPoint, Tile):
+            return self.internalConnections[self._entryPoint(entryPoint)]
+        else:
+            return self.internalConnections[entryPoint]
+    
+    def _adjacentSide(self, knownSide):
+        """
+        _adjacentSide: int -> int
+        Calculates which side of a bordering tile the specified side of this tile would touch.
+            knownSide - the side of this tile (0-3)
+        """
+        return (knownSide-2)%len(self.borderingTiles)
+    
+    def neighborOnSide(self, side):
+        """
+        hasNeighborOnSide: int -> Tile
+        Fetches the tile bordering the specified side of this one
+            side - the side of this tile to check (0-3)
+        """
+        return self.borderingTiles[side]
     
     def lookupDestination(self, source):
         """
@@ -466,36 +477,41 @@ class ConnectedTile(Tile):
         Determines to which other tile this tile's path will lead if one is to start from specified neighboring tile or side of this tile.
             source - the neighboring tile from where wants to trace the path or side of this tile from where one wants to start (0-3)
         """
-        if isinstance(source, Tile):
-            return self.borderingTiles[self._exitPoint(self._entryPoint(source))]
-        else:
-            return self.borderingTiles[self._exitPoint(source)]
+        return self.neighborOnSide(self._exitPoint(source))
     
     def routeComplete(self, caller):
         """
-        routeComplete: Tile -> bool
+        routeComplete: (Tile or int) -> bool
         This helper method is used to determine whether each Tile represents the end of its track, and if so, it returns whether it represents an ending that leaves the track complete.  This override always recurses to the destination Tile's implementation of this method and returns the result of that call.
-            caller - a reference to the Tile that called this method
+            caller - a reference to the Tile that called this method or the side of this tile from where we entered (0-3)
         """
-        return self.lookupDestination(caller).routeComplete(self)
+        return self.lookupDestination(caller).routeComplete(self._adjacentSide(self._exitPoint(caller)))
     
     def tabulateScore(self, caller, runningScore):
         """
-        tabulateScore: Tile * int -> int
+        tabulateScore: (Tile or int) * int -> int
         This helper method is used to determine each track's total score.  This override always recurses to the destination Tile's implementation of this method, incrementing the score by 1, and returns the result of that call.
-            caller - a reference to the Tile that called this method
+            caller - a reference to the Tile that called this method or the side of this tile from where we entered (0-3)
             runningScore - the running score
         """
-        return self.lookupDestination(caller).tabulateScore(self, runningScore+1)
+        return self.lookupDestination(caller).tabulateScore(self._adjacentSide(self._exitPoint(caller)), runningScore+1)
     
-    def followRoute(self, entryPoint):
+    def followRoute(self, caller):
         """
-        followRoute: int -> tuple(Tile, int)
+        followRoute: (Tile or int) -> tuple(Tile, int)
+        This helper method is used to fetch the tile at the end of a track, as well as the side of this tile on which the rest of the track is.  This override recurses to the destination Tile's implementation and returns that method's result.
+            entryPoint - this side of this tile on which the track enters (0-3)
+        """
+        return self.lookupDestination(caller).followRoute(self._adjacentSide(self._exitPoint(caller)))
+    
+    '''def followRoute(self, entryPoint):
+        """
+        followRoute: (Tile or int) -> tuple(Tile, int)
         This helper method is used to fetch the tile at the end of a track, as well as the side of this tile on which the rest of the track is.  This override recurses to the destination Tile's implementation and returns that method's result.
             entryPoint - this side of this tile on which the track enters (0-3)
         """
         exit=self._exitPoint(entryPoint)
-        return self.neighborOnSide(exit).followRoute((exit-2)%len(self.borderingTiles))
+        return self.neighborOnSide(exit).followRoute((exit-2)%len(self.borderingTiles))'''
     
     def __nonzero__(self):
         """

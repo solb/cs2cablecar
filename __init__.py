@@ -61,13 +61,23 @@ def move(playerData):
     
     playerData.logger.write("move() called")
     
+    print(playerData.ourRemainingStations)
+    print(playerData.currentTile)
     for highScoringTrack in playerData.ourRemainingStations: #attempt 1: put it where we want
-        row, column=playerData.board.lookupTileCoordinates(playerData.board.followRoute(stationId(highScoringTrack))[0]) #where could we place the tile to extend this route?
+        print(highScoringTrack)
+        endOfLine=playerData.board.followRoute(stationId(highScoringTrack))
+        print(endOfLine)
+        row, column=playerData.board.lookupTileCoordinates(endOfLine[0]) #where could we place the tile to extend this route?
+        routeSide=endOfLine[1]
         for rotation in range(4):
             tile=playerData.makeTile(rotation=rotation) #make one of whatever type of tile we've been given
             if playerData.board.validPlacement(tile, row, column):
-                playerData.board.addTile(tile, row, column)
-                return playerData, PlayerMove(playerData.playerId, (row, column), playerData.currentTile, rotation)
+                playerData.board.addTile(tile, row, column, False)
+                print(tile.borderingTiles)
+                print(routeSide)
+                if not tile.routeComplete(tile.neighborOnSide(routeSide)): #we're NOT going to complete this route
+                    playerData.board.addTile(tile, row, column)
+                    return playerData, PlayerMove(playerData.playerId, (row, column), playerData.currentTile, rotation)
     
     unoccupiedCoordinates=[]
     for row in range(8): #where are the vacancies on the board?

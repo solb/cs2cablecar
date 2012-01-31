@@ -8,7 +8,7 @@
 <td valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>board</strong></big></big></font></td
 ><td align=right valign=bottom
-><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/sboucher/Documents/Data Structures for Problem Solving/Workspace/CableCar/Players/slb1566/board.py">/home/sboucher/Documents/Data Structures for Problem Solving/Workspace/CableCar/Players/slb1566/board.py</a></font></td></tr></table>
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/sboucher/Documents/Data Structures for Problem Solving/Workspace/CableCar/Players/GroupA/board.py">/home/sboucher/Documents/Data Structures for Problem Solving/Workspace/CableCar/Players/GroupA/board.py</a></font></td></tr></table>
     <p><tt>Cable&nbsp;Car:&nbsp;Data&nbsp;Storage&nbsp;Solution<br>
 &nbsp;<br>
 A&nbsp;fully-encapsulated&nbsp;system&nbsp;for&nbsp;keeping&nbsp;track&nbsp;of&nbsp;the&nbsp;board&nbsp;and&nbsp;its&nbsp;tiles.&nbsp;&nbsp;The&nbsp;user&nbsp;will&nbsp;typically&nbsp;only&nbsp;need&nbsp;to&nbsp;use&nbsp;the&nbsp;<a href="#Board">Board</a>&nbsp;class&nbsp;and&nbsp;the&nbsp;subclasses&nbsp;of&nbsp;<a href="#ConnectedTile">ConnectedTile</a>.<br>
@@ -194,7 +194,7 @@ Links&nbsp;this&nbsp;tile&nbsp;with&nbsp;that&nbsp;lying&nbsp;on&nbsp;the&nbsp;s
 &nbsp;&nbsp;&nbsp;&nbsp;mutualConnection&nbsp;-&nbsp;whether&nbsp;to&nbsp;connect&nbsp;both&nbsp;ways&nbsp;iff&nbsp;neighbor&nbsp;is&nbsp;a&nbsp;<a href="#ConnectedTile">ConnectedTile</a><br>
 pre:&nbsp;neighbor&nbsp;is&nbsp;not&nbsp;in&nbsp;borderingTiles.</tt></dd></dl>
 
-<dl><dt><a name="ConnectedTile-followRoute"><strong>followRoute</strong></a>(self, entryPoint)</dt><dd><tt>followRoute:&nbsp;int&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
+<dl><dt><a name="ConnectedTile-followRoute"><strong>followRoute</strong></a>(self, caller)</dt><dd><tt>followRoute:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;fetch&nbsp;the&nbsp;tile&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;a&nbsp;track,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;rest&nbsp;of&nbsp;the&nbsp;track&nbsp;is.&nbsp;&nbsp;This&nbsp;override&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;and&nbsp;returns&nbsp;that&nbsp;method's&nbsp;result.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;entryPoint&nbsp;-&nbsp;this&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;track&nbsp;enters&nbsp;(0-3)</tt></dd></dl>
 
@@ -206,13 +206,13 @@ Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;pa
 Fetches&nbsp;the&nbsp;tile&nbsp;bordering&nbsp;the&nbsp;specified&nbsp;side&nbsp;of&nbsp;this&nbsp;one<br>
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;to&nbsp;check&nbsp;(0-3)</tt></dd></dl>
 
-<dl><dt><a name="ConnectedTile-routeComplete"><strong>routeComplete</strong></a>(self, caller)</dt><dd><tt>routeComplete:&nbsp;<a href="#Tile">Tile</a>&nbsp;-&gt;&nbsp;bool<br>
+<dl><dt><a name="ConnectedTile-routeComplete"><strong>routeComplete</strong></a>(self, caller)</dt><dd><tt>routeComplete:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;bool<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;determine&nbsp;whether&nbsp;each&nbsp;<a href="#Tile">Tile</a>&nbsp;represents&nbsp;the&nbsp;end&nbsp;of&nbsp;its&nbsp;track,&nbsp;and&nbsp;if&nbsp;so,&nbsp;it&nbsp;returns&nbsp;whether&nbsp;it&nbsp;represents&nbsp;an&nbsp;ending&nbsp;that&nbsp;leaves&nbsp;the&nbsp;track&nbsp;complete.&nbsp;&nbsp;This&nbsp;override&nbsp;always&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;of&nbsp;this&nbsp;method&nbsp;and&nbsp;returns&nbsp;the&nbsp;result&nbsp;of&nbsp;that&nbsp;call.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method</tt></dd></dl>
+&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method&nbsp;or&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;from&nbsp;where&nbsp;we&nbsp;entered&nbsp;(0-3)</tt></dd></dl>
 
-<dl><dt><a name="ConnectedTile-tabulateScore"><strong>tabulateScore</strong></a>(self, caller, runningScore)</dt><dd><tt>tabulateScore:&nbsp;<a href="#Tile">Tile</a>&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;int<br>
+<dl><dt><a name="ConnectedTile-tabulateScore"><strong>tabulateScore</strong></a>(self, caller, runningScore)</dt><dd><tt>tabulateScore:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;int<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;determine&nbsp;each&nbsp;track's&nbsp;total&nbsp;score.&nbsp;&nbsp;This&nbsp;override&nbsp;always&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;of&nbsp;this&nbsp;method,&nbsp;incrementing&nbsp;the&nbsp;score&nbsp;by&nbsp;1,&nbsp;and&nbsp;returns&nbsp;the&nbsp;result&nbsp;of&nbsp;that&nbsp;call.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method<br>
+&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method&nbsp;or&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;from&nbsp;where&nbsp;we&nbsp;entered&nbsp;(0-3)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;runningScore&nbsp;-&nbsp;the&nbsp;running&nbsp;score</tt></dd></dl>
 
 <hr>
@@ -455,7 +455,7 @@ Links&nbsp;this&nbsp;tile&nbsp;with&nbsp;that&nbsp;lying&nbsp;on&nbsp;the&nbsp;s
 &nbsp;&nbsp;&nbsp;&nbsp;mutualConnection&nbsp;-&nbsp;whether&nbsp;to&nbsp;connect&nbsp;both&nbsp;ways&nbsp;iff&nbsp;neighbor&nbsp;is&nbsp;a&nbsp;<a href="#ConnectedTile">ConnectedTile</a><br>
 pre:&nbsp;neighbor&nbsp;is&nbsp;not&nbsp;in&nbsp;borderingTiles.</tt></dd></dl>
 
-<dl><dt><a name="TileA-followRoute"><strong>followRoute</strong></a>(self, entryPoint)</dt><dd><tt>followRoute:&nbsp;int&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
+<dl><dt><a name="TileA-followRoute"><strong>followRoute</strong></a>(self, caller)</dt><dd><tt>followRoute:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;fetch&nbsp;the&nbsp;tile&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;a&nbsp;track,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;rest&nbsp;of&nbsp;the&nbsp;track&nbsp;is.&nbsp;&nbsp;This&nbsp;override&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;and&nbsp;returns&nbsp;that&nbsp;method's&nbsp;result.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;entryPoint&nbsp;-&nbsp;this&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;track&nbsp;enters&nbsp;(0-3)</tt></dd></dl>
 
@@ -467,13 +467,13 @@ Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;pa
 Fetches&nbsp;the&nbsp;tile&nbsp;bordering&nbsp;the&nbsp;specified&nbsp;side&nbsp;of&nbsp;this&nbsp;one<br>
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;to&nbsp;check&nbsp;(0-3)</tt></dd></dl>
 
-<dl><dt><a name="TileA-routeComplete"><strong>routeComplete</strong></a>(self, caller)</dt><dd><tt>routeComplete:&nbsp;<a href="#Tile">Tile</a>&nbsp;-&gt;&nbsp;bool<br>
+<dl><dt><a name="TileA-routeComplete"><strong>routeComplete</strong></a>(self, caller)</dt><dd><tt>routeComplete:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;bool<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;determine&nbsp;whether&nbsp;each&nbsp;<a href="#Tile">Tile</a>&nbsp;represents&nbsp;the&nbsp;end&nbsp;of&nbsp;its&nbsp;track,&nbsp;and&nbsp;if&nbsp;so,&nbsp;it&nbsp;returns&nbsp;whether&nbsp;it&nbsp;represents&nbsp;an&nbsp;ending&nbsp;that&nbsp;leaves&nbsp;the&nbsp;track&nbsp;complete.&nbsp;&nbsp;This&nbsp;override&nbsp;always&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;of&nbsp;this&nbsp;method&nbsp;and&nbsp;returns&nbsp;the&nbsp;result&nbsp;of&nbsp;that&nbsp;call.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method</tt></dd></dl>
+&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method&nbsp;or&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;from&nbsp;where&nbsp;we&nbsp;entered&nbsp;(0-3)</tt></dd></dl>
 
-<dl><dt><a name="TileA-tabulateScore"><strong>tabulateScore</strong></a>(self, caller, runningScore)</dt><dd><tt>tabulateScore:&nbsp;<a href="#Tile">Tile</a>&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;int<br>
+<dl><dt><a name="TileA-tabulateScore"><strong>tabulateScore</strong></a>(self, caller, runningScore)</dt><dd><tt>tabulateScore:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;int<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;determine&nbsp;each&nbsp;track's&nbsp;total&nbsp;score.&nbsp;&nbsp;This&nbsp;override&nbsp;always&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;of&nbsp;this&nbsp;method,&nbsp;incrementing&nbsp;the&nbsp;score&nbsp;by&nbsp;1,&nbsp;and&nbsp;returns&nbsp;the&nbsp;result&nbsp;of&nbsp;that&nbsp;call.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method<br>
+&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method&nbsp;or&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;from&nbsp;where&nbsp;we&nbsp;entered&nbsp;(0-3)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;runningScore&nbsp;-&nbsp;the&nbsp;running&nbsp;score</tt></dd></dl>
 
 <hr>
@@ -538,7 +538,7 @@ Links&nbsp;this&nbsp;tile&nbsp;with&nbsp;that&nbsp;lying&nbsp;on&nbsp;the&nbsp;s
 &nbsp;&nbsp;&nbsp;&nbsp;mutualConnection&nbsp;-&nbsp;whether&nbsp;to&nbsp;connect&nbsp;both&nbsp;ways&nbsp;iff&nbsp;neighbor&nbsp;is&nbsp;a&nbsp;<a href="#ConnectedTile">ConnectedTile</a><br>
 pre:&nbsp;neighbor&nbsp;is&nbsp;not&nbsp;in&nbsp;borderingTiles.</tt></dd></dl>
 
-<dl><dt><a name="TileB-followRoute"><strong>followRoute</strong></a>(self, entryPoint)</dt><dd><tt>followRoute:&nbsp;int&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
+<dl><dt><a name="TileB-followRoute"><strong>followRoute</strong></a>(self, caller)</dt><dd><tt>followRoute:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;fetch&nbsp;the&nbsp;tile&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;a&nbsp;track,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;rest&nbsp;of&nbsp;the&nbsp;track&nbsp;is.&nbsp;&nbsp;This&nbsp;override&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;and&nbsp;returns&nbsp;that&nbsp;method's&nbsp;result.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;entryPoint&nbsp;-&nbsp;this&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;track&nbsp;enters&nbsp;(0-3)</tt></dd></dl>
 
@@ -550,13 +550,13 @@ Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;pa
 Fetches&nbsp;the&nbsp;tile&nbsp;bordering&nbsp;the&nbsp;specified&nbsp;side&nbsp;of&nbsp;this&nbsp;one<br>
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;to&nbsp;check&nbsp;(0-3)</tt></dd></dl>
 
-<dl><dt><a name="TileB-routeComplete"><strong>routeComplete</strong></a>(self, caller)</dt><dd><tt>routeComplete:&nbsp;<a href="#Tile">Tile</a>&nbsp;-&gt;&nbsp;bool<br>
+<dl><dt><a name="TileB-routeComplete"><strong>routeComplete</strong></a>(self, caller)</dt><dd><tt>routeComplete:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;bool<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;determine&nbsp;whether&nbsp;each&nbsp;<a href="#Tile">Tile</a>&nbsp;represents&nbsp;the&nbsp;end&nbsp;of&nbsp;its&nbsp;track,&nbsp;and&nbsp;if&nbsp;so,&nbsp;it&nbsp;returns&nbsp;whether&nbsp;it&nbsp;represents&nbsp;an&nbsp;ending&nbsp;that&nbsp;leaves&nbsp;the&nbsp;track&nbsp;complete.&nbsp;&nbsp;This&nbsp;override&nbsp;always&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;of&nbsp;this&nbsp;method&nbsp;and&nbsp;returns&nbsp;the&nbsp;result&nbsp;of&nbsp;that&nbsp;call.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method</tt></dd></dl>
+&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method&nbsp;or&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;from&nbsp;where&nbsp;we&nbsp;entered&nbsp;(0-3)</tt></dd></dl>
 
-<dl><dt><a name="TileB-tabulateScore"><strong>tabulateScore</strong></a>(self, caller, runningScore)</dt><dd><tt>tabulateScore:&nbsp;<a href="#Tile">Tile</a>&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;int<br>
+<dl><dt><a name="TileB-tabulateScore"><strong>tabulateScore</strong></a>(self, caller, runningScore)</dt><dd><tt>tabulateScore:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;int<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;determine&nbsp;each&nbsp;track's&nbsp;total&nbsp;score.&nbsp;&nbsp;This&nbsp;override&nbsp;always&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;of&nbsp;this&nbsp;method,&nbsp;incrementing&nbsp;the&nbsp;score&nbsp;by&nbsp;1,&nbsp;and&nbsp;returns&nbsp;the&nbsp;result&nbsp;of&nbsp;that&nbsp;call.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method<br>
+&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method&nbsp;or&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;from&nbsp;where&nbsp;we&nbsp;entered&nbsp;(0-3)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;runningScore&nbsp;-&nbsp;the&nbsp;running&nbsp;score</tt></dd></dl>
 
 <hr>
@@ -621,7 +621,7 @@ Links&nbsp;this&nbsp;tile&nbsp;with&nbsp;that&nbsp;lying&nbsp;on&nbsp;the&nbsp;s
 &nbsp;&nbsp;&nbsp;&nbsp;mutualConnection&nbsp;-&nbsp;whether&nbsp;to&nbsp;connect&nbsp;both&nbsp;ways&nbsp;iff&nbsp;neighbor&nbsp;is&nbsp;a&nbsp;<a href="#ConnectedTile">ConnectedTile</a><br>
 pre:&nbsp;neighbor&nbsp;is&nbsp;not&nbsp;in&nbsp;borderingTiles.</tt></dd></dl>
 
-<dl><dt><a name="TileC-followRoute"><strong>followRoute</strong></a>(self, entryPoint)</dt><dd><tt>followRoute:&nbsp;int&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
+<dl><dt><a name="TileC-followRoute"><strong>followRoute</strong></a>(self, caller)</dt><dd><tt>followRoute:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;fetch&nbsp;the&nbsp;tile&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;a&nbsp;track,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;rest&nbsp;of&nbsp;the&nbsp;track&nbsp;is.&nbsp;&nbsp;This&nbsp;override&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;and&nbsp;returns&nbsp;that&nbsp;method's&nbsp;result.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;entryPoint&nbsp;-&nbsp;this&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;track&nbsp;enters&nbsp;(0-3)</tt></dd></dl>
 
@@ -633,13 +633,13 @@ Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;pa
 Fetches&nbsp;the&nbsp;tile&nbsp;bordering&nbsp;the&nbsp;specified&nbsp;side&nbsp;of&nbsp;this&nbsp;one<br>
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;to&nbsp;check&nbsp;(0-3)</tt></dd></dl>
 
-<dl><dt><a name="TileC-routeComplete"><strong>routeComplete</strong></a>(self, caller)</dt><dd><tt>routeComplete:&nbsp;<a href="#Tile">Tile</a>&nbsp;-&gt;&nbsp;bool<br>
+<dl><dt><a name="TileC-routeComplete"><strong>routeComplete</strong></a>(self, caller)</dt><dd><tt>routeComplete:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;bool<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;determine&nbsp;whether&nbsp;each&nbsp;<a href="#Tile">Tile</a>&nbsp;represents&nbsp;the&nbsp;end&nbsp;of&nbsp;its&nbsp;track,&nbsp;and&nbsp;if&nbsp;so,&nbsp;it&nbsp;returns&nbsp;whether&nbsp;it&nbsp;represents&nbsp;an&nbsp;ending&nbsp;that&nbsp;leaves&nbsp;the&nbsp;track&nbsp;complete.&nbsp;&nbsp;This&nbsp;override&nbsp;always&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;of&nbsp;this&nbsp;method&nbsp;and&nbsp;returns&nbsp;the&nbsp;result&nbsp;of&nbsp;that&nbsp;call.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method</tt></dd></dl>
+&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method&nbsp;or&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;from&nbsp;where&nbsp;we&nbsp;entered&nbsp;(0-3)</tt></dd></dl>
 
-<dl><dt><a name="TileC-tabulateScore"><strong>tabulateScore</strong></a>(self, caller, runningScore)</dt><dd><tt>tabulateScore:&nbsp;<a href="#Tile">Tile</a>&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;int<br>
+<dl><dt><a name="TileC-tabulateScore"><strong>tabulateScore</strong></a>(self, caller, runningScore)</dt><dd><tt>tabulateScore:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;int<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;determine&nbsp;each&nbsp;track's&nbsp;total&nbsp;score.&nbsp;&nbsp;This&nbsp;override&nbsp;always&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;of&nbsp;this&nbsp;method,&nbsp;incrementing&nbsp;the&nbsp;score&nbsp;by&nbsp;1,&nbsp;and&nbsp;returns&nbsp;the&nbsp;result&nbsp;of&nbsp;that&nbsp;call.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method<br>
+&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method&nbsp;or&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;from&nbsp;where&nbsp;we&nbsp;entered&nbsp;(0-3)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;runningScore&nbsp;-&nbsp;the&nbsp;running&nbsp;score</tt></dd></dl>
 
 <hr>
@@ -704,7 +704,7 @@ Links&nbsp;this&nbsp;tile&nbsp;with&nbsp;that&nbsp;lying&nbsp;on&nbsp;the&nbsp;s
 &nbsp;&nbsp;&nbsp;&nbsp;mutualConnection&nbsp;-&nbsp;whether&nbsp;to&nbsp;connect&nbsp;both&nbsp;ways&nbsp;iff&nbsp;neighbor&nbsp;is&nbsp;a&nbsp;<a href="#ConnectedTile">ConnectedTile</a><br>
 pre:&nbsp;neighbor&nbsp;is&nbsp;not&nbsp;in&nbsp;borderingTiles.</tt></dd></dl>
 
-<dl><dt><a name="TileD-followRoute"><strong>followRoute</strong></a>(self, entryPoint)</dt><dd><tt>followRoute:&nbsp;int&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
+<dl><dt><a name="TileD-followRoute"><strong>followRoute</strong></a>(self, caller)</dt><dd><tt>followRoute:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;fetch&nbsp;the&nbsp;tile&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;a&nbsp;track,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;rest&nbsp;of&nbsp;the&nbsp;track&nbsp;is.&nbsp;&nbsp;This&nbsp;override&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;and&nbsp;returns&nbsp;that&nbsp;method's&nbsp;result.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;entryPoint&nbsp;-&nbsp;this&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;track&nbsp;enters&nbsp;(0-3)</tt></dd></dl>
 
@@ -716,13 +716,13 @@ Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;pa
 Fetches&nbsp;the&nbsp;tile&nbsp;bordering&nbsp;the&nbsp;specified&nbsp;side&nbsp;of&nbsp;this&nbsp;one<br>
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;to&nbsp;check&nbsp;(0-3)</tt></dd></dl>
 
-<dl><dt><a name="TileD-routeComplete"><strong>routeComplete</strong></a>(self, caller)</dt><dd><tt>routeComplete:&nbsp;<a href="#Tile">Tile</a>&nbsp;-&gt;&nbsp;bool<br>
+<dl><dt><a name="TileD-routeComplete"><strong>routeComplete</strong></a>(self, caller)</dt><dd><tt>routeComplete:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;bool<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;determine&nbsp;whether&nbsp;each&nbsp;<a href="#Tile">Tile</a>&nbsp;represents&nbsp;the&nbsp;end&nbsp;of&nbsp;its&nbsp;track,&nbsp;and&nbsp;if&nbsp;so,&nbsp;it&nbsp;returns&nbsp;whether&nbsp;it&nbsp;represents&nbsp;an&nbsp;ending&nbsp;that&nbsp;leaves&nbsp;the&nbsp;track&nbsp;complete.&nbsp;&nbsp;This&nbsp;override&nbsp;always&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;of&nbsp;this&nbsp;method&nbsp;and&nbsp;returns&nbsp;the&nbsp;result&nbsp;of&nbsp;that&nbsp;call.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method</tt></dd></dl>
+&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method&nbsp;or&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;from&nbsp;where&nbsp;we&nbsp;entered&nbsp;(0-3)</tt></dd></dl>
 
-<dl><dt><a name="TileD-tabulateScore"><strong>tabulateScore</strong></a>(self, caller, runningScore)</dt><dd><tt>tabulateScore:&nbsp;<a href="#Tile">Tile</a>&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;int<br>
+<dl><dt><a name="TileD-tabulateScore"><strong>tabulateScore</strong></a>(self, caller, runningScore)</dt><dd><tt>tabulateScore:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;int<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;determine&nbsp;each&nbsp;track's&nbsp;total&nbsp;score.&nbsp;&nbsp;This&nbsp;override&nbsp;always&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;of&nbsp;this&nbsp;method,&nbsp;incrementing&nbsp;the&nbsp;score&nbsp;by&nbsp;1,&nbsp;and&nbsp;returns&nbsp;the&nbsp;result&nbsp;of&nbsp;that&nbsp;call.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method<br>
+&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method&nbsp;or&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;from&nbsp;where&nbsp;we&nbsp;entered&nbsp;(0-3)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;runningScore&nbsp;-&nbsp;the&nbsp;running&nbsp;score</tt></dd></dl>
 
 <hr>
@@ -787,7 +787,7 @@ Links&nbsp;this&nbsp;tile&nbsp;with&nbsp;that&nbsp;lying&nbsp;on&nbsp;the&nbsp;s
 &nbsp;&nbsp;&nbsp;&nbsp;mutualConnection&nbsp;-&nbsp;whether&nbsp;to&nbsp;connect&nbsp;both&nbsp;ways&nbsp;iff&nbsp;neighbor&nbsp;is&nbsp;a&nbsp;<a href="#ConnectedTile">ConnectedTile</a><br>
 pre:&nbsp;neighbor&nbsp;is&nbsp;not&nbsp;in&nbsp;borderingTiles.</tt></dd></dl>
 
-<dl><dt><a name="TileE-followRoute"><strong>followRoute</strong></a>(self, entryPoint)</dt><dd><tt>followRoute:&nbsp;int&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
+<dl><dt><a name="TileE-followRoute"><strong>followRoute</strong></a>(self, caller)</dt><dd><tt>followRoute:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;fetch&nbsp;the&nbsp;tile&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;a&nbsp;track,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;rest&nbsp;of&nbsp;the&nbsp;track&nbsp;is.&nbsp;&nbsp;This&nbsp;override&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;and&nbsp;returns&nbsp;that&nbsp;method's&nbsp;result.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;entryPoint&nbsp;-&nbsp;this&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;track&nbsp;enters&nbsp;(0-3)</tt></dd></dl>
 
@@ -799,13 +799,13 @@ Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;pa
 Fetches&nbsp;the&nbsp;tile&nbsp;bordering&nbsp;the&nbsp;specified&nbsp;side&nbsp;of&nbsp;this&nbsp;one<br>
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;to&nbsp;check&nbsp;(0-3)</tt></dd></dl>
 
-<dl><dt><a name="TileE-routeComplete"><strong>routeComplete</strong></a>(self, caller)</dt><dd><tt>routeComplete:&nbsp;<a href="#Tile">Tile</a>&nbsp;-&gt;&nbsp;bool<br>
+<dl><dt><a name="TileE-routeComplete"><strong>routeComplete</strong></a>(self, caller)</dt><dd><tt>routeComplete:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;bool<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;determine&nbsp;whether&nbsp;each&nbsp;<a href="#Tile">Tile</a>&nbsp;represents&nbsp;the&nbsp;end&nbsp;of&nbsp;its&nbsp;track,&nbsp;and&nbsp;if&nbsp;so,&nbsp;it&nbsp;returns&nbsp;whether&nbsp;it&nbsp;represents&nbsp;an&nbsp;ending&nbsp;that&nbsp;leaves&nbsp;the&nbsp;track&nbsp;complete.&nbsp;&nbsp;This&nbsp;override&nbsp;always&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;of&nbsp;this&nbsp;method&nbsp;and&nbsp;returns&nbsp;the&nbsp;result&nbsp;of&nbsp;that&nbsp;call.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method</tt></dd></dl>
+&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method&nbsp;or&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;from&nbsp;where&nbsp;we&nbsp;entered&nbsp;(0-3)</tt></dd></dl>
 
-<dl><dt><a name="TileE-tabulateScore"><strong>tabulateScore</strong></a>(self, caller, runningScore)</dt><dd><tt>tabulateScore:&nbsp;<a href="#Tile">Tile</a>&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;int<br>
+<dl><dt><a name="TileE-tabulateScore"><strong>tabulateScore</strong></a>(self, caller, runningScore)</dt><dd><tt>tabulateScore:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;int<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;determine&nbsp;each&nbsp;track's&nbsp;total&nbsp;score.&nbsp;&nbsp;This&nbsp;override&nbsp;always&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;of&nbsp;this&nbsp;method,&nbsp;incrementing&nbsp;the&nbsp;score&nbsp;by&nbsp;1,&nbsp;and&nbsp;returns&nbsp;the&nbsp;result&nbsp;of&nbsp;that&nbsp;call.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method<br>
+&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method&nbsp;or&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;from&nbsp;where&nbsp;we&nbsp;entered&nbsp;(0-3)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;runningScore&nbsp;-&nbsp;the&nbsp;running&nbsp;score</tt></dd></dl>
 
 <hr>
@@ -870,7 +870,7 @@ Links&nbsp;this&nbsp;tile&nbsp;with&nbsp;that&nbsp;lying&nbsp;on&nbsp;the&nbsp;s
 &nbsp;&nbsp;&nbsp;&nbsp;mutualConnection&nbsp;-&nbsp;whether&nbsp;to&nbsp;connect&nbsp;both&nbsp;ways&nbsp;iff&nbsp;neighbor&nbsp;is&nbsp;a&nbsp;<a href="#ConnectedTile">ConnectedTile</a><br>
 pre:&nbsp;neighbor&nbsp;is&nbsp;not&nbsp;in&nbsp;borderingTiles.</tt></dd></dl>
 
-<dl><dt><a name="TileF-followRoute"><strong>followRoute</strong></a>(self, entryPoint)</dt><dd><tt>followRoute:&nbsp;int&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
+<dl><dt><a name="TileF-followRoute"><strong>followRoute</strong></a>(self, caller)</dt><dd><tt>followRoute:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;fetch&nbsp;the&nbsp;tile&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;a&nbsp;track,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;rest&nbsp;of&nbsp;the&nbsp;track&nbsp;is.&nbsp;&nbsp;This&nbsp;override&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;and&nbsp;returns&nbsp;that&nbsp;method's&nbsp;result.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;entryPoint&nbsp;-&nbsp;this&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;track&nbsp;enters&nbsp;(0-3)</tt></dd></dl>
 
@@ -882,13 +882,13 @@ Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;pa
 Fetches&nbsp;the&nbsp;tile&nbsp;bordering&nbsp;the&nbsp;specified&nbsp;side&nbsp;of&nbsp;this&nbsp;one<br>
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;to&nbsp;check&nbsp;(0-3)</tt></dd></dl>
 
-<dl><dt><a name="TileF-routeComplete"><strong>routeComplete</strong></a>(self, caller)</dt><dd><tt>routeComplete:&nbsp;<a href="#Tile">Tile</a>&nbsp;-&gt;&nbsp;bool<br>
+<dl><dt><a name="TileF-routeComplete"><strong>routeComplete</strong></a>(self, caller)</dt><dd><tt>routeComplete:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;bool<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;determine&nbsp;whether&nbsp;each&nbsp;<a href="#Tile">Tile</a>&nbsp;represents&nbsp;the&nbsp;end&nbsp;of&nbsp;its&nbsp;track,&nbsp;and&nbsp;if&nbsp;so,&nbsp;it&nbsp;returns&nbsp;whether&nbsp;it&nbsp;represents&nbsp;an&nbsp;ending&nbsp;that&nbsp;leaves&nbsp;the&nbsp;track&nbsp;complete.&nbsp;&nbsp;This&nbsp;override&nbsp;always&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;of&nbsp;this&nbsp;method&nbsp;and&nbsp;returns&nbsp;the&nbsp;result&nbsp;of&nbsp;that&nbsp;call.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method</tt></dd></dl>
+&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method&nbsp;or&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;from&nbsp;where&nbsp;we&nbsp;entered&nbsp;(0-3)</tt></dd></dl>
 
-<dl><dt><a name="TileF-tabulateScore"><strong>tabulateScore</strong></a>(self, caller, runningScore)</dt><dd><tt>tabulateScore:&nbsp;<a href="#Tile">Tile</a>&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;int<br>
+<dl><dt><a name="TileF-tabulateScore"><strong>tabulateScore</strong></a>(self, caller, runningScore)</dt><dd><tt>tabulateScore:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;int<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;determine&nbsp;each&nbsp;track's&nbsp;total&nbsp;score.&nbsp;&nbsp;This&nbsp;override&nbsp;always&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;of&nbsp;this&nbsp;method,&nbsp;incrementing&nbsp;the&nbsp;score&nbsp;by&nbsp;1,&nbsp;and&nbsp;returns&nbsp;the&nbsp;result&nbsp;of&nbsp;that&nbsp;call.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method<br>
+&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method&nbsp;or&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;from&nbsp;where&nbsp;we&nbsp;entered&nbsp;(0-3)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;runningScore&nbsp;-&nbsp;the&nbsp;running&nbsp;score</tt></dd></dl>
 
 <hr>
@@ -953,7 +953,7 @@ Links&nbsp;this&nbsp;tile&nbsp;with&nbsp;that&nbsp;lying&nbsp;on&nbsp;the&nbsp;s
 &nbsp;&nbsp;&nbsp;&nbsp;mutualConnection&nbsp;-&nbsp;whether&nbsp;to&nbsp;connect&nbsp;both&nbsp;ways&nbsp;iff&nbsp;neighbor&nbsp;is&nbsp;a&nbsp;<a href="#ConnectedTile">ConnectedTile</a><br>
 pre:&nbsp;neighbor&nbsp;is&nbsp;not&nbsp;in&nbsp;borderingTiles.</tt></dd></dl>
 
-<dl><dt><a name="TileG-followRoute"><strong>followRoute</strong></a>(self, entryPoint)</dt><dd><tt>followRoute:&nbsp;int&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
+<dl><dt><a name="TileG-followRoute"><strong>followRoute</strong></a>(self, caller)</dt><dd><tt>followRoute:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;fetch&nbsp;the&nbsp;tile&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;a&nbsp;track,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;rest&nbsp;of&nbsp;the&nbsp;track&nbsp;is.&nbsp;&nbsp;This&nbsp;override&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;and&nbsp;returns&nbsp;that&nbsp;method's&nbsp;result.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;entryPoint&nbsp;-&nbsp;this&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;track&nbsp;enters&nbsp;(0-3)</tt></dd></dl>
 
@@ -965,13 +965,13 @@ Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;pa
 Fetches&nbsp;the&nbsp;tile&nbsp;bordering&nbsp;the&nbsp;specified&nbsp;side&nbsp;of&nbsp;this&nbsp;one<br>
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;to&nbsp;check&nbsp;(0-3)</tt></dd></dl>
 
-<dl><dt><a name="TileG-routeComplete"><strong>routeComplete</strong></a>(self, caller)</dt><dd><tt>routeComplete:&nbsp;<a href="#Tile">Tile</a>&nbsp;-&gt;&nbsp;bool<br>
+<dl><dt><a name="TileG-routeComplete"><strong>routeComplete</strong></a>(self, caller)</dt><dd><tt>routeComplete:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;bool<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;determine&nbsp;whether&nbsp;each&nbsp;<a href="#Tile">Tile</a>&nbsp;represents&nbsp;the&nbsp;end&nbsp;of&nbsp;its&nbsp;track,&nbsp;and&nbsp;if&nbsp;so,&nbsp;it&nbsp;returns&nbsp;whether&nbsp;it&nbsp;represents&nbsp;an&nbsp;ending&nbsp;that&nbsp;leaves&nbsp;the&nbsp;track&nbsp;complete.&nbsp;&nbsp;This&nbsp;override&nbsp;always&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;of&nbsp;this&nbsp;method&nbsp;and&nbsp;returns&nbsp;the&nbsp;result&nbsp;of&nbsp;that&nbsp;call.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method</tt></dd></dl>
+&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method&nbsp;or&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;from&nbsp;where&nbsp;we&nbsp;entered&nbsp;(0-3)</tt></dd></dl>
 
-<dl><dt><a name="TileG-tabulateScore"><strong>tabulateScore</strong></a>(self, caller, runningScore)</dt><dd><tt>tabulateScore:&nbsp;<a href="#Tile">Tile</a>&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;int<br>
+<dl><dt><a name="TileG-tabulateScore"><strong>tabulateScore</strong></a>(self, caller, runningScore)</dt><dd><tt>tabulateScore:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;int<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;determine&nbsp;each&nbsp;track's&nbsp;total&nbsp;score.&nbsp;&nbsp;This&nbsp;override&nbsp;always&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;of&nbsp;this&nbsp;method,&nbsp;incrementing&nbsp;the&nbsp;score&nbsp;by&nbsp;1,&nbsp;and&nbsp;returns&nbsp;the&nbsp;result&nbsp;of&nbsp;that&nbsp;call.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method<br>
+&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method&nbsp;or&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;from&nbsp;where&nbsp;we&nbsp;entered&nbsp;(0-3)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;runningScore&nbsp;-&nbsp;the&nbsp;running&nbsp;score</tt></dd></dl>
 
 <hr>
@@ -1036,7 +1036,7 @@ Links&nbsp;this&nbsp;tile&nbsp;with&nbsp;that&nbsp;lying&nbsp;on&nbsp;the&nbsp;s
 &nbsp;&nbsp;&nbsp;&nbsp;mutualConnection&nbsp;-&nbsp;whether&nbsp;to&nbsp;connect&nbsp;both&nbsp;ways&nbsp;iff&nbsp;neighbor&nbsp;is&nbsp;a&nbsp;<a href="#ConnectedTile">ConnectedTile</a><br>
 pre:&nbsp;neighbor&nbsp;is&nbsp;not&nbsp;in&nbsp;borderingTiles.</tt></dd></dl>
 
-<dl><dt><a name="TileH-followRoute"><strong>followRoute</strong></a>(self, entryPoint)</dt><dd><tt>followRoute:&nbsp;int&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
+<dl><dt><a name="TileH-followRoute"><strong>followRoute</strong></a>(self, caller)</dt><dd><tt>followRoute:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;fetch&nbsp;the&nbsp;tile&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;a&nbsp;track,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;rest&nbsp;of&nbsp;the&nbsp;track&nbsp;is.&nbsp;&nbsp;This&nbsp;override&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;and&nbsp;returns&nbsp;that&nbsp;method's&nbsp;result.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;entryPoint&nbsp;-&nbsp;this&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;track&nbsp;enters&nbsp;(0-3)</tt></dd></dl>
 
@@ -1048,13 +1048,13 @@ Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;pa
 Fetches&nbsp;the&nbsp;tile&nbsp;bordering&nbsp;the&nbsp;specified&nbsp;side&nbsp;of&nbsp;this&nbsp;one<br>
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;to&nbsp;check&nbsp;(0-3)</tt></dd></dl>
 
-<dl><dt><a name="TileH-routeComplete"><strong>routeComplete</strong></a>(self, caller)</dt><dd><tt>routeComplete:&nbsp;<a href="#Tile">Tile</a>&nbsp;-&gt;&nbsp;bool<br>
+<dl><dt><a name="TileH-routeComplete"><strong>routeComplete</strong></a>(self, caller)</dt><dd><tt>routeComplete:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;bool<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;determine&nbsp;whether&nbsp;each&nbsp;<a href="#Tile">Tile</a>&nbsp;represents&nbsp;the&nbsp;end&nbsp;of&nbsp;its&nbsp;track,&nbsp;and&nbsp;if&nbsp;so,&nbsp;it&nbsp;returns&nbsp;whether&nbsp;it&nbsp;represents&nbsp;an&nbsp;ending&nbsp;that&nbsp;leaves&nbsp;the&nbsp;track&nbsp;complete.&nbsp;&nbsp;This&nbsp;override&nbsp;always&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;of&nbsp;this&nbsp;method&nbsp;and&nbsp;returns&nbsp;the&nbsp;result&nbsp;of&nbsp;that&nbsp;call.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method</tt></dd></dl>
+&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method&nbsp;or&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;from&nbsp;where&nbsp;we&nbsp;entered&nbsp;(0-3)</tt></dd></dl>
 
-<dl><dt><a name="TileH-tabulateScore"><strong>tabulateScore</strong></a>(self, caller, runningScore)</dt><dd><tt>tabulateScore:&nbsp;<a href="#Tile">Tile</a>&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;int<br>
+<dl><dt><a name="TileH-tabulateScore"><strong>tabulateScore</strong></a>(self, caller, runningScore)</dt><dd><tt>tabulateScore:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;int<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;determine&nbsp;each&nbsp;track's&nbsp;total&nbsp;score.&nbsp;&nbsp;This&nbsp;override&nbsp;always&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;of&nbsp;this&nbsp;method,&nbsp;incrementing&nbsp;the&nbsp;score&nbsp;by&nbsp;1,&nbsp;and&nbsp;returns&nbsp;the&nbsp;result&nbsp;of&nbsp;that&nbsp;call.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method<br>
+&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method&nbsp;or&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;from&nbsp;where&nbsp;we&nbsp;entered&nbsp;(0-3)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;runningScore&nbsp;-&nbsp;the&nbsp;running&nbsp;score</tt></dd></dl>
 
 <hr>
@@ -1119,7 +1119,7 @@ Links&nbsp;this&nbsp;tile&nbsp;with&nbsp;that&nbsp;lying&nbsp;on&nbsp;the&nbsp;s
 &nbsp;&nbsp;&nbsp;&nbsp;mutualConnection&nbsp;-&nbsp;whether&nbsp;to&nbsp;connect&nbsp;both&nbsp;ways&nbsp;iff&nbsp;neighbor&nbsp;is&nbsp;a&nbsp;<a href="#ConnectedTile">ConnectedTile</a><br>
 pre:&nbsp;neighbor&nbsp;is&nbsp;not&nbsp;in&nbsp;borderingTiles.</tt></dd></dl>
 
-<dl><dt><a name="TileI-followRoute"><strong>followRoute</strong></a>(self, entryPoint)</dt><dd><tt>followRoute:&nbsp;int&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
+<dl><dt><a name="TileI-followRoute"><strong>followRoute</strong></a>(self, caller)</dt><dd><tt>followRoute:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;fetch&nbsp;the&nbsp;tile&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;a&nbsp;track,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;rest&nbsp;of&nbsp;the&nbsp;track&nbsp;is.&nbsp;&nbsp;This&nbsp;override&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;and&nbsp;returns&nbsp;that&nbsp;method's&nbsp;result.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;entryPoint&nbsp;-&nbsp;this&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;track&nbsp;enters&nbsp;(0-3)</tt></dd></dl>
 
@@ -1131,13 +1131,13 @@ Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;pa
 Fetches&nbsp;the&nbsp;tile&nbsp;bordering&nbsp;the&nbsp;specified&nbsp;side&nbsp;of&nbsp;this&nbsp;one<br>
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;to&nbsp;check&nbsp;(0-3)</tt></dd></dl>
 
-<dl><dt><a name="TileI-routeComplete"><strong>routeComplete</strong></a>(self, caller)</dt><dd><tt>routeComplete:&nbsp;<a href="#Tile">Tile</a>&nbsp;-&gt;&nbsp;bool<br>
+<dl><dt><a name="TileI-routeComplete"><strong>routeComplete</strong></a>(self, caller)</dt><dd><tt>routeComplete:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;bool<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;determine&nbsp;whether&nbsp;each&nbsp;<a href="#Tile">Tile</a>&nbsp;represents&nbsp;the&nbsp;end&nbsp;of&nbsp;its&nbsp;track,&nbsp;and&nbsp;if&nbsp;so,&nbsp;it&nbsp;returns&nbsp;whether&nbsp;it&nbsp;represents&nbsp;an&nbsp;ending&nbsp;that&nbsp;leaves&nbsp;the&nbsp;track&nbsp;complete.&nbsp;&nbsp;This&nbsp;override&nbsp;always&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;of&nbsp;this&nbsp;method&nbsp;and&nbsp;returns&nbsp;the&nbsp;result&nbsp;of&nbsp;that&nbsp;call.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method</tt></dd></dl>
+&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method&nbsp;or&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;from&nbsp;where&nbsp;we&nbsp;entered&nbsp;(0-3)</tt></dd></dl>
 
-<dl><dt><a name="TileI-tabulateScore"><strong>tabulateScore</strong></a>(self, caller, runningScore)</dt><dd><tt>tabulateScore:&nbsp;<a href="#Tile">Tile</a>&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;int<br>
+<dl><dt><a name="TileI-tabulateScore"><strong>tabulateScore</strong></a>(self, caller, runningScore)</dt><dd><tt>tabulateScore:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;int<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;determine&nbsp;each&nbsp;track's&nbsp;total&nbsp;score.&nbsp;&nbsp;This&nbsp;override&nbsp;always&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;of&nbsp;this&nbsp;method,&nbsp;incrementing&nbsp;the&nbsp;score&nbsp;by&nbsp;1,&nbsp;and&nbsp;returns&nbsp;the&nbsp;result&nbsp;of&nbsp;that&nbsp;call.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method<br>
+&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method&nbsp;or&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;from&nbsp;where&nbsp;we&nbsp;entered&nbsp;(0-3)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;runningScore&nbsp;-&nbsp;the&nbsp;running&nbsp;score</tt></dd></dl>
 
 <hr>
@@ -1202,7 +1202,7 @@ Links&nbsp;this&nbsp;tile&nbsp;with&nbsp;that&nbsp;lying&nbsp;on&nbsp;the&nbsp;s
 &nbsp;&nbsp;&nbsp;&nbsp;mutualConnection&nbsp;-&nbsp;whether&nbsp;to&nbsp;connect&nbsp;both&nbsp;ways&nbsp;iff&nbsp;neighbor&nbsp;is&nbsp;a&nbsp;<a href="#ConnectedTile">ConnectedTile</a><br>
 pre:&nbsp;neighbor&nbsp;is&nbsp;not&nbsp;in&nbsp;borderingTiles.</tt></dd></dl>
 
-<dl><dt><a name="TileJ-followRoute"><strong>followRoute</strong></a>(self, entryPoint)</dt><dd><tt>followRoute:&nbsp;int&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
+<dl><dt><a name="TileJ-followRoute"><strong>followRoute</strong></a>(self, caller)</dt><dd><tt>followRoute:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;fetch&nbsp;the&nbsp;tile&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;a&nbsp;track,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;rest&nbsp;of&nbsp;the&nbsp;track&nbsp;is.&nbsp;&nbsp;This&nbsp;override&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;and&nbsp;returns&nbsp;that&nbsp;method's&nbsp;result.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;entryPoint&nbsp;-&nbsp;this&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;on&nbsp;which&nbsp;the&nbsp;track&nbsp;enters&nbsp;(0-3)</tt></dd></dl>
 
@@ -1214,13 +1214,13 @@ Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;pa
 Fetches&nbsp;the&nbsp;tile&nbsp;bordering&nbsp;the&nbsp;specified&nbsp;side&nbsp;of&nbsp;this&nbsp;one<br>
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;to&nbsp;check&nbsp;(0-3)</tt></dd></dl>
 
-<dl><dt><a name="TileJ-routeComplete"><strong>routeComplete</strong></a>(self, caller)</dt><dd><tt>routeComplete:&nbsp;<a href="#Tile">Tile</a>&nbsp;-&gt;&nbsp;bool<br>
+<dl><dt><a name="TileJ-routeComplete"><strong>routeComplete</strong></a>(self, caller)</dt><dd><tt>routeComplete:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;-&gt;&nbsp;bool<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;determine&nbsp;whether&nbsp;each&nbsp;<a href="#Tile">Tile</a>&nbsp;represents&nbsp;the&nbsp;end&nbsp;of&nbsp;its&nbsp;track,&nbsp;and&nbsp;if&nbsp;so,&nbsp;it&nbsp;returns&nbsp;whether&nbsp;it&nbsp;represents&nbsp;an&nbsp;ending&nbsp;that&nbsp;leaves&nbsp;the&nbsp;track&nbsp;complete.&nbsp;&nbsp;This&nbsp;override&nbsp;always&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;of&nbsp;this&nbsp;method&nbsp;and&nbsp;returns&nbsp;the&nbsp;result&nbsp;of&nbsp;that&nbsp;call.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method</tt></dd></dl>
+&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method&nbsp;or&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;from&nbsp;where&nbsp;we&nbsp;entered&nbsp;(0-3)</tt></dd></dl>
 
-<dl><dt><a name="TileJ-tabulateScore"><strong>tabulateScore</strong></a>(self, caller, runningScore)</dt><dd><tt>tabulateScore:&nbsp;<a href="#Tile">Tile</a>&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;int<br>
+<dl><dt><a name="TileJ-tabulateScore"><strong>tabulateScore</strong></a>(self, caller, runningScore)</dt><dd><tt>tabulateScore:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;int<br>
 This&nbsp;helper&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;determine&nbsp;each&nbsp;track's&nbsp;total&nbsp;score.&nbsp;&nbsp;This&nbsp;override&nbsp;always&nbsp;recurses&nbsp;to&nbsp;the&nbsp;destination&nbsp;<a href="#Tile">Tile</a>'s&nbsp;implementation&nbsp;of&nbsp;this&nbsp;method,&nbsp;incrementing&nbsp;the&nbsp;score&nbsp;by&nbsp;1,&nbsp;and&nbsp;returns&nbsp;the&nbsp;result&nbsp;of&nbsp;that&nbsp;call.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method<br>
+&nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;called&nbsp;this&nbsp;method&nbsp;or&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;from&nbsp;where&nbsp;we&nbsp;entered&nbsp;(0-3)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;runningScore&nbsp;-&nbsp;the&nbsp;running&nbsp;score</tt></dd></dl>
 
 <hr>

@@ -69,7 +69,7 @@ def move(playerData):
             tile=playerData.makeTile(rotation=rotation) #make one of whatever type of tile we've been given
             if playerData.board.validPlacement(tile, row, column):
                 playerData.board.addTile(tile, row, column, False) #get ready to test this tile
-                if not tile.routeComplete(routeSide): #we're NOT going to complete this route
+                if not tile.routeComplete(routeSide) or isinstance(tile.lookupDestination(routeSide), PowerStation): #we're NOT going to connect to the border
                     playerData.board.addTile(tile, row, column) #commit/actually add it to the board
                     return playerData, PlayerMove(playerData.playerId, (row, column), playerData.currentTile, rotation)
     

@@ -59,15 +59,16 @@ def move(playerData):
     """
     
     playerData.logger.write("move() called")
+    #TODO do a better job of starting our tracks safely
     
-    #TODO account for first move
+    #TODO go into defensive mode if our tracks are in danger
     
-    #TODO check to make sure we're not extending another of their tracks while ending the one on which we focus
+    
+    #go on the offense: shut down an opponent's track
     #TODO end longer tracks over shorter ones
-    #TODO look out for ending our own tracks
     attacks=[] #stores (row, col, rotation, delta-score)
     for station in range(1, 33):
-        if playerData.trackOwner(station)!=playerData.playerId and not playerData.board.routeIsComplete(station): #this isn't ours
+        if playerData.trackOwner(station)!=playerData.playerId and not playerData.board.routeIsComplete(station) and playerData.board.calculateTrackScore(station): #this isn't ours, has been started, and is unfinished
             endOfLine=playerData.board.followRoute(station)
             row, column=playerData.board.lookupTileCoordinates(endOfLine[0])
             routeSide=endOfLine[1]
@@ -77,22 +78,41 @@ def move(playerData):
                 if playerData.board.validPlacement(tile, row, column): #this would be legal
                     playerData.board.addTile(tile, row, column, False)
                     if tile.routeComplete(routeSide): #we could complete this track to bother our opponent
-                        currentScore=playerData.board.calculateTrackScore(station)
-                        if not isinstance(tile.followRoute(routeSide), PowerStation): #no doubling to deal with
-                            newScore=currentScore+tile.tabulateScore(routeSide)
+                        deltaScore=0
+                        
+                        #check what else is happening at this location
+                        abort=False
+                        for neighbor in range(4):
+                            if isinstance(tile.neighborOnSide(neighbor), ConnectedTile) and neighbor!=routeSide: #there could be a track here and this isn't the side we're primarily worried about
+                                trackNum=playerData.board.lookupTrackNumber(tile.neighborOnSide(neighbor), neighbor)
+                                endOfLine=tile.followRoute(neighbor)
+                                if playerData.trackOwner(trackNum)==playerData.playerId: #one of our tracks passes through
+                                    if isinstance(endOfLine, OuterStations): #we're going to end one of our tracks on an edge!
+                                        abort=True
+                                        break
+                                elif isinstance(endOfLine, OuterStations): #they would be finished
+                                    deltaScore+=tile.tabulateScore(neighbor)
+                                elif isinstance(endOfLine, PowerStation): #they would be power-finished
+                                    deltaScore+=playerData.board.calculateTrackScore(trackNum)+tile.tabulateScore(neighbor)*2 #score doubled
+                                    
+                        if abort:
+                            continue #let's not use this rotation...
+                        
+                        if isinstance(tile.followRoute(routeSide), OuterStations): #no doubling to deal with
+                            deltaScore+=tile.tabulateScore(routeSide)
                         else:
-                            newScore=(currentScore+tile.tabulateScore(routeSide)/2)*2
-                        deltaScore=newScore-currentScore
+                            deltaScore+=playerData.board.calculateTrackScore(station)+tile.tabulateScore(neighbor)*2 #score doubled
                         if not bestRotation or deltaScore<bestRotation[1]: #we want to minimize their score
                             bestRotation=(rotation, deltaScore)
-            if bestRotation: #we found a good move
+            if bestRotation: #we found at least one good move
                 attacks.append((row, column, bestRotation[0], bestRotation[1])) #keep the best option for this tile
     attacks.sort(key=lambda possibleMove: possibleMove[3])
     if len(attacks):
         playerData.board.addTile(playerData.makeTile(playerData.currentTile, attacks[0][2]), attacks[0][0], attacks[0][1])
         return playerData, PlayerMove(playerData.playerId, (attacks[0][0], attacks[0][1]), playerData.currentTile, attacks[0][2])
     
-    '''
+    #score some points: extend one of our tracks
+    #TODO check to make sure we don't accidently complete another one of our stations (write a method to reuse the code from above?)
     for highScoringTrack in playerData.ourRemainingStations: #attempt 1: put it where we want
         endOfLine=playerData.board.followRoute(stationId(highScoringTrack))
         row, column=playerData.board.lookupTileCoordinates(endOfLine[0]) #where could we place the tile to extend this route?
@@ -101,17 +121,16 @@ def move(playerData):
             tile=playerData.makeTile(rotation=rotation) #make one of whatever type of tile we've been given
             if playerData.board.validPlacement(tile, row, column):
                 playerData.board.addTile(tile, row, column, False) #get ready to test this tile
-                if not tile.routeComplete(routeSide) or isinstance(tile.lookupDestination(routeSide), PowerStation): #we're NOT going to connect to the border
+                if not tile.routeComplete(routeSide) or isinstance(tile.followRoute(routeSide)[0], PowerStation): #we're NOT going to connect to the border
                     playerData.board.addTile(tile, row, column) #commit/actually add it to the board
                     return playerData, PlayerMove(playerData.playerId, (row, column), playerData.currentTile, rotation)
-    '''
     
+    #give up: put it wherever it's valid #TODO make this smarter/absent, or at least more efficient
     unoccupiedCoordinates=[]
     for row in range(8): #where are the vacancies on the board?
         for column in range(8):
             if not playerData.board.lookupTile(row, column): #there's nothing here
                 unoccupiedCoordinates.append((row, column))
-    
     for location in unoccupiedCoordinates: #attempt 2: put wherever it's valid
         for rotation in range(4):
             tile=playerData.makeTile(rotation=rotation)

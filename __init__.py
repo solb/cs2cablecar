@@ -4,7 +4,6 @@ from playerData import *
 """
 Cable Car: Student Computer Player
 
-TODO: Win against BadComputer!
 Author: Adam Oest (amo9149@rit.edu)
 Author: Solomon Boucher (slb1566@rit.edu)
 Author: Brad Bensch (brb7020@rit.edu)

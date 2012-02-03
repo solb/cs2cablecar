@@ -36,11 +36,14 @@ def stationScore(remainingStationsMember, newValue=-1):
     return remainingStationsMember[1]
 
 class PlayerData(object):
-    __slots__ = ('logger', 'playerId', 'currentTile', 'numPlayers', 'board', 'ourRemainingStations')
+    __slots__ = ('logger', 'playerId', 'currentTile', 'numPlayers', 'board', 'stationOwners', 'ourRemainingStations')
     """
     Our data members:
         board - stores the tiles
+        stationOwners - contains the owner of each track, indexed by track *(0-31)*
+            access via: PlayerData.trackOwner(...)
         ourRemainingStations - contains the numbers (1-32) of our incomplete tracks and their scores
+            access via: stationId(...), stationScore(...)
     """
     
     def __init__(self, logger, playerId, currentTile, numPlayers):
@@ -61,10 +64,37 @@ class PlayerData(object):
         
         self.board=Board()
         
+        #who owns each given track?
+        if numPlayers==1:
+            self.stationOwners=[0 for _ in range(32)]
+        elif numPlayers==2:
+            self.stationOwners=[num%2 for num in range(32)]
+        elif numPlayers==3:
+            self.stationOwners=[0, 1, 2, 0, 2, 0, 1, 2,\
+                                1, 2, 0, 1, 2, 1, 0,-1,\
+                               -1, 2, 1, 0, 2, 1, 0, 2,\
+                                0, 2, 1, 0, 1, 2, 0, 1]
+        elif numPlayers==4:
+            self.stationOwners=[2, 3, 1, 0, 3, 2, 0, 1,\
+                                3, 2, 0, 1, 2, 3, 1, 0,\
+                                3, 2, 1, 0, 2, 3, 0, 1,\
+                                2, 3, 0, 1, 3, 2, 1, 0]
+        elif numPlayers==5:
+            self.stationOwners=[0, 3, 2, 4, 0, 1, 2, 4,\
+                                3, 0, 4, 1, 3, 0, 2,-1,\
+                               -1, 1, 2, 4, 3, 0, 1, 4,\
+                                2, 3, 1, 0, 2, 3, 4, 1]
+        elif numPlayers==6:
+            self.stationOwners=[0, 1, 4, 2, 0, 3, 5, 2,\
+                                4, 0, 1, 5, 4, 2, 3,-1,\
+                               -1, 1, 0, 3, 2, 5, 4, 3,\
+                                1, 2, 0, 5, 1, 4, 3, 5]
+                
         #which tracks are ours?
         self.ourRemainingStations=[]
-        for station in range(32//self.numPlayers):
-            self.ourRemainingStations.append([station*numPlayers+playerId+1, 0])
+        for station in range(len(self.stationOwners)):
+            if self.stationOwners[station]==playerId: #this one's ours!
+                self.ourRemainingStations.append([station+1, 0])
     
     def makeTile(self, tileName='', rotation=0):
         """
@@ -97,13 +127,13 @@ class PlayerData(object):
         else:
             return TileJ(rotation)
     
-    def trackOwner(self, trackId): #TODO this is wrong for some numbers of players!
+    def trackOwner(self, trackId):
         """
         trackOwner: int -> int
-        Returns the player ID of the owner of the track with the specified track ID.
+        Returns the player ID of the owner of the track with the specified track ID, or -1 if no one owns this track.
             trackId - the track ID (1-32)
         """
-        return (trackId-1)%self.numPlayers
+        return self.stationOwners[trackId-1]
     
     ######
     #These functions are intended to be called regularly in order to update our recorded information.

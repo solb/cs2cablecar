@@ -111,6 +111,20 @@ class Board(object):
                 return row, self.board[row].index(tile)
         return None
     
+    def lookupTrackNumber(self, tile, side):
+        """
+        lookupTrackNumber: ConnectedTile * int -> int
+        Returns the cable car station (1-32) of the from which the track ending on the specified side of the specified tile originates.  If the route doesn't touch the edge of the board, the sentinel -1 is returned.
+            tile - the ConnectedTile at the end of the route
+            side - the side of the next tile in the route (after the last one) to which the route connects (0-3)
+        pre: tile must be on this board!
+        """
+        result=self.cars.reverseFollowRoute(tile, side)+1
+        if not result: #invalid, meaning the route never touched the board's edge
+            return -1
+        else:
+            return result
+    
     def routeIsComplete(self, whichStation):
         """
         routeIsComplete: int -> bool
@@ -230,6 +244,20 @@ class Cars(object):
         NOTE: At this level, the cable car station is represented using a 0-based indexing system; this contrasts with the 1-based scheme used at all levels higher!
         """
         return self.rideTrack(track).followRoute(track/8)
+    
+    def reverseFollowRoute(self, tile, side):
+        """
+        reverseFollowRoute: ConnectedTile * int -> int
+        Returns the cable car station *(0-31)* from which the track ending at the specified tile originates.  If the route doesn't touch any of these stations, the sentinel -1 is returned.
+            tile - the ConnectedTile at the end of the track
+            side - the side of the next tile in the route (after the last one) to which the route connects (0-3)
+        NOTE: At this level, the cable car station is represented using a 0-based indexing system; this contrasts with the 1-based scheme used at all levels higher!
+        """
+        station, substation=tile.reverseFollowRoute(side)
+        if isinstance(station, OuterStations): #this route actually touches the edge
+            return self.stations.index(station)*8+substation
+        else:
+            return -1
 
 class Tile(object):
     """
@@ -286,6 +314,14 @@ class Tile(object):
             entryPoint - this side of this tile on which the track enters (0-3)
         """
         return self, entryPoint
+    
+    def reverseFollowRoute(self, _):
+        """
+        reverseFollowRoute: Tile -> tuple(Tile, int)
+        This method returns the tile from which the route of which this tile is a member originates, as well as the position where the route is attached.  This default returns a reference to this tile and the sentinel -1.
+            _ - ignored (included for compatibility with child classes' implementations)
+        """
+        return self, -1
     
     def __nonzero__(self):
         """
@@ -351,6 +387,14 @@ class OuterStations(Tile):
             _ - ignored (included for compatibility with child classes' implementations)
         """
         return True
+    
+    def reverseFollowRoute(self, caller):
+        """
+        reverseFollowRoute: Tile -> tuple(Tile, int)
+        This method returns the tile from which the route of which this tile is a member originates, as well as the position where the route is attached.  This override returns this object and the substation to which the track is connected.
+            caller - the tile connected to this terminal
+        """
+        return self, self.borderedTiles.index(caller)
 
 class PowerStation(Tile):
     """
@@ -500,18 +544,22 @@ class ConnectedTile(Tile):
         """
         followRoute: (Tile or int) -> tuple(Tile, int)
         This helper method is used to fetch the tile at the end of a track, as well as the side of this tile on which the rest of the track is.  This override recurses to the destination Tile's implementation and returns that method's result.
-            entryPoint - this side of this tile on which the track enters (0-3)
+            entryPoint - a reference to the Tile that called this method or the side of this tile on which the track enters (0-3)
         """
         return self.lookupDestination(caller).followRoute(self._adjacentSide(self._exitPoint(caller)))
     
-    '''def followRoute(self, entryPoint):
+    def reverseFollowRoute(self, caller):
         """
-        followRoute: (Tile or int) -> tuple(Tile, int)
-        This helper method is used to fetch the tile at the end of a track, as well as the side of this tile on which the rest of the track is.  This override recurses to the destination Tile's implementation and returns that method's result.
-            entryPoint - this side of this tile on which the track enters (0-3)
+        reverseFollowRoute: (Tile or int) -> tuple(Tile, int)
+        This method returns the tile from which the route of which this tile is a member originates, as well as the position where the route is attached.
+            caller - a reference to the *next* Tile in this route or the side of the *next* tile in the chain to which this one connects (0-3)
         """
-        exit=self._exitPoint(entryPoint)
-        return self.neighborOnSide(exit).followRoute((exit-2)%len(self.borderingTiles))'''
+        if isinstance(caller, Tile):
+            trackSide=self.internalConnections.index(self._entryPoint(caller)) #the side of *this* tile where the *preceding* tile is connected
+        else:
+            trackSide=self.internalConnections.index(self._adjacentSide(caller)) #the side of *this* tile where the *preceding* tile is connected
+        
+        return self.neighborOnSide(trackSide).reverseFollowRoute(self)
     
     def __nonzero__(self):
         """

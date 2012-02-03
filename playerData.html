@@ -56,7 +56,7 @@ Returns&nbsp;an&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;to&nbsp;r
 &nbsp;&nbsp;&nbsp;&nbsp;rotation&nbsp;-&nbsp;the&nbsp;tile's&nbsp;rotation,&nbsp;0-3</tt></dd></dl>
 
 <dl><dt><a name="PlayerData-trackOwner"><strong>trackOwner</strong></a>(self, trackId)</dt><dd><tt>trackOwner:&nbsp;int&nbsp;-&gt;&nbsp;int<br>
-Returns&nbsp;the&nbsp;player&nbsp;ID&nbsp;of&nbsp;the&nbsp;owner&nbsp;of&nbsp;the&nbsp;track&nbsp;with&nbsp;the&nbsp;specified&nbsp;track&nbsp;ID.<br>
+Returns&nbsp;the&nbsp;player&nbsp;ID&nbsp;of&nbsp;the&nbsp;owner&nbsp;of&nbsp;the&nbsp;track&nbsp;with&nbsp;the&nbsp;specified&nbsp;track&nbsp;ID,&nbsp;or&nbsp;-1&nbsp;if&nbsp;no&nbsp;one&nbsp;owns&nbsp;this&nbsp;track.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;trackId&nbsp;-&nbsp;the&nbsp;track&nbsp;ID&nbsp;(1-32)</tt></dd></dl>
 
 <dl><dt><a name="PlayerData-updateOurStations"><strong>updateOurStations</strong></a>(self)</dt><dd><tt>updateOurStations<br>
@@ -76,6 +76,8 @@ Data descriptors defined here:<br>
 <dl><dt><strong>ourRemainingStations</strong></dt>
 </dl>
 <dl><dt><strong>playerId</strong></dt>
+</dl>
+<dl><dt><strong>stationOwners</strong></dt>
 </dl>
 </td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">

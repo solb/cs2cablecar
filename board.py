@@ -234,7 +234,7 @@ class Cars(object):
             track - the cable car station *(0-31)*
         NOTE: At this level, the cable car station is represented using a 0-based indexing system; this contrasts with the 1-based scheme used at all levels higher!
         """
-        return self.rideTrack(track).tabulateScore(self._terminal(track), 0)
+        return self.rideTrack(track).tabulateScore(self._terminal(track))
     
     def followRoute(self, track):
         """
@@ -298,7 +298,7 @@ class Tile(object):
         """
         return False
     
-    def tabulateScore(self, _, runningScore):
+    def tabulateScore(self, _, runningScore=0):
         """
         tabulateScore: any * int -> int
         This helper method is used to determine each track's total score.  This particular default always returns the running score without incrementing it.
@@ -531,7 +531,7 @@ class ConnectedTile(Tile):
         """
         return self.lookupDestination(caller).routeComplete(self._adjacentSide(self._exitPoint(caller)))
     
-    def tabulateScore(self, caller, runningScore):
+    def tabulateScore(self, caller, runningScore=0):
         """
         tabulateScore: (Tile or int) * int -> int
         This helper method is used to determine each track's total score.  This override always recurses to the destination Tile's implementation of this method, incrementing the score by 1, and returns the result of that call.

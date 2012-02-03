@@ -60,6 +60,39 @@ def move(playerData):
     
     playerData.logger.write("move() called")
     
+    #TODO account for first move
+    
+    #TODO check to make sure we're not extending another of their tracks while ending the one on which we focus
+    #TODO end longer tracks over shorter ones
+    #TODO look out for ending our own tracks
+    attacks=[] #stores (row, col, rotation, delta-score)
+    for station in range(1, 33):
+        if playerData.trackOwner(station)!=playerData.playerId and not playerData.board.routeIsComplete(station): #this isn't ours
+            endOfLine=playerData.board.followRoute(station)
+            row, column=playerData.board.lookupTileCoordinates(endOfLine[0])
+            routeSide=endOfLine[1]
+            bestRotation=None #stores (rotation, delta-score)
+            for rotation in range(4):
+                tile=playerData.makeTile(playerData.currentTile, rotation)
+                if playerData.board.validPlacement(tile, row, column): #this would be legal
+                    playerData.board.addTile(tile, row, column, False)
+                    if tile.routeComplete(routeSide): #we could complete this track to bother our opponent
+                        currentScore=playerData.board.calculateTrackScore(station)
+                        if not isinstance(tile.followRoute(routeSide), PowerStation): #no doubling to deal with
+                            newScore=currentScore+tile.tabulateScore(routeSide)
+                        else:
+                            newScore=(currentScore+tile.tabulateScore(routeSide)/2)*2
+                        deltaScore=newScore-currentScore
+                        if not bestRotation or deltaScore<bestRotation[1]: #we want to minimize their score
+                            bestRotation=(rotation, deltaScore)
+            if bestRotation: #we found a good move
+                attacks.append((row, column, bestRotation[0], bestRotation[1])) #keep the best option for this tile
+    attacks.sort(key=lambda possibleMove: possibleMove[3])
+    if len(attacks):
+        playerData.board.addTile(playerData.makeTile(playerData.currentTile, attacks[0][2]), attacks[0][0], attacks[0][1])
+        return playerData, PlayerMove(playerData.playerId, (attacks[0][0], attacks[0][1]), playerData.currentTile, attacks[0][2])
+    
+    '''
     for highScoringTrack in playerData.ourRemainingStations: #attempt 1: put it where we want
         endOfLine=playerData.board.followRoute(stationId(highScoringTrack))
         row, column=playerData.board.lookupTileCoordinates(endOfLine[0]) #where could we place the tile to extend this route?
@@ -71,6 +104,7 @@ def move(playerData):
                 if not tile.routeComplete(routeSide) or isinstance(tile.lookupDestination(routeSide), PowerStation): #we're NOT going to connect to the border
                     playerData.board.addTile(tile, row, column) #commit/actually add it to the board
                     return playerData, PlayerMove(playerData.playerId, (row, column), playerData.currentTile, rotation)
+    '''
     
     unoccupiedCoordinates=[]
     for row in range(8): #where are the vacancies on the board?

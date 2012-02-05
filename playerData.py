@@ -36,7 +36,7 @@ def stationScore(remainingStationsMember, newValue=-1):
     return remainingStationsMember[1]
 
 class PlayerData(object):
-    __slots__ = ('logger', 'playerId', 'currentTile', 'numPlayers', 'board', 'stationOwners', 'ourRemainingStations')
+    __slots__ = ('logger', 'playerId', 'currentTile', 'numPlayers', 'board', 'stationOwners', 'ourRemainingStations', 'opponentsTiles')
     """
     Our data members:
         board - stores the tiles
@@ -44,6 +44,8 @@ class PlayerData(object):
             access via: PlayerData.trackOwner(...)
         ourRemainingStations - contains the numbers (1-32) of our incomplete tracks and their scores
             access via: stationId(...), stationScore(...)
+        opponentsTiles - a list of our opponents' next tile letters
+            NOTE: not currently accessible by player id, since we don't account for disqualified ones
     """
     
     def __init__(self, logger, playerId, currentTile, numPlayers):
@@ -95,6 +97,8 @@ class PlayerData(object):
         for station in range(len(self.stationOwners)):
             if self.stationOwners[station]==playerId: #this one's ours!
                 self.ourRemainingStations.append([station+1, 0])
+        
+        self.opponentsTiles=[]
     
     def makeTile(self, tileName='', rotation=0):
         """

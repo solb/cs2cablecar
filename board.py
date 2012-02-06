@@ -35,7 +35,7 @@ class Board(object):
     def _linkTileSide(self, newResident, neighboringRow, neighboringCol, side, makePermanent=True):
         """
         _linkTileSide: Tile * int * int * int
-        Links a newly-placed tile with the surrounding tiles, returning whether all surrounding references to newResident have been updated
+        Links a newly-placed tile with the surrounding tiles
             newResident - the new tile to be linked
             neighboringRow - the r-coordinate of the existing tile with which to link (0-7)
             neighboringCol - the c-coordinate of the existing tile with which to link (0-7)
@@ -44,17 +44,12 @@ class Board(object):
         """
         if neighboringRow<0 or neighboringRow>=len(self.board): #newResident on the top or bottom board edge
             self.cars.layTrack(newResident, side, neighboringCol, makePermanent) #link station to this tile
-            return True
         elif neighboringCol<0 or neighboringCol>=len(self.board[neighboringRow]): #on the left or right edge
             self.cars.layTrack(newResident, side, neighboringRow, makePermanent) #link station to this tile
-            return True
         elif isinstance(newResident, ConnectedTile): #not on the edge of the board and may be linked
             newResident.addBorderingTile(self.board[neighboringRow][neighboringCol], side, makePermanent) #link with another ConectedTile
-            return True
         elif isinstance(self.board[neighboringRow][neighboringCol], ConnectedTile): #newResident isn't a ConnectedTile, and this neighboring ConnectedTile doesn't know about it
-            return False #we're probably trying to remove a tile that was already on the board, and will need to handle this ourselves
-        else:
-            return True #all references have been updated
+            self.board[neighboringRow][neighboringCol].addBorderingTile(newResident, self.board[neighboringRow][neighboringCol].adjacentSide(side), False)
     
     def addTile(self, resident, row, column, makePermanent=True):
         """
@@ -91,10 +86,10 @@ class Board(object):
             return False
         
         self.board[row][column]=Tile() #replace with placeholder
-        self._linkTileSide(Tile(), row-1, column, 0, True) or self.board[row-1][column].addBorderingTile(self.board[row][column], oldTile.adjacentSide(0), False) #unlink from the above tile
-        self._linkTileSide(Tile(), row, column+1, 1, True) or self.board[row][column+1].addBorderingTile(self.board[row][column], oldTile.adjacentSide(1), False) #unlink from the right tile
-        self._linkTileSide(Tile(), row+1, column, 2, True) or self.board[row+1][column].addBorderingTile(self.board[row][column], oldTile.adjacentSide(2), False) #unlink from the below tile
-        self._linkTileSide(Tile(), row, column-1, 3, True) or self.board[row][column-1].addBorderingTile(self.board[row][column], oldTile.adjacentSide(3), False) #unlink from the left tile
+        self._linkTileSide(self.board[row][column], row-1, column, 0, True) #unlink from the above tile
+        self._linkTileSide(self.board[row][column], row, column+1, 1, True) #unlink from the right tile
+        self._linkTileSide(self.board[row][column], row+1, column, 2, True) #unlink from the below tile
+        self._linkTileSide(self.board[row][column], row, column-1, 3, True) #unlink from the left tile
         return True
     
     def lookupTile(self, row, column, giveEmpty=False):
@@ -381,7 +376,7 @@ class OuterStations(Tile):
         Tile.__init__(self)
         self.type='os'
         self.rotation=rotation
-        self.borderedTiles=[Tile() for _ in range(8)]
+        self.borderedTiles=[None for _ in range(8)]
     
     def addTrack(self, neighbor, substation, rememberTile=True):
         """

@@ -35,7 +35,7 @@ class Board(object):
     def _linkTileSide(self, newResident, neighboringRow, neighboringCol, side, makePermanent=True):
         """
         _linkTileSide: Tile * int * int * int
-        Links a newly-placed tile with the surrounding tiles
+        Links a newly-placed tile with the surrounding tiles, returning whether all surrounding references to newResident have been updated
             newResident - the new tile to be linked
             neighboringRow - the r-coordinate of the existing tile with which to link (0-7)
             neighboringCol - the c-coordinate of the existing tile with which to link (0-7)
@@ -44,10 +44,17 @@ class Board(object):
         """
         if neighboringRow<0 or neighboringRow>=len(self.board): #newResident on the top or bottom board edge
             self.cars.layTrack(newResident, side, neighboringCol, makePermanent) #link station to this tile
+            return True
         elif neighboringCol<0 or neighboringCol>=len(self.board[neighboringRow]): #on the left or right edge
             self.cars.layTrack(newResident, side, neighboringRow, makePermanent) #link station to this tile
+            return True
         elif isinstance(newResident, ConnectedTile): #not on the edge of the board and may be linked
             newResident.addBorderingTile(self.board[neighboringRow][neighboringCol], side, makePermanent) #link with another ConectedTile
+            return True
+        elif isinstance(self.board[neighboringRow][neighboringCol], ConnectedTile): #newResident isn't a ConnectedTile, and this neighboring ConnectedTile doesn't know about it
+            return False #we're probably trying to remove a tile that was already on the board, and will need to handle this ourselves
+        else:
+            return True #all references have been updated
     
     def addTile(self, resident, row, column, makePermanent=True):
         """
@@ -67,8 +74,27 @@ class Board(object):
         
         self._linkTileSide(resident, row-1, column, 0, makePermanent) #link with the above tile
         self._linkTileSide(resident, row, column+1, 1, makePermanent) #link with the right tile
-        self._linkTileSide(resident, row+1, column, 2, makePermanent) #link with the left tile
-        self._linkTileSide(resident, row, column-1, 3, makePermanent) #link with the below tile
+        self._linkTileSide(resident, row+1, column, 2, makePermanent) #link with the below tile
+        self._linkTileSide(resident, row, column-1, 3, makePermanent) #link with the left tile
+        return True
+    
+    def removeTile(self, row, column):
+        """
+        removeTile: int * int -> bool
+        Removes the tile at the specified coordinates from the board, returning whether the operation succeeded (didn't try to remove part of the board itself)
+            row - the r-coordinate (0-7)
+            column - the c-coordinate (0-7)
+        post: The tile that has been removed is the same as if it had been passed into addTile(...) in order to create a temporary link.
+        """
+        oldTile=self.board[row][column]
+        if not isinstance(oldTile, ConnectedTile): #this is part of the board
+            return False
+        
+        self.board[row][column]=Tile() #replace with placeholder
+        self._linkTileSide(Tile(), row-1, column, 0, True) or self.board[row-1][column].addBorderingTile(self.board[row][column], oldTile.adjacentSide(0), False) #unlink from the above tile
+        self._linkTileSide(Tile(), row, column+1, 1, True) or self.board[row][column+1].addBorderingTile(self.board[row][column], oldTile.adjacentSide(1), False) #unlink from the right tile
+        self._linkTileSide(Tile(), row+1, column, 2, True) or self.board[row+1][column].addBorderingTile(self.board[row][column], oldTile.adjacentSide(2), False) #unlink from the below tile
+        self._linkTileSide(Tile(), row, column-1, 3, True) or self.board[row][column-1].addBorderingTile(self.board[row][column], oldTile.adjacentSide(3), False) #unlink from the left tile
         return True
     
     def lookupTile(self, row, column, giveEmpty=False):
@@ -355,8 +381,7 @@ class OuterStations(Tile):
         Tile.__init__(self)
         self.type='os'
         self.rotation=rotation
-        emptyTile=Tile()
-        self.borderedTiles=[emptyTile for _ in range(8)]
+        self.borderedTiles=[Tile() for _ in range(8)]
     
     def addTrack(self, neighbor, substation, rememberTile=True):
         """
@@ -477,7 +502,7 @@ class ConnectedTile(Tile):
         """
         self.borderingTiles[side]=neighbor
         if mutualConnection and isinstance(neighbor, ConnectedTile):
-            neighbor.borderingTiles[(side-2)%len(self.borderingTiles)]=self #make the connection mutual
+            neighbor.borderingTiles[self.adjacentSide(side)]=self #make the connection mutual
     
     def _entryPoint(self, source):
         """
@@ -499,9 +524,9 @@ class ConnectedTile(Tile):
         else:
             return self.internalConnections[entryPoint]
     
-    def _adjacentSide(self, knownSide):
+    def adjacentSide(self, knownSide):
         """
-        _adjacentSide: int -> int
+        adjacentSide: int -> int
         Calculates which side of a bordering tile the specified side of this tile would touch.
             knownSide - the side of this tile (0-3)
         """
@@ -529,7 +554,7 @@ class ConnectedTile(Tile):
         This helper method is used to determine whether each Tile represents the end of its track, and if so, it returns whether it represents an ending that leaves the track complete.  This override always recurses to the destination Tile's implementation of this method and returns the result of that call.
             caller - a reference to the Tile that called this method or the side of this tile from where we entered (0-3)
         """
-        return self.lookupDestination(caller).routeComplete(self._adjacentSide(self._exitPoint(caller)))
+        return self.lookupDestination(caller).routeComplete(self.adjacentSide(self._exitPoint(caller)))
     
     def tabulateScore(self, caller, runningScore=0):
         """
@@ -538,7 +563,7 @@ class ConnectedTile(Tile):
             caller - a reference to the Tile that called this method or the side of this tile from where we entered (0-3)
             runningScore - the running score
         """
-        return self.lookupDestination(caller).tabulateScore(self._adjacentSide(self._exitPoint(caller)), runningScore+1)
+        return self.lookupDestination(caller).tabulateScore(self.adjacentSide(self._exitPoint(caller)), runningScore+1)
     
     def followRoute(self, caller):
         """
@@ -546,7 +571,7 @@ class ConnectedTile(Tile):
         This helper method is used to fetch the tile at the end of a track, as well as the side of this tile on which the rest of the track is.  This override recurses to the destination Tile's implementation and returns that method's result.
             entryPoint - a reference to the Tile that called this method or the side of this tile on which the track enters (0-3)
         """
-        return self.lookupDestination(caller).followRoute(self._adjacentSide(self._exitPoint(caller)))
+        return self.lookupDestination(caller).followRoute(self.adjacentSide(self._exitPoint(caller)))
     
     def reverseFollowRoute(self, caller):
         """
@@ -557,7 +582,7 @@ class ConnectedTile(Tile):
         if isinstance(caller, Tile):
             trackSide=self.internalConnections.index(self._entryPoint(caller)) #the side of *this* tile where the *preceding* tile is connected
         else:
-            trackSide=self.internalConnections.index(self._adjacentSide(caller)) #the side of *this* tile where the *preceding* tile is connected
+            trackSide=self.internalConnections.index(self.adjacentSide(caller)) #the side of *this* tile where the *preceding* tile is connected
         
         return self.neighborOnSide(trackSide).reverseFollowRoute(self)
     

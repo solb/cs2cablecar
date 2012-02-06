@@ -44,8 +44,8 @@ class PlayerData(object):
             access via: PlayerData.trackOwner(...)
         ourRemainingStations - contains the numbers (1-32) of our incomplete tracks and their scores
             access via: stationId(...), stationScore(...)
-        opponentsTiles - a list of our opponents' next tile letters
-            NOTE: not currently accessible by player id, since we don't account for disqualified ones
+        opponentsTiles - a list of our opponents' next tile letters, indexed by player ID
+            NOTE: our tile and any eliminated opponents' tiles are set to ''
     """
     
     def __init__(self, logger, playerId, currentTile, numPlayers):
@@ -98,7 +98,7 @@ class PlayerData(object):
             if self.stationOwners[station]==playerId: #this one's ours!
                 self.ourRemainingStations.append([station+1, 0])
         
-        self.opponentsTiles=[]
+        self.opponentsTiles=['' for _ in range(numPlayers)]
     
     def makeTile(self, tileName='', rotation=0):
         """
@@ -138,6 +138,37 @@ class PlayerData(object):
             trackId - the track ID (1-32)
         """
         return self.stationOwners[trackId-1]
+    
+    def routeInDanger(self, track, attacker=-1): #TODO doesn't account for legal invalid placements
+        """
+        routeInDanger: int -> bool
+        Returns whether the specified attacker--or any player besides us if none specified--could connect the specified track--in its current state--to the board's edge in a single turn.
+            track - the ID of the track about which we're worried
+            attacker - the ID of the player who might end the track, or all other players by default
+        pre: The specified route is not yet complete, and the specified player actually has another move.
+        """
+        if attacker==-1: #we'll need to check all players
+            for enemy in range(self.numPlayers):
+                if self.opponentsTiles[enemy] and self.routeInDanger(track, enemy): #this player is an opponent with a move to make, and poses a threat to this route
+                    return True
+            return False
+        else:
+            if attacker==self.playerId: #WE are the attacker!
+                tileType=self.currentTile
+            else:
+                tileType=self.opponentsTiles[attacker]
+            routeEnd=self.board.followRoute(track)
+            row, column=self.board.lookupTileCoordinates(routeEnd[0])
+            side=routeEnd[1]
+            for rotation in range(4):
+                tile=self.makeTile(tileType, rotation)
+                if self.board.validPlacement(tile, row, column): #TODO what if an invalid placement would be legal?
+                    self.board.addTile(tile, row, column)
+                    vulnerable=isinstance(tile.followRoute(side)[0], OuterStations)
+                    self.board.removeTile(row, column)
+                    if vulnerable:
+                        return True
+            return False
     
     ######
     #These functions are intended to be called regularly in order to update our recorded information.

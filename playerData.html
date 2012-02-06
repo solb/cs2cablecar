@@ -55,6 +55,12 @@ Returns&nbsp;an&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;to&nbsp;r
 &nbsp;&nbsp;&nbsp;&nbsp;tileName&nbsp;-&nbsp;the&nbsp;type&nbsp;of&nbsp;tile,&nbsp;'a'-'j'&nbsp;(default&nbsp;is&nbsp;our&nbsp;current&nbsp;tile)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;rotation&nbsp;-&nbsp;the&nbsp;tile's&nbsp;rotation,&nbsp;0-3</tt></dd></dl>
 
+<dl><dt><a name="PlayerData-routeInDanger"><strong>routeInDanger</strong></a>(self, track, attacker<font color="#909090">=-1</font>)</dt><dd><tt>routeInDanger:&nbsp;int&nbsp;-&gt;&nbsp;bool<br>
+Returns&nbsp;whether&nbsp;the&nbsp;specified&nbsp;attacker--or&nbsp;any&nbsp;player&nbsp;besides&nbsp;us&nbsp;if&nbsp;none&nbsp;specified--could&nbsp;connect&nbsp;the&nbsp;specified&nbsp;track--in&nbsp;its&nbsp;current&nbsp;state--to&nbsp;the&nbsp;board's&nbsp;edge&nbsp;in&nbsp;a&nbsp;single&nbsp;turn.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;track&nbsp;-&nbsp;the&nbsp;ID&nbsp;of&nbsp;the&nbsp;track&nbsp;about&nbsp;which&nbsp;we're&nbsp;worried<br>
+&nbsp;&nbsp;&nbsp;&nbsp;attacker&nbsp;-&nbsp;the&nbsp;ID&nbsp;of&nbsp;the&nbsp;player&nbsp;who&nbsp;might&nbsp;end&nbsp;the&nbsp;track,&nbsp;or&nbsp;all&nbsp;other&nbsp;players&nbsp;by&nbsp;default<br>
+pre:&nbsp;The&nbsp;specified&nbsp;route&nbsp;is&nbsp;not&nbsp;yet&nbsp;complete,&nbsp;and&nbsp;the&nbsp;specified&nbsp;player&nbsp;actually&nbsp;has&nbsp;another&nbsp;move.</tt></dd></dl>
+
 <dl><dt><a name="PlayerData-trackOwner"><strong>trackOwner</strong></a>(self, trackId)</dt><dd><tt>trackOwner:&nbsp;int&nbsp;-&gt;&nbsp;int<br>
 Returns&nbsp;the&nbsp;player&nbsp;ID&nbsp;of&nbsp;the&nbsp;owner&nbsp;of&nbsp;the&nbsp;track&nbsp;with&nbsp;the&nbsp;specified&nbsp;track&nbsp;ID,&nbsp;or&nbsp;-1&nbsp;if&nbsp;no&nbsp;one&nbsp;owns&nbsp;this&nbsp;track.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;trackId&nbsp;-&nbsp;the&nbsp;track&nbsp;ID&nbsp;(1-32)</tt></dd></dl>

@@ -57,12 +57,57 @@ def move(playerData):
             which contains whatever you need to keep track of
         playerMove - your next move
     """
+    #FIXME re-implement this whole thing functionally
+    #FIXME weigh DEFENSE against OFFENSE
+    #FIXME choose the best-scoring rotation whenever we choose a tile
     
     playerData.logger.write("move() called")
     #TODO do a better job of starting our tracks safely
     
-    #TODO go into defensive mode if our tracks are in danger
-    
+    #defend our tracks: save those that are in danger
+    #TODO defend more than just the first such problem we see
+    #TODO look after our unstarted routes, too
+    for station in range(1, 33):
+        if playerData.trackOwner(station)==playerData.playerId and not playerData.board.routeIsComplete(station) and playerData.board.calculateTrackScore(station): #this is ours, has been started, and is unfinished
+            endOfLine=playerData.board.followRoute(station)
+            row, column=playerData.board.lookupTileCoordinates(endOfLine[0])
+            routeSide=endOfLine[1]
+            for threat in playerData.opponentsTiles: #we're going to make sure no opponent could shut this down
+                trackAtRisk=False
+                for newRotation in range(4):
+                    threateningTile=playerData.makeTile(threat, newRotation)
+                    if not playerData.board.lookupTile(row, column): #nothing here yet
+                        playerData.board.addTile(threateningTile, row, column, False) #populate this with the board's knowledge
+                        if threateningTile.routeComplete(routeSide): #we could be thwarted
+                            trackAtRisk=True
+                            break
+                if trackAtRisk:
+                    for rotation in range(4):
+                        tile=playerData.makeTile(rotation=rotation)
+                        if playerData.board.validPlacement(tile, row, column):
+                            playerData.board.addTile(tile, row, column, False) #get ready to test more deeply
+                            
+                            if not isinstance(tile.followRoute(routeSide)[0], OuterStations): #we're NOT going to connect to the border
+                                abort=False
+                                for threat in playerData.opponentsTiles: #we're going to make sure no opponent could shut this down
+                                    for newRotation in range(4):
+                                        newEndOfLine=tile.followRoute(routeSide)
+                                        newRow, newColumn=playerData.board.lookupTileCoordinates(newEndOfLine[0])
+                                        newRouteSide=newEndOfLine[1]
+                                        threateningTile=playerData.makeTile(threat, newRotation)
+                                        if not playerData.board.lookupTile(newRow, newColumn): #nothing here yet
+                                            playerData.board.addTile(threateningTile, newRow, newColumn, False) #populate this with the board's knowledge
+                                            if playerData.board.lookupTileCoordinates(threateningTile.neighborOnSide(newRouteSide))==(row, column): #this is adjacent to the tile we're trying to place
+                                                threateningTile.addBorderingTile(tile, newRouteSide, False) #make it aware of the tile we were planning on placing
+                                            if threateningTile.routeComplete(newRouteSide): #we could be thwarted
+                                                abort=True
+                                                break
+                                if abort:
+                                    break #this move would be no good; let's try a different rotation/tile
+                                
+                                playerData.board.addTile(tile, row, column) #commit/actually add it to the board
+                                return playerData, PlayerMove(playerData.playerId, (row, column), playerData.currentTile, rotation)
+                    break
     
     #go on the offense: shut down an opponent's track
     #TODO end longer tracks over shorter ones
@@ -125,19 +170,20 @@ def move(playerData):
                     abort=False
                     for threat in playerData.opponentsTiles: #we're going to make sure no opponent could shut this down
                         for newRotation in range(4):
+                            #FIXME there seems to be a bug in here:
                             newEndOfLine=tile.followRoute(routeSide)
                             newRow, newColumn=playerData.board.lookupTileCoordinates(newEndOfLine[0])
                             newRouteSide=newEndOfLine[1]
-                            threat=playerData.makeTile(threat, newRotation)
+                            threateningTile=playerData.makeTile(threat, newRotation)
                             if not playerData.board.lookupTile(newRow, newColumn): #nothing here yet
-                                playerData.board.addTile(threat, newRow, newColumn, False) #populate this with the board's knowledge
-                                if playerData.board.lookupTileCoordinates(threat.neighborOnSide(newRouteSide))==(row, column): #this is adjacent to the tile we're trying to place
-                                    threat.addBorderingTile(tile, newRouteSide, False) #make it aware of the tile we were planning on placing
-                                if threat.routeComplete(newRouteSide): #we could be thwarted
+                                playerData.board.addTile(threateningTile, newRow, newColumn, False) #populate this with the board's knowledge
+                                if playerData.board.lookupTileCoordinates(threateningTile.neighborOnSide(newRouteSide))==(row, column): #this is adjacent to the tile we're trying to place
+                                    threateningTile.addBorderingTile(tile, newRouteSide, False) #make it aware of the tile we were planning on placing
+                                if threateningTile.routeComplete(newRouteSide): #we could be thwarted
                                     abort=True
                                     break
                         if abort:
-                            continue
+                            break #this move would be no good; let's try a different rotation/tile
                         
                         playerData.board.addTile(tile, row, column) #commit/actually add it to the board
                         return playerData, PlayerMove(playerData.playerId, (row, column), playerData.currentTile, rotation)
@@ -182,10 +228,10 @@ def move_info(playerData, playerMove, nextTile):
     
     if not playerMove: #we've just moved; here's our next tile
         playerData.currentTile=nextTile
-        playerData.opponentsTiles=[] #it's a new round and our opponents will have new tiles
+        playerData.opponentsTiles=['' for _ in range(self.numPlayers)] #it's a new round and our opponents will have new tiles
     else: #we're looking at someone else's move
         playerData.board.addTile(playerData.makeTile(playerMove.tileName, playerMove.rotation), playerMove.position[0], playerMove.position[1]) #keep track of this tile's location
-        playerData.opponentsTiles.append(nextTile) #remember this player's next tile
+        playerData.opponentsTiles[playerMove.playerId]=nextTile #remember this player's next tile
     
     if playerData.numPlayers==1 or (playerMove and playerMove.playerId==(playerData.playerId-1)%playerData.numPlayers): #we're either all alone or we'll be up next
         playerData.updateOurStations() #keep watch on our progress and score

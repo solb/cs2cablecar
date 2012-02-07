@@ -60,12 +60,17 @@ def move(playerData):
     #TODO we currently don't count PowerStation connections as completions at all; should we?
     defenses=[] #our tracks in need of saving: stores [row, column, rotation, deltaScore]
     attacks=[] #opponents' vulnerable tracks: stores [row, column, rotation, deltaScore]
+    extensions=[] #our tracks that could be extended: stores [row, column, rotation, deltaScore]
     for track in range(1, 33):
         if not playerData.board.routeIsComplete(track):
             if playerData.trackOwner(track)==playerData.playerId: #our track
-                if playerData.routeInDanger(track):
-                    currentScore=playerData.board.calculateTrackScore(track)
-                    possibleFutures=playerData.possibleTrackExtensions(track, False) #avoid completing our tracks
+                currentScore=playerData.board.calculateTrackScore(track)
+                possibleFutures=playerData.possibleTrackExtensions(track, False) #avoid edges
+                if playerData.routeInDanger(track): #this track needs defense
+                    for option in possibleFutures:
+                        option[3]-=currentScore #only consider our gain, not the total track score
+                        defenses.append(option)
+                else: #lengthen this track, possibly connecting it to a power station
                     for option in possibleFutures:
                         option[3]-=currentScore #only consider our gain, not the total track score
                         defenses.append(option)
@@ -83,6 +88,7 @@ def move(playerData):
     print 'NB: Our best defenses are:\n'+str(defenses)
     print 'NB: Our best attacks are:\n'+str(attacks)
     
+    #TODO weigh DEFENSE against OFFENSE
     if len(defenses):
         print 'NB: On guard!'
         playerData.board.addTile(playerData.makeTile(playerData.currentTile, defenses[0][2]), defenses[0][0], defenses[0][1])
@@ -92,10 +98,10 @@ def move(playerData):
         print 'I think I\'m going to find this there: '+str(playerData.board.lookupTile(attacks[0][0], attacks[0][1]))
         playerData.board.addTile(playerData.makeTile(playerData.currentTile, attacks[0][2]), attacks[0][0], attacks[0][1])
         return playerData, PlayerMove(playerData.playerId, (attacks[0][0], attacks[0][1]), playerData.currentTile, attacks[0][2])
+    elif len(extensions):
+        playerData.board.addTile(playerData.makeTile(playerData.currentTile, extensions[0][2]), extensions[0][0], extensions[0][1])
+        return playerData, PlayerMove(playerData.playerId, (extensions[0][0], extensions[0][1]), playerData.currentTile, extensions[0][2])
     
-    
-    
-    #FIXME weigh DEFENSE against OFFENSE
     #FIXME choose the best-scoring rotation whenever we choose a tile
     #FIXME do a better job of starting out our tracks
     #FIXME end their longer tracks over their shorter ones, instead of just looking at the deltas?

@@ -57,41 +57,41 @@ def move(playerData):
             which contains whatever you need to keep track of
         playerMove - your next move
     """
-    defenses=[] #our tracks in need of saving: stores (track, score)
-    attacks=[] #opponents' vulnerable tracks: stores (row, column, rotation, deltaScore)
+    #TODO we currently don't count PowerStation connections as completions at all; should we?
+    defenses=[] #our tracks in need of saving: stores [row, column, rotation, deltaScore]
+    attacks=[] #opponents' vulnerable tracks: stores [row, column, rotation, deltaScore]
     for track in range(1, 33):
         if not playerData.board.routeIsComplete(track):
             if playerData.trackOwner(track)==playerData.playerId: #our track
                 if playerData.routeInDanger(track):
-                    #TODO we need to make sure we don't put anything else in danger by fixing this vulnerability
-                    defenses.append((track, playerData.board.calculateTrackScore(track))) #TODO We currently only save the track with the highest score; should we consider anything else?
+                    currentScore=playerData.board.calculateTrackScore(track)
+                    possibleFutures=playerData.possibleTrackExtensions(track, False) #avoid completing our tracks
+                    for option in possibleFutures:
+                        option[3]-=currentScore #only consider our gain, not the total track score
+                        defenses.append(option)
             else: #someone else's
                 if playerData.routeInDanger(track, playerData.playerId): #WE pose a threat
                     currentScore=playerData.board.calculateTrackScore(track)
-                    row, column=playerData.board.lookupTileCoordinates(playerData.board.followRoute(track)[0])
+                    possibleFutures=playerData.possibleTrackExtensions(track, True) #aim to complete their tracks
                     
-                    options=[] #stores (rotation, score)
-                    for rotation in range(4):
-                        ourTile=playerData.makeTile(rotation=rotation)
-                        if playerData.board.validPlacement(ourTile, row, column) or playerData.mayMoveIllegally[playerData.playerId]: #we're legal or allowed not to be
-                            playerData.board.addTile(ourTile, row, column)
-                            if playerData.board.routeIsComplete(track): #this rotation completes it
-                                if not playerData.tileJeopardizesOurRoutes(row, column): #we haven't done anything significant to our own routes at the same time
-                                    options.append((rotation, playerData.board.calculateTrackScore(track)))
-                                else:
-                                    print 'NB: Placing at '+str((row, column))+' w/ rotation '+str(rotation)+' would jeopardize our own route'
-                            playerData.board.removeTile(row, column)
-                    options.sort(key=lambda potentialRotation: potentialRotation[1]) #their lowest gain first
-                    
-                    if len(options):
-                        attacks.append((row, column, options[0][0], options[0][1]-currentScore)) #TODO Should we be able to take out our anger on specific players?
-    defenses.sort(key=lambda inNeed: inNeed[1], reverse=True) #our highest current score first
+                    for option in possibleFutures:
+                        option[3]-=currentScore #only consider their gain, not the total track score
+                        attacks.append(option) #TODO Should we be able to take out our anger on specific players?
+    defenses.sort(key=lambda inNeed: inNeed[3], reverse=True) #our highest current score first
     attacks.sort(key=lambda wideOpen: wideOpen[3]) #their lowest gain first
     
     print 'NB: Our best defenses are:\n'+str(defenses)
     print 'NB: Our best attacks are:\n'+str(attacks)
-    if True:
-        pass
+    
+    if len(defenses):
+        print 'NB: On guard!'
+        playerData.board.addTile(playerData.makeTile(playerData.currentTile, defenses[0][2]), defenses[0][0], defenses[0][1])
+        return playerData, PlayerMove(playerData.playerId, (defenses[0][0], defenses[0][1]), playerData.currentTile, defenses[0][2])
+    elif len(attacks):
+        print 'NB: Commencing attack run...'
+        print 'I think I\'m going to find this there: '+str(playerData.board.lookupTile(attacks[0][0], attacks[0][1]))
+        playerData.board.addTile(playerData.makeTile(playerData.currentTile, attacks[0][2]), attacks[0][0], attacks[0][1])
+        return playerData, PlayerMove(playerData.playerId, (attacks[0][0], attacks[0][1]), playerData.currentTile, attacks[0][2])
     
     
     
@@ -123,9 +123,11 @@ def move(playerData):
             tile=playerData.makeTile(rotation=rotation)
             if playerData.board.validPlacement(tile, location[0], location[1]):
                 playerData.board.addTile(tile, location[0], location[1])
+                print 'Making a legal move.'
                 return playerData, PlayerMove(playerData.playerId, (location[0], location[1]), playerData.currentTile, rotation)
     
     playerData.board.addTile(playerData.makeTile(), unoccupiedCoordinates[0][0], unoccupiedCoordinates[0][1], rotation)
+    print 'Making an illegal move!'
     return playerData, PlayerMove(playerData.playerId, (unoccupiedCoordinates[0][0], unoccupiedCoordinates[0][1]), playerData.currentTile, rotation) #final attempt: stick it somewhere it shouldn't be
 
 def move_info(playerData, playerMove, nextTile):

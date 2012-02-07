@@ -197,6 +197,27 @@ class PlayerData(object):
                             return True
         return False
     
+    def possibleTrackExtensions(self, track, completeTrack):
+        """
+        possibleTrackExtensions: int * bool -> list(int, int, int, int)
+        Returns a list of the permissible uses of the current tile in order to extend the specified track and either complete or not complete it, all while maintaining the completeness and safety of our own stations; the list is of the form (row, column, rotation, new_score)
+            track - the track to extend
+            completeTrack - our goal, whether it be to complete the track or not to complete it
+        """
+        row, column=self.board.lookupTileCoordinates(self.board.followRoute(track)[0])
+        options=[] #stores (rotation, score)
+        for rotation in range(4):
+            ourTile=self.makeTile(rotation=rotation)
+            if self.board.validPlacement(ourTile, row, column) or (not self.board.lookupTile(row, column) and self.mayMoveIllegally[self.playerId]): #we're legal or allowed not to be
+                self.board.addTile(ourTile, row, column)
+                if isinstance(self.board.followRoute(track)[0], OuterStations)==completeTrack: #this rotation completes it
+                    if not self.tileJeopardizesOurRoutes(row, column): #we haven't done anything significant to our own routes at the same time
+                        options.append([row, column, rotation, self.board.calculateTrackScore(track)])
+                    else:
+                        print 'NB: Placing at '+str((row, column))+' w/ rotation '+str(rotation)+' would jeopardize our own route'
+                self.board.removeTile(row, column)
+        return options
+    
     ######
     #These functions are intended to be called regularly in order to update our recorded information.
     ######

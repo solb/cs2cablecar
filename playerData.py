@@ -36,7 +36,7 @@ def stationScore(remainingStationsMember, newValue=-1):
     return remainingStationsMember[1]
 
 class PlayerData(object):
-    __slots__ = ('logger', 'playerId', 'currentTile', 'numPlayers', 'board', 'stationOwners', 'ourRemainingStations', 'opponentsTiles')
+    __slots__ = ('logger', 'playerId', 'currentTile', 'numPlayers', 'board', 'stationOwners', 'ourRemainingStations', 'opponentsTiles', 'mayMoveIllegally')
     """
     Our data members:
         board - stores the tiles
@@ -46,6 +46,7 @@ class PlayerData(object):
             access via: stationId(...), stationScore(...)
         opponentsTiles - a list of our opponents' next tile letters, indexed by player ID
             NOTE: our tile and any eliminated opponents' tiles are set to ''
+        mayMoveIllegally - a list of who may legally make an invalid move, indexed by player ID
     """
     
     def __init__(self, logger, playerId, currentTile, numPlayers):
@@ -99,6 +100,7 @@ class PlayerData(object):
                 self.ourRemainingStations.append([station+1, 0])
         
         self.opponentsTiles=['' for _ in range(numPlayers)]
+        self.updateLegalConstraints()
     
     def makeTile(self, tileName='', rotation=0):
         """
@@ -139,10 +141,10 @@ class PlayerData(object):
         """
         return self.stationOwners[trackId-1]
     
-    def routeInDanger(self, track, attacker=-1): #TODO doesn't account for legal invalid placements
+    def routeInDanger(self, track, attacker=-1): #TODO We currently allow others to connect our routes to PowerStation s; should we make this optional?
         """
-        routeInDanger: int -> bool
-        Returns whether the specified attacker--or any player besides us if none specified--could connect the specified track--in its current state--to the board's edge in a single turn.
+        routeInDanger: int * int -> bool
+        Returns whether the specified attacker--or any player besides us if none specified--could connect the specified track--in its current state--to the board's edge in a single turn
             track - the ID of the track about which we're worried
             attacker - the ID of the player who might end the track, or all other players by default
         pre: The specified route is not yet complete, and the specified player actually has another move.
@@ -162,13 +164,38 @@ class PlayerData(object):
             side=routeEnd[1]
             for rotation in range(4):
                 tile=self.makeTile(tileType, rotation)
-                if self.board.validPlacement(tile, row, column): #TODO what if an invalid placement would be legal?
+                if self.board.validPlacement(tile, row, column) or self.mayMoveIllegally[attacker]: #move would be valid or would have just cause not to be
                     self.board.addTile(tile, row, column)
                     vulnerable=isinstance(tile.followRoute(side)[0], OuterStations)
                     self.board.removeTile(row, column)
                     if vulnerable:
                         return True
             return False
+    
+    def tileJeopardizesOurRoutes(self, row, column, allowCompletion=-1): #TODO We currently allow others to connect our routes to PowerStation s; should we make this optional?  Won't we sometimes want to be able to complete multiple tracks at once?
+        """
+        tileJeopardizesOurRoutes: int * int * int -> bool
+        Returns whether the placement of the tile at the specified coordinates connected any of our routes to the edge or even placed any of them in danger's way
+            row - r-coord (0-7)
+            col - c-coord (0-7)
+            allowCompletion - the side--if any--on which to permit a completion
+        pre: A tile has already been placed at the specified coordinates.
+        """
+        for side in range(4):
+            if side!=allowCompletion: #this isn't the side we were aiming to complete...
+                if isinstance(self.board.lookupTile(row, column).followRoute(side)[0], OuterStations): #this opened a new path to the edge, so we need to reaffirm the safety of *all* our stations
+                    for track in self.ourRemainingStations:
+                        if isinstance(self.board.followRoute(stationId(track))[0], OuterStations) or self.routeInDanger(stationId(track)): #one of our remaining stations was either inadvertently completed or is now at risk
+                            return True
+                else: #we only need to check those of our stations that pass through this tile
+                    route=self.board.lookupTrackNumber(self.board.lookupTile(row, column), self.board.lookupTile(row, column).adjacentSide(side))
+                    
+                    if route==-1 or self.trackOwner(route)!=self.playerId: #this isn't a real route (yet) or someone we don't care about owns it
+                        continue
+                    else: #this is one of our hard-earned routes
+                        if isinstance(self.board.followRoute(route)[0], OuterStations) or self.routeInDanger(route): #one of our hard-earned stations was either inadvertently completed or is now at risk
+                            return True
+        return False
     
     ######
     #These functions are intended to be called regularly in order to update our recorded information.
@@ -189,6 +216,30 @@ class PlayerData(object):
         while len(deletionStack):
             del self.ourRemainingStations[deletionStack.pop()]
         self.ourRemainingStations.sort(key=stationScore, reverse=True) #sort by score
+    
+    def updateLegalConstraints(self):
+        """
+        updateLegalConstratins
+        Updates the list of who may legally make an invalid move
+        post: mayMoveIllegally is up to date.
+        """
+        self.mayMoveIllegally=[True for _ in range(self.numPlayers)]
+        for player in range(self.numPlayers):
+            if player==self.playerId:
+                tileName=self.currentTile
+            else:
+                tileName=self.opponentsTiles[player]
+            if tileName: #we know of this player's next tile
+                for row in range(8):
+                    for column in range(8):
+                        for rotation in range(4):
+                            if self.board.validPlacement(self.makeTile(tileName, rotation), row, column): #this guy has no excuse but to make a legal move
+                                self.mayMoveIllegally[player]=False
+                                break
+                        if not self.mayMoveIllegally[player]:
+                            break
+                    if not self.mayMoveIllegally[player]:
+                        break
     
     def __str__(self):
         """

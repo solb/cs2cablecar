@@ -57,136 +57,60 @@ def move(playerData):
             which contains whatever you need to keep track of
         playerMove - your next move
     """
-    #FIXME re-implement this whole thing functionally
+    defenses=[] #our tracks in need of saving: stores (track, score)
+    attacks=[] #opponents' vulnerable tracks: stores (row, column, rotation, deltaScore)
+    for track in range(1, 33):
+        if not playerData.board.routeIsComplete(track):
+            if playerData.trackOwner(track)==playerData.playerId: #our track
+                if playerData.routeInDanger(track):
+                    #TODO we need to make sure we don't put anything else in danger by fixing this vulnerability
+                    defenses.append((track, playerData.board.calculateTrackScore(track))) #TODO We currently only save the track with the highest score; should we consider anything else?
+            else: #someone else's
+                if playerData.routeInDanger(track, playerData.playerId): #WE pose a threat
+                    currentScore=playerData.board.calculateTrackScore(track)
+                    row, column=playerData.board.lookupTileCoordinates(playerData.board.followRoute(track)[0])
+                    
+                    options=[] #stores (rotation, score)
+                    for rotation in range(4):
+                        ourTile=playerData.makeTile(rotation=rotation)
+                        if playerData.board.validPlacement(ourTile, row, column) or playerData.mayMoveIllegally[playerData.playerId]: #we're legal or allowed not to be
+                            playerData.board.addTile(ourTile, row, column)
+                            if playerData.board.routeIsComplete(track): #this rotation completes it
+                                if not playerData.tileJeopardizesOurRoutes(row, column): #we haven't done anything significant to our own routes at the same time
+                                    options.append((rotation, playerData.board.calculateTrackScore(track)))
+                                else:
+                                    print 'NB: Placing at '+str((row, column))+' w/ rotation '+str(rotation)+' would jeopardize our own route'
+                            playerData.board.removeTile(row, column)
+                    options.sort(key=lambda potentialRotation: potentialRotation[1]) #their lowest gain first
+                    
+                    if len(options):
+                        attacks.append((row, column, options[0][0], options[0][1]-currentScore)) #TODO Should we be able to take out our anger on specific players?
+    defenses.sort(key=lambda inNeed: inNeed[1], reverse=True) #our highest current score first
+    attacks.sort(key=lambda wideOpen: wideOpen[3]) #their lowest gain first
+    
+    print 'NB: Our best defenses are:\n'+str(defenses)
+    print 'NB: Our best attacks are:\n'+str(attacks)
+    if True:
+        pass
+    
+    
+    
     #FIXME weigh DEFENSE against OFFENSE
     #FIXME choose the best-scoring rotation whenever we choose a tile
+    #FIXME do a better job of starting out our tracks
+    #FIXME end their longer tracks over their shorter ones, instead of just looking at the deltas?
     
-    playerData.logger.write("move() called")
-    #TODO do a better job of starting our tracks safely
     
-    #defend our tracks: save those that are in danger
-    #TODO defend more than just the first such problem we see
-    #TODO look after our unstarted routes, too
-    for station in range(1, 33):
-        if playerData.trackOwner(station)==playerData.playerId and not playerData.board.routeIsComplete(station) and playerData.board.calculateTrackScore(station): #this is ours, has been started, and is unfinished
-            endOfLine=playerData.board.followRoute(station)
-            row, column=playerData.board.lookupTileCoordinates(endOfLine[0])
-            routeSide=endOfLine[1]
-            for threat in playerData.opponentsTiles: #we're going to make sure no opponent could shut this down
-                trackAtRisk=False
-                for newRotation in range(4):
-                    threateningTile=playerData.makeTile(threat, newRotation)
-                    if not playerData.board.lookupTile(row, column): #nothing here yet
-                        playerData.board.addTile(threateningTile, row, column, False) #populate this with the board's knowledge
-                        if threateningTile.routeComplete(routeSide): #we could be thwarted
-                            trackAtRisk=True
-                            break
-                if trackAtRisk:
+    #code for optimized choice of route to extend:
+    '''currentScore=playerData.board.calculateTrackScore(track)
+                    row, column=playerData.board.lookupTileCoordinates(playerData.board.followRoute(track)[0])
                     for rotation in range(4):
-                        tile=playerData.makeTile(rotation=rotation)
-                        if playerData.board.validPlacement(tile, row, column):
-                            playerData.board.addTile(tile, row, column, False) #get ready to test more deeply
-                            
-                            if not isinstance(tile.followRoute(routeSide)[0], OuterStations): #we're NOT going to connect to the border
-                                abort=False
-                                for threat in playerData.opponentsTiles: #we're going to make sure no opponent could shut this down
-                                    for newRotation in range(4):
-                                        newEndOfLine=tile.followRoute(routeSide)
-                                        newRow, newColumn=playerData.board.lookupTileCoordinates(newEndOfLine[0])
-                                        newRouteSide=newEndOfLine[1]
-                                        threateningTile=playerData.makeTile(threat, newRotation)
-                                        if not playerData.board.lookupTile(newRow, newColumn): #nothing here yet
-                                            playerData.board.addTile(threateningTile, newRow, newColumn, False) #populate this with the board's knowledge
-                                            if playerData.board.lookupTileCoordinates(threateningTile.neighborOnSide(newRouteSide))==(row, column): #this is adjacent to the tile we're trying to place
-                                                threateningTile.addBorderingTile(tile, newRouteSide, False) #make it aware of the tile we were planning on placing
-                                            if threateningTile.routeComplete(newRouteSide): #we could be thwarted
-                                                abort=True
-                                                break
-                                if abort:
-                                    break #this move would be no good; let's try a different rotation/tile
-                                
-                                playerData.board.addTile(tile, row, column) #commit/actually add it to the board
-                                return playerData, PlayerMove(playerData.playerId, (row, column), playerData.currentTile, rotation)
-                    break
+                        ourTile=playerData.makeTile(rotation=rotation)
+                        playerData.board.addTile(ourTile, row, column)
+                        
+                        playerData.board.removeTile(ourTile, row, column)'''
     
-    #go on the offense: shut down an opponent's track
-    #TODO end longer tracks over shorter ones
-    attacks=[] #stores (row, col, rotation, delta-score)
-    for station in range(1, 33):
-        if playerData.trackOwner(station)!=playerData.playerId and not playerData.board.routeIsComplete(station) and playerData.board.calculateTrackScore(station): #this isn't ours, has been started, and is unfinished
-            endOfLine=playerData.board.followRoute(station)
-            row, column=playerData.board.lookupTileCoordinates(endOfLine[0])
-            routeSide=endOfLine[1]
-            bestRotation=None #stores (rotation, delta-score)
-            for rotation in range(4):
-                tile=playerData.makeTile(playerData.currentTile, rotation)
-                if playerData.board.validPlacement(tile, row, column): #this would be legal
-                    playerData.board.addTile(tile, row, column, False)
-                    if tile.routeComplete(routeSide): #we could complete this track to bother our opponent
-                        deltaScore=0
-                        
-                        #check what else is happening at this location
-                        abort=False
-                        for neighbor in range(4):
-                            if isinstance(tile.neighborOnSide(neighbor), ConnectedTile) and neighbor!=routeSide: #there could be a track here and this isn't the side we're primarily worried about
-                                trackNum=playerData.board.lookupTrackNumber(tile.neighborOnSide(neighbor), neighbor)
-                                endOfLine=tile.followRoute(neighbor)
-                                if playerData.trackOwner(trackNum)==playerData.playerId: #one of our tracks passes through
-                                    if isinstance(endOfLine, OuterStations): #we're going to end one of our tracks on an edge!
-                                        abort=True
-                                        break
-                                elif isinstance(endOfLine, OuterStations): #they would be finished
-                                    deltaScore+=tile.tabulateScore(neighbor)
-                                elif isinstance(endOfLine, PowerStation): #they would be power-finished
-                                    deltaScore+=playerData.board.calculateTrackScore(trackNum)+tile.tabulateScore(neighbor)*2 #score doubled
-                                    
-                        if abort:
-                            continue #let's not use this rotation...
-                        
-                        if isinstance(tile.followRoute(routeSide), OuterStations): #no doubling to deal with
-                            deltaScore+=tile.tabulateScore(routeSide)
-                        else:
-                            deltaScore+=playerData.board.calculateTrackScore(station)+tile.tabulateScore(neighbor)*2 #score doubled
-                        if not bestRotation or deltaScore<bestRotation[1]: #we want to minimize their score
-                            bestRotation=(rotation, deltaScore)
-            if bestRotation: #we found at least one good move
-                attacks.append((row, column, bestRotation[0], bestRotation[1])) #keep the best option for this tile
-    attacks.sort(key=lambda possibleMove: possibleMove[3])
-    if len(attacks):
-        playerData.board.addTile(playerData.makeTile(playerData.currentTile, attacks[0][2]), attacks[0][0], attacks[0][1])
-        return playerData, PlayerMove(playerData.playerId, (attacks[0][0], attacks[0][1]), playerData.currentTile, attacks[0][2])
-    
-    #score some points: extend one of our tracks
-    #TODO check to make sure we don't accidently complete another one of our stations (write a method to reuse the code from above?)
-    for highScoringTrack in playerData.ourRemainingStations: #attempt 1: put it where we want
-        endOfLine=playerData.board.followRoute(stationId(highScoringTrack))
-        row, column=playerData.board.lookupTileCoordinates(endOfLine[0]) #where could we place the tile to extend this route?
-        routeSide=endOfLine[1] #on which side of the new tile is the track that we're extending?
-        for rotation in range(4):
-            tile=playerData.makeTile(rotation=rotation) #make one of whatever type of tile we've been given
-            if playerData.board.validPlacement(tile, row, column):
-                playerData.board.addTile(tile, row, column, False) #get ready to test this tile
-                if not isinstance(tile.followRoute(routeSide)[0], OuterStations): #we're NOT going to connect to the border
-                    abort=False
-                    for threat in playerData.opponentsTiles: #we're going to make sure no opponent could shut this down
-                        for newRotation in range(4):
-                            #FIXME there seems to be a bug in here:
-                            newEndOfLine=tile.followRoute(routeSide)
-                            newRow, newColumn=playerData.board.lookupTileCoordinates(newEndOfLine[0])
-                            newRouteSide=newEndOfLine[1]
-                            threateningTile=playerData.makeTile(threat, newRotation)
-                            if not playerData.board.lookupTile(newRow, newColumn): #nothing here yet
-                                playerData.board.addTile(threateningTile, newRow, newColumn, False) #populate this with the board's knowledge
-                                if playerData.board.lookupTileCoordinates(threateningTile.neighborOnSide(newRouteSide))==(row, column): #this is adjacent to the tile we're trying to place
-                                    threateningTile.addBorderingTile(tile, newRouteSide, False) #make it aware of the tile we were planning on placing
-                                if threateningTile.routeComplete(newRouteSide): #we could be thwarted
-                                    abort=True
-                                    break
-                        if abort:
-                            break #this move would be no good; let's try a different rotation/tile
-                        
-                        playerData.board.addTile(tile, row, column) #commit/actually add it to the board
-                        return playerData, PlayerMove(playerData.playerId, (row, column), playerData.currentTile, rotation)
+    #END GOOD CODE!
     
     #give up: put it wherever it's valid #TODO make this smarter/absent, or at least more efficient
     unoccupiedCoordinates=[]
@@ -228,13 +152,14 @@ def move_info(playerData, playerMove, nextTile):
     
     if not playerMove: #we've just moved; here's our next tile
         playerData.currentTile=nextTile
-        playerData.opponentsTiles=['' for _ in range(self.numPlayers)] #it's a new round and our opponents will have new tiles
+        playerData.opponentsTiles=['' for _ in range(playerData.numPlayers)] #it's a new round and our opponents will have new tiles
     else: #we're looking at someone else's move
         playerData.board.addTile(playerData.makeTile(playerMove.tileName, playerMove.rotation), playerMove.position[0], playerMove.position[1]) #keep track of this tile's location
         playerData.opponentsTiles[playerMove.playerId]=nextTile #remember this player's next tile
     
     if playerData.numPlayers==1 or (playerMove and playerMove.playerId==(playerData.playerId-1)%playerData.numPlayers): #we're either all alone or we'll be up next
         playerData.updateOurStations() #keep watch on our progress and score
+        playerData.updateLegalConstraints()
     
     return playerData
 

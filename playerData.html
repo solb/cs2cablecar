@@ -55,6 +55,11 @@ Returns&nbsp;an&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;to&nbsp;r
 &nbsp;&nbsp;&nbsp;&nbsp;tileName&nbsp;-&nbsp;the&nbsp;type&nbsp;of&nbsp;tile,&nbsp;'a'-'j'&nbsp;(default&nbsp;is&nbsp;our&nbsp;current&nbsp;tile)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;rotation&nbsp;-&nbsp;the&nbsp;tile's&nbsp;rotation,&nbsp;0-3</tt></dd></dl>
 
+<dl><dt><a name="PlayerData-possibleTrackExtensions"><strong>possibleTrackExtensions</strong></a>(self, track, completeTrack)</dt><dd><tt>possibleTrackExtensions:&nbsp;int&nbsp;*&nbsp;bool&nbsp;-&gt;&nbsp;list(int,&nbsp;int,&nbsp;int,&nbsp;int)<br>
+Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;the&nbsp;permissible&nbsp;uses&nbsp;of&nbsp;the&nbsp;current&nbsp;tile&nbsp;in&nbsp;order&nbsp;to&nbsp;extend&nbsp;the&nbsp;specified&nbsp;track&nbsp;and&nbsp;either&nbsp;complete&nbsp;or&nbsp;not&nbsp;complete&nbsp;it,&nbsp;all&nbsp;while&nbsp;maintaining&nbsp;the&nbsp;completeness&nbsp;and&nbsp;safety&nbsp;of&nbsp;our&nbsp;own&nbsp;stations;&nbsp;the&nbsp;list&nbsp;is&nbsp;of&nbsp;the&nbsp;form&nbsp;(row,&nbsp;column,&nbsp;rotation,&nbsp;new_score)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;track&nbsp;-&nbsp;the&nbsp;track&nbsp;to&nbsp;extend<br>
+&nbsp;&nbsp;&nbsp;&nbsp;completeTrack&nbsp;-&nbsp;our&nbsp;goal,&nbsp;whether&nbsp;it&nbsp;be&nbsp;to&nbsp;complete&nbsp;the&nbsp;track&nbsp;or&nbsp;not&nbsp;to&nbsp;complete&nbsp;it</tt></dd></dl>
+
 <dl><dt><a name="PlayerData-routeInDanger"><strong>routeInDanger</strong></a>(self, track, attacker<font color="#909090">=-1</font>)</dt><dd><tt>routeInDanger:&nbsp;int&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;bool<br>
 Returns&nbsp;whether&nbsp;the&nbsp;specified&nbsp;attacker--or&nbsp;any&nbsp;player&nbsp;besides&nbsp;us&nbsp;if&nbsp;none&nbsp;specified--could&nbsp;connect&nbsp;the&nbsp;specified&nbsp;track--in&nbsp;its&nbsp;current&nbsp;state--to&nbsp;the&nbsp;board's&nbsp;edge&nbsp;in&nbsp;a&nbsp;single&nbsp;turn<br>
 &nbsp;&nbsp;&nbsp;&nbsp;track&nbsp;-&nbsp;the&nbsp;ID&nbsp;of&nbsp;the&nbsp;track&nbsp;about&nbsp;which&nbsp;we're&nbsp;worried<br>

@@ -311,36 +311,40 @@ class Tile(object):
         """
         return self.rotation
     
-    def routeComplete(self, _):
+    def routeComplete(self, _, __=None):
         """
-        routeComplete: any -> bool
+        routeComplete: any * any -> bool
         This helper method is used to determine whether each Tile represents the end of its track, and if so, it returns whether it represents an ending that leaves the track complete.  This default implementation always replies that the route is incomplete.
             _ - ignored (included for compatibility with child classes' implementations)
+            __ - likewise
         """
         return False
     
-    def tabulateScore(self, _, runningScore=0):
+    def tabulateScore(self, _, runningScore=0, __=None):
         """
-        tabulateScore: any * int -> int
+        tabulateScore: any * int * any -> int
         This helper method is used to determine each track's total score.  This particular default always returns the running score without incrementing it.
             _ - ignored (included for compatibility with child classes' implementations)
             runningScore - the running score
+            __ - also ignored
         """
         return runningScore
     
-    def followRoute(self, entryPoint):
+    def followRoute(self, entryPoint, _=None):
         """
         followRoute: int -> tuple(Tile, int)
         This helper method is used to fetch the tile at the end of a track, as well as the side of this tile on which the rest of the track is.  This default returns a reference to this tile.
             entryPoint - this side of this tile on which the track enters (0-3)
+            _ - ignored (included for compatibility with child classes' implementations)
         """
         return self, entryPoint
     
-    def reverseFollowRoute(self, _):
+    def reverseFollowRoute(self, _, __=None):
         """
         reverseFollowRoute: Tile -> tuple(Tile, int)
         This method returns the tile from which the route of which this tile is a member originates, as well as the position where the route is attached.  This default returns a reference to this tile and the sentinel -1.
             _ - ignored (included for compatibility with child classes' implementations)
+            __ - also ignored
         """
         return self, -1
     
@@ -400,19 +404,21 @@ class OuterStations(Tile):
         """
         return self.borderedTiles[substation]
     
-    def routeComplete(self, _):
+    def routeComplete(self, _, __=None):
         """
         routeComplete: any -> bool
         This helper method is used to determine whether each Tile represents the end of its track, and if so, it returns whether it represents an ending that leaves the track complete.  This override always replies that the route is complete.
-            _ - ignored (included for compatibility with child classes' implementations)
+            _ - ignored (included for compatibility with sibling classes' implementations)
+            __ - likewise
         """
         return True
     
-    def reverseFollowRoute(self, caller):
+    def reverseFollowRoute(self, caller, _=None):
         """
         reverseFollowRoute: Tile -> tuple(Tile, int)
         This method returns the tile from which the route of which this tile is a member originates, as well as the position where the route is attached.  This override returns this object and the substation to which the track is connected.
             caller - the tile connected to this terminal
+            _ - ignored (included for compatibility with sibling classes' implementations)
         """
         return self, self.borderedTiles.index(caller)
 
@@ -430,20 +436,22 @@ class PowerStation(Tile):
         self.type='ps'
         self.rotation=0
     
-    def routeComplete(self, _):
+    def routeComplete(self, _, __=None):
         """
         routeComplete: any -> bool
         This helper method is used to determine whether each Tile represents the end of its track, and if so, it returns whether it represents an ending that leaves the track complete.  This override always replies that the route is complete.
-            _ - ignored (included for compatibility with child classes' implementations)
+            _ - ignored (included for compatibility with sibling classes' implementations)
+            __ - likewise
         """
         return True
     
-    def tabulateScore(self, _, runningScore):
+    def tabulateScore(self, _, runningScore, __=None):
         """
         tabulateScore: any * int -> int
         This helper method is used to determine each track's total score.  This override always returns twice the running score in order to award the deserved 2x bonus.
             _ - ignored (included for compatibility with child classes' implementations)
             runningScore - the running score
+            __ - likewise
         """
         return runningScore*2
     
@@ -475,7 +483,7 @@ class ConnectedTile(Tile):
     def _rotate(self, connectionsTemplate, rotation):
         """
         _rotate: List(int) * int
-        Fixes a specific instance's connections, accounting for both the tile's type and its rotation.
+        Fixes a specific instance's connections, accounting for both the tile's type and its rotation
             connectionsTemplate - the tile-specific internalConnections version for an unrotated instance (length 4)
             rotation - this instance's rotation (0-3)
         pre: internalConnections is an empty list (length 0).
@@ -489,7 +497,7 @@ class ConnectedTile(Tile):
     def addBorderingTile(self, neighbor, side, mutualConnection=True):
         """
         addBorderingTile: Tile, int
-        Links this tile with that lying on the specified side.
+        Links this tile with that lying on the specified side
             neighbor - the tile with which this one should be linked (a two-way link will only be created if this is a ConnectedTile)
             side - on which side of this tile neighbor is sitting (0-3)
             mutualConnection - whether to connect both ways iff neighbor is a ConnectedTile
@@ -502,7 +510,7 @@ class ConnectedTile(Tile):
     def _entryPoint(self, source):
         """
         _entryPoint: Tile -> int
-        Calculates the side at which the tile source enters this one (0-3).
+        Calculates the side at which the tile source enters this one (0-3)
             source - the tile whose path is being followed
         pre: source is in borderingTiles.
         """
@@ -522,7 +530,7 @@ class ConnectedTile(Tile):
     def adjacentSide(self, knownSide):
         """
         adjacentSide: int -> int
-        Calculates which side of a bordering tile the specified side of this tile would touch.
+        Calculates which side of a bordering tile the specified side of this tile would touch
             knownSide - the side of this tile (0-3)
         """
         return (knownSide-2)%len(self.borderingTiles)
@@ -538,48 +546,72 @@ class ConnectedTile(Tile):
     def lookupDestination(self, source):
         """
         lookupDestination: (Tile or int) -> Tile
-        Determines to which other tile this tile's path will lead if one is to start from specified neighboring tile or side of this tile.
+        Determines to which other tile this tile's path will lead if one is to start from specified neighboring tile or side of this tile
             source - the neighboring tile from where wants to trace the path or side of this tile from where one wants to start (0-3)
         """
         return self.neighborOnSide(self._exitPoint(source))
     
-    def routeComplete(self, caller):
+    def _loopingInfinitely(self, caller, visited):
         """
-        routeComplete: (Tile or int) -> bool
+        _loopingInfinitely: (Tile or int) * list(ConnectedTile) -> bool
+        Determines whether a recursive function is looping infinitely along the same track
+        """
+        if not isinstance(caller, Tile):
+            caller=self.neighborOnSide(caller)
+        
+        for index in range(len(visited)):
+            if visited[index]==caller and index<len(visited)-1 and visited[index+1]==self: #this same leap has been made before in the same direction
+                return True
+        return False
+    
+    def routeComplete(self, caller, visited=[]):
+        """
+        routeComplete: (Tile or int) * list(ConnectedTile) -> bool
         This helper method is used to determine whether each Tile represents the end of its track, and if so, it returns whether it represents an ending that leaves the track complete.  This override always recurses to the destination Tile's implementation of this method and returns the result of that call.
             caller - a reference to the Tile that called this method or the side of this tile from where we entered (0-3)
         """
-        return self.lookupDestination(caller).routeComplete(self.adjacentSide(self._exitPoint(caller)))
+        if self._loopingInfinitely(caller, visited):
+            return False
+        else:
+            return self.lookupDestination(caller).routeComplete(self.adjacentSide(self._exitPoint(caller)), visited+[self])
     
-    def tabulateScore(self, caller, runningScore=0):
+    def tabulateScore(self, caller, runningScore=0, visited=[]):
         """
-        tabulateScore: (Tile or int) * int -> int
-        This helper method is used to determine each track's total score.  This override always recurses to the destination Tile's implementation of this method, incrementing the score by 1, and returns the result of that call.
+        tabulateScore: (Tile or int) * int * list(ConnectedTile) -> int
+        This helper method is used to determine each track's total score.  This override always recurses to the destination Tile's implementation of this method, incrementing the score by 1, and returns the result of that call.  An infinite loop in the route will cause a sentinel return value of -1.
             caller - a reference to the Tile that called this method or the side of this tile from where we entered (0-3)
             runningScore - the running score
         """
-        return self.lookupDestination(caller).tabulateScore(self.adjacentSide(self._exitPoint(caller)), runningScore+1)
+        if self._loopingInfinitely(caller, visited):
+            return -1
+        else:
+            return self.lookupDestination(caller).tabulateScore(self.adjacentSide(self._exitPoint(caller)), runningScore+1, visited+[self])
     
-    def followRoute(self, caller):
+    def followRoute(self, caller, visited=[]):
         """
-        followRoute: (Tile or int) -> tuple(Tile, int)
-        This helper method is used to fetch the tile at the end of a track, as well as the side of this tile on which the rest of the track is.  This override recurses to the destination Tile's implementation and returns that method's result.
+        followRoute: (Tile or int) * list(ConnectedTile) -> tuple(Tile, int)
+        This helper method is used to fetch the tile at the end of a track, as well as the side of this tile on which the rest of the track is.  This override recurses to the destination Tile's implementation and returns that method's result.  An infinite loop in the route will cause a sentinel side value of -1 to be returned.
             entryPoint - a reference to the Tile that called this method or the side of this tile on which the track enters (0-3)
         """
-        return self.lookupDestination(caller).followRoute(self.adjacentSide(self._exitPoint(caller)))
+        if self._loopingInfinitely(caller, visited):
+            return self, -1
+        else:
+            return self.lookupDestination(caller).followRoute(self.adjacentSide(self._exitPoint(caller)), visited+[self])
     
-    def reverseFollowRoute(self, caller):
+    def reverseFollowRoute(self, caller, visited=[]):
         """
-        reverseFollowRoute: (Tile or int) -> tuple(Tile, int)
-        This method returns the tile from which the route of which this tile is a member originates, as well as the position where the route is attached.
+        reverseFollowRoute: (Tile or int) * list(ConnectedTile) -> tuple(Tile, int)
+        This method returns the tile from which the route of which this tile is a member originates, as well as the position where the route is attached.  An infinite loop in the route will cause a sentinel side value of -1 to be returned.
             caller - a reference to the *next* Tile in this route or the side of the *next* tile in the chain to which this one connects (0-3)
         """
-        if isinstance(caller, Tile):
+        if self._loopingInfinitely(caller, visited):
+            return self, -1
+        elif isinstance(caller, Tile):
             trackSide=self.internalConnections.index(self._entryPoint(caller)) #the side of *this* tile where the *preceding* tile is connected
         else:
             trackSide=self.internalConnections.index(self.adjacentSide(caller)) #the side of *this* tile where the *preceding* tile is connected
         
-        return self.neighborOnSide(trackSide).reverseFollowRoute(self)
+        return self.neighborOnSide(trackSide).reverseFollowRoute(self, visited+[self])
     
     def __nonzero__(self):
         """

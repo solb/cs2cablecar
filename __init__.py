@@ -75,7 +75,7 @@ def move(playerData):
                     possibleFutures=playerData.possibleTrackExtensions(track, True) #aim to complete their tracks
                     
                     for option in possibleFutures:
-                        option[3]-=currentScore #only consider their gain, not the total track score
+                        option[3]-=currentScore #TODO consider ending their longest track instead of minimizing their gain?
                         attacks.append(option) #TODO Should we be able to take out our anger on specific players?
     defenses.sort(key=lambda inNeed: inNeed[3], reverse=True) #our highest current score first
     attacks.sort(key=lambda wideOpen: wideOpen[3]) #their lowest gain first

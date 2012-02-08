@@ -535,6 +535,14 @@ class ConnectedTile(Tile):
         """
         return (knownSide-2)%len(self.borderingTiles)
     
+    def nextTileSide(self, previousTileSide):
+        """
+        nextTileSide: int -> int
+        Calculates on which side of this tile the next tile in the route starting on previousTileSide is.
+            previousTileSide - the starting side of this tile (0-3)
+        """
+        return self._exitPoint(previousTileSide)
+    
     def neighborOnSide(self, side):
         """
         hasNeighborOnSide: int -> Tile

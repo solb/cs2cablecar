@@ -67,39 +67,44 @@ def move(playerData):
                 currentScore=playerData.board.calculateTrackScore(track)
                 possibleFutures=playerData.possibleTrackExtensions(track, False) #avoid edges
                 if playerData.routeInDanger(track): #this track needs defense
+                    #print 'NB: Our track '+str(track)+' is in danger.'
                     for option in possibleFutures:
                         option[3]-=currentScore #only consider our gain, not the total track score
                         defenses.append(option)
+                    #if not len(possibleFutures): print 'NB: Cannot save our track '+str(track)
                 else: #lengthen this track, possibly connecting it to a power station
                     for option in possibleFutures:
                         option[3]-=currentScore #only consider our gain, not the total track score
                         extensions.append(option)
+                    #if not len(possibleFutures): print 'NB: Cannot extend our track '+str(track)
             else: #someone else's
                 if playerData.routeInDanger(track, playerData.playerId): #WE pose a threat
+                    #print 'NB: We could harm their track '+str(track)
                     currentScore=playerData.board.calculateTrackScore(track)
                     possibleFutures=playerData.possibleTrackExtensions(track, True) #aim to complete their tracks
                     
                     for option in possibleFutures:
                         option[3]-=currentScore #TODO consider ending their longest track instead of minimizing their gain?
                         attacks.append(option) #TODO Should we be able to take out our anger on specific players?
+                    #if not len(possibleFutures): print 'NB: Cannot stop their track '+str(track)
     defenses.sort(key=lambda inNeed: inNeed[3], reverse=True) #our highest gain first
     attacks.sort(key=lambda wideOpen: wideOpen[3]) #their lowest gain first
     extensions.sort(key=lambda needsWork: needsWork[3], reverse=True) #our highest gain first
     
     #print 'NB: Our best defenses are:\n'+str(defenses)
     #print 'NB: Our best attacks are:\n'+str(attacks)
-    #print 'NB: Our best extensions are:\n'+str(attacks)
+    #print 'NB: Our best extensions are:\n'+str(extensions)
     
     #TODO weigh DEFENSE against OFFENSE
-    if len(defenses):
-        #print 'NB: On guard!'
-        playerData.board.addTile(playerData.makeTile(playerData.currentTile, defenses[0][2]), defenses[0][0], defenses[0][1])
-        return playerData, PlayerMove(playerData.playerId, (defenses[0][0], defenses[0][1]), playerData.currentTile, defenses[0][2])
-    elif len(attacks):
+    if len(attacks):
         #print 'NB: Commencing attack run...'
         #print 'I think I\'m going to find this there: '+str(playerData.board.lookupTile(attacks[0][0], attacks[0][1]))
         playerData.board.addTile(playerData.makeTile(playerData.currentTile, attacks[0][2]), attacks[0][0], attacks[0][1])
         return playerData, PlayerMove(playerData.playerId, (attacks[0][0], attacks[0][1]), playerData.currentTile, attacks[0][2])
+    elif len(defenses):
+        #print 'NB: On guard!'
+        playerData.board.addTile(playerData.makeTile(playerData.currentTile, defenses[0][2]), defenses[0][0], defenses[0][1])
+        return playerData, PlayerMove(playerData.playerId, (defenses[0][0], defenses[0][1]), playerData.currentTile, defenses[0][2])
     elif len(extensions):
         #print 'NB: Adding onto one of our tracks...'
         playerData.board.addTile(playerData.makeTile(playerData.currentTile, extensions[0][2]), extensions[0][0], extensions[0][1])

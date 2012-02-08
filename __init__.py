@@ -73,7 +73,7 @@ def move(playerData):
                 else: #lengthen this track, possibly connecting it to a power station
                     for option in possibleFutures:
                         option[3]-=currentScore #only consider our gain, not the total track score
-                        defenses.append(option)
+                        extensions.append(option)
             else: #someone else's
                 if playerData.routeInDanger(track, playerData.playerId): #WE pose a threat
                     currentScore=playerData.board.calculateTrackScore(track)
@@ -82,28 +82,34 @@ def move(playerData):
                     for option in possibleFutures:
                         option[3]-=currentScore #TODO consider ending their longest track instead of minimizing their gain?
                         attacks.append(option) #TODO Should we be able to take out our anger on specific players?
-    defenses.sort(key=lambda inNeed: inNeed[3], reverse=True) #our highest current score first
+    defenses.sort(key=lambda inNeed: inNeed[3], reverse=True) #our highest gain first
     attacks.sort(key=lambda wideOpen: wideOpen[3]) #their lowest gain first
+    extensions.sort(key=lambda needsWork: needsWork[3], reverse=True) #our highest gain first
     
-    print 'NB: Our best defenses are:\n'+str(defenses)
-    print 'NB: Our best attacks are:\n'+str(attacks)
+    #print 'NB: Our best defenses are:\n'+str(defenses)
+    #print 'NB: Our best attacks are:\n'+str(attacks)
+    #print 'NB: Our best extensions are:\n'+str(attacks)
     
     #TODO weigh DEFENSE against OFFENSE
     if len(defenses):
-        print 'NB: On guard!'
+        #print 'NB: On guard!'
         playerData.board.addTile(playerData.makeTile(playerData.currentTile, defenses[0][2]), defenses[0][0], defenses[0][1])
         return playerData, PlayerMove(playerData.playerId, (defenses[0][0], defenses[0][1]), playerData.currentTile, defenses[0][2])
     elif len(attacks):
-        print 'NB: Commencing attack run...'
-        print 'I think I\'m going to find this there: '+str(playerData.board.lookupTile(attacks[0][0], attacks[0][1]))
+        #print 'NB: Commencing attack run...'
+        #print 'I think I\'m going to find this there: '+str(playerData.board.lookupTile(attacks[0][0], attacks[0][1]))
         playerData.board.addTile(playerData.makeTile(playerData.currentTile, attacks[0][2]), attacks[0][0], attacks[0][1])
         return playerData, PlayerMove(playerData.playerId, (attacks[0][0], attacks[0][1]), playerData.currentTile, attacks[0][2])
     elif len(extensions):
+        #print 'NB: Adding onto one of our tracks...'
         playerData.board.addTile(playerData.makeTile(playerData.currentTile, extensions[0][2]), extensions[0][0], extensions[0][1])
         return playerData, PlayerMove(playerData.playerId, (extensions[0][0], extensions[0][1]), playerData.currentTile, extensions[0][2])
     
+    #TODO if we can't find a good move to make, extend one of our opponent's tracks, prefereably so that it is vulnerable
+    #TODO find each opponent's best-scoring move and block it
+    #TODO puppy guard opponents' stations
     #FIXME choose the best-scoring rotation whenever we choose a tile
-    #FIXME do a better job of starting out our tracks
+    #FIXME do a better job of starting out our tracks: if nothing is in danger, don't randomly start any!
     #FIXME end their longer tracks over their shorter ones, instead of just looking at the deltas?
     
     
@@ -129,11 +135,11 @@ def move(playerData):
             tile=playerData.makeTile(rotation=rotation)
             if playerData.board.validPlacement(tile, location[0], location[1]):
                 playerData.board.addTile(tile, location[0], location[1])
-                print 'Making a legal move.'
+                #print 'NB: Making a legal move.'
                 return playerData, PlayerMove(playerData.playerId, (location[0], location[1]), playerData.currentTile, rotation)
     
-    playerData.board.addTile(playerData.makeTile(), unoccupiedCoordinates[0][0], unoccupiedCoordinates[0][1], rotation)
-    print 'Making an illegal move!'
+    playerData.board.addTile(playerData.makeTile(rotation=rotation), unoccupiedCoordinates[0][0], unoccupiedCoordinates[0][1])
+    #print 'NB: Making an illegal move!'
     return playerData, PlayerMove(playerData.playerId, (unoccupiedCoordinates[0][0], unoccupiedCoordinates[0][1]), playerData.currentTile, rotation) #final attempt: stick it somewhere it shouldn't be
 
 def move_info(playerData, playerMove, nextTile):
@@ -243,42 +249,30 @@ def game_over(playerData, historyFileName = None):
         historyFileName - name of the current history file, 
             or None if not being used 
     """
+    playerScores=[0 for _ in range(playerData.numPlayers)]
+    for track in range(1, 33):
+        owner=playerData.trackOwner(track)
+        if owner!=-1:
+            playerScores[owner]+=playerData.board.calculateTrackScore(track)
+            #print 'track '+str(track)+' is worth '+str(playerData.board.calculateTrackScore(track))+' to player '+str(owner)
     
-    # Test things here, changing the function calls...
-    print "History File: %s" % historyFileName
-    print "If it says False below, you are doing something wrong"
+    winners=[]
+    for player in range(len(playerScores)):
+        if not len(winners):
+            winners=[player]
+        else: #at least one element
+            if playerScores[player]>playerScores[winners[0]]:
+                winners=[player]
+            elif playerScores[player]==playerScores[winners[0]]:
+                winners.append(player)
+        
+        print 'Player '+str(player)+': score = '+str(playerScores[player])
     
-    if historyFileName == "example_complete_start.data":
-        print tile_info_at_coordinates(playerData, 5, 2) == ('e', 0)
-        print tile_info_at_coordinates(playerData, 2, 1) == ('j', 0)
-        print tile_info_at_coordinates(playerData, 1, 2) == ('b', 0)
-        #print route_complete(playerData, 1) == True
-        #print route_score(playerData, 1) == 3
-    elif historyFileName == "example_complete.data":
-        print tile_info_at_coordinates(playerData, 5, 5) == ('e', 1)
-        print tile_info_at_coordinates(playerData, 1, 0) == ('a', 0)
-        print tile_info_at_coordinates(playerData, 3, 3) == ('ps', 0)
-    elif historyFileName == "example_incomplete1.data":
-        print route_complete(playerData, 29) == False
-        print route_complete(playerData, 5) == False
-        print route_complete(playerData, 11) == False
-        print route_score(playerData, 22) == 0
-        print route_score(playerData, 26) == 1
-        print route_score(playerData, 18) == 1
-    elif historyFileName == "example_incomplete2.data":
-        print route_complete(playerData, 8) == False
-        print route_complete(playerData, 25) == True
-        print route_complete(playerData, 22) == False
-        print route_score(playerData, 20) == 2
-        print route_score(playerData, 26) == 3
-        print route_score(playerData, 21) == 3
-    elif historyFileName == "slb1566-1a.data":
-        print tile_info_at_coordinates(playerData, 4, 0) == ('b', 1)
-        print tile_info_at_coordinates(playerData, 6, 1) == ('d', 1)
-        print tile_info_at_coordinates(playerData, 0, 4) == ('a', 1)
-        print route_complete(playerData, 21) == True
-        print route_complete(playerData, 1) == True
-        print route_complete(playerData, 11) == True
-        print route_score(playerData, 10) == 2
-        print route_score(playerData, 24) == 4
-        print route_score(playerData, 20) == 54
+    if len(winners)==1:
+        print 'Player #'+str(winners[0])+' has won.'
+    else: #there's been at least a two-way tie
+        output='Players #'+str(winners[0])
+        for player in range(1, len(winners)):
+            output+=', #'+str(winners[player])
+        output+=' have won.'
+        print output

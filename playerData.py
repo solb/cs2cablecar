@@ -213,8 +213,8 @@ class PlayerData(object):
                 if isinstance(self.board.followRoute(track)[0], OuterStations)==completeTrack: #this rotation completes it
                     if not self.tileJeopardizesOurRoutes(row, column): #we haven't done anything significant to our own routes at the same time
                         options.append([row, column, rotation, self.board.calculateTrackScore(track)])
-                    else:
-                        print 'NB: Placing at '+str((row, column))+' w/ rotation '+str(rotation)+' would jeopardize our own route'
+                    #else:
+                        #print 'NB: Placing at '+str((row, column))+' w/ rotation '+str(rotation)+' would jeopardize our own route'
                 self.board.removeTile(row, column)
         return options
     

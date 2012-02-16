@@ -37,11 +37,8 @@ def init(playerId, numPlayers, startTile, logger, arg = "None"):
     # It can be an object, list, or dictionary
     playerData = PlayerData(logger, playerId, startTile, numPlayers)
 
-    # This is how you write data to the log file
-    playerData.logger.write("Player %s starting up" % playerId)
-    
-    # This is how you print out your data to standard output (not logged)
-    print(playerData)
+    #Our "constants":
+    playerData.POWER_STATION_THRESHOLD=15
     
     return playerData
 
@@ -66,34 +63,31 @@ def move(playerData):
             if playerData.trackOwner(track)==playerData.playerId: #our track
                 currentScore=playerData.board.calculateTrackScore(track)
                 possibleFutures=playerData.possibleTrackExtensions(track, False) #avoid edges
-                if playerData.routeInDanger(track): #this track needs defense
-                    #print 'NB: Our track '+str(track)+' is in danger.'
-                    for option in possibleFutures:
-                        option[3]-=currentScore #only consider our gain, not the total track score
-                        defenses.append(option)
-                    #if not len(possibleFutures): print 'NB: Cannot save our track '+str(track)
-                else: #lengthen this track, possibly connecting it to a power station
-                    for option in possibleFutures:
-                        option[3]-=currentScore #only consider our gain, not the total track score
-                        extensions.append(option)
-                    #if not len(possibleFutures): print 'NB: Cannot extend our track '+str(track)
+                if possibleFutures: #we came up with an option
+                    if playerData.routeInDanger(track): #this track needs defense
+                        defenses+=possibleFutures
+                    elif playerData.board.calculateTrackScore(track): #it this track has already been started, lengthen it (possibly connecting it to a power station)
+                        extensions+=possibleFutures
             else: #someone else's
                 if playerData.routeInDanger(track, playerData.playerId): #WE pose a threat
                     #print 'NB: We could harm their track '+str(track)
                     currentScore=playerData.board.calculateTrackScore(track)
                     possibleFutures=playerData.possibleTrackExtensions(track, True) #aim to complete their tracks
-                    
-                    for option in possibleFutures:
-                        option[3]-=currentScore #TODO consider ending their longest track instead of minimizing their gain?
-                        attacks.append(option) #TODO Should we be able to take out our anger on specific players?
-                    #if not len(possibleFutures): print 'NB: Cannot stop their track '+str(track)
-    defenses.sort(key=lambda inNeed: inNeed[3], reverse=True) #our highest gain first
-    attacks.sort(key=lambda wideOpen: wideOpen[3]) #their lowest gain first
-    extensions.sort(key=lambda needsWork: needsWork[3], reverse=True) #our highest gain first
+                    if possibleFutures: #we came up with an option
+                        attacks+=possibleFutures
+    defenses.sort(key=lambda inNeed: inNeed[4], reverse=True) #our highest gain first
+    attacks.sort(key=lambda wideOpen: wideOpen[4]) #their lowest gain first
+    attacks.sort(key=lambda wideOpen: wideOpen[3], reverse=True) #their longest first
+    extensions.sort(key=lambda needsWork: needsWork[4], reverse=True) #our highest gain first
     
-    #print 'NB: Our best defenses are:\n'+str(defenses)
-    #print 'NB: Our best attacks are:\n'+str(attacks)
-    #print 'NB: Our best extensions are:\n'+str(extensions)
+    print 'NB: Our best defenses are:\n'+str(defenses)
+    print 'NB: Our best attacks are:\n'+str(attacks)
+    print 'NB: Our best extensions are:\n'+str(extensions)
+    
+    #observations after watching GoodComputer:
+    #TODO if we go first, consider extending their track
+    #TODO when extending our tracks (not defending them), consider the longest first
+    #TODO random should be used to create additional sinks to the edge
     
     #TODO weigh DEFENSE against OFFENSE
     if len(attacks):
@@ -130,6 +124,7 @@ def move(playerData):
     #END GOOD CODE!
     
     #give up: put it wherever it's valid #TODO make this smarter/absent, or at least more efficient
+    print 'NB: Making a random move!'
     unoccupiedCoordinates=[]
     for row in range(8): #where are the vacancies on the board?
         for column in range(8):

@@ -228,6 +228,10 @@ Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;pa
 Fetches&nbsp;the&nbsp;tile&nbsp;bordering&nbsp;the&nbsp;specified&nbsp;side&nbsp;of&nbsp;this&nbsp;one<br>
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;to&nbsp;check&nbsp;(0-3)</tt></dd></dl>
 
+<dl><dt><a name="ConnectedTile-nextTileSide"><strong>nextTileSide</strong></a>(self, previousTileSide)</dt><dd><tt>nextTileSide:&nbsp;int&nbsp;-&gt;&nbsp;int<br>
+Calculates&nbsp;on&nbsp;which&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;the&nbsp;next&nbsp;tile&nbsp;in&nbsp;the&nbsp;route&nbsp;starting&nbsp;on&nbsp;previousTileSide&nbsp;is.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;previousTileSide&nbsp;-&nbsp;the&nbsp;starting&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;(0-3)</tt></dd></dl>
+
 <dl><dt><a name="ConnectedTile-reverseFollowRoute"><strong>reverseFollowRoute</strong></a>(self, caller, visited<font color="#909090">=[]</font>)</dt><dd><tt>reverseFollowRoute:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;*&nbsp;list(<a href="#ConnectedTile">ConnectedTile</a>)&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
 This&nbsp;method&nbsp;returns&nbsp;the&nbsp;tile&nbsp;from&nbsp;which&nbsp;the&nbsp;route&nbsp;of&nbsp;which&nbsp;this&nbsp;tile&nbsp;is&nbsp;a&nbsp;member&nbsp;originates,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;position&nbsp;where&nbsp;the&nbsp;route&nbsp;is&nbsp;attached.&nbsp;&nbsp;An&nbsp;infinite&nbsp;loop&nbsp;in&nbsp;the&nbsp;route&nbsp;will&nbsp;cause&nbsp;a&nbsp;sentinel&nbsp;side&nbsp;value&nbsp;of&nbsp;-1&nbsp;to&nbsp;be&nbsp;returned.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;*next*&nbsp;<a href="#Tile">Tile</a>&nbsp;in&nbsp;this&nbsp;route&nbsp;or&nbsp;the&nbsp;side&nbsp;of&nbsp;the&nbsp;*next*&nbsp;tile&nbsp;in&nbsp;the&nbsp;chain&nbsp;to&nbsp;which&nbsp;this&nbsp;one&nbsp;connects&nbsp;(0-3)</tt></dd></dl>
@@ -521,6 +525,10 @@ Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;pa
 Fetches&nbsp;the&nbsp;tile&nbsp;bordering&nbsp;the&nbsp;specified&nbsp;side&nbsp;of&nbsp;this&nbsp;one<br>
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;to&nbsp;check&nbsp;(0-3)</tt></dd></dl>
 
+<dl><dt><a name="TileA-nextTileSide"><strong>nextTileSide</strong></a>(self, previousTileSide)</dt><dd><tt>nextTileSide:&nbsp;int&nbsp;-&gt;&nbsp;int<br>
+Calculates&nbsp;on&nbsp;which&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;the&nbsp;next&nbsp;tile&nbsp;in&nbsp;the&nbsp;route&nbsp;starting&nbsp;on&nbsp;previousTileSide&nbsp;is.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;previousTileSide&nbsp;-&nbsp;the&nbsp;starting&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;(0-3)</tt></dd></dl>
+
 <dl><dt><a name="TileA-reverseFollowRoute"><strong>reverseFollowRoute</strong></a>(self, caller, visited<font color="#909090">=[]</font>)</dt><dd><tt>reverseFollowRoute:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;*&nbsp;list(<a href="#ConnectedTile">ConnectedTile</a>)&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
 This&nbsp;method&nbsp;returns&nbsp;the&nbsp;tile&nbsp;from&nbsp;which&nbsp;the&nbsp;route&nbsp;of&nbsp;which&nbsp;this&nbsp;tile&nbsp;is&nbsp;a&nbsp;member&nbsp;originates,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;position&nbsp;where&nbsp;the&nbsp;route&nbsp;is&nbsp;attached.&nbsp;&nbsp;An&nbsp;infinite&nbsp;loop&nbsp;in&nbsp;the&nbsp;route&nbsp;will&nbsp;cause&nbsp;a&nbsp;sentinel&nbsp;side&nbsp;value&nbsp;of&nbsp;-1&nbsp;to&nbsp;be&nbsp;returned.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;*next*&nbsp;<a href="#Tile">Tile</a>&nbsp;in&nbsp;this&nbsp;route&nbsp;or&nbsp;the&nbsp;side&nbsp;of&nbsp;the&nbsp;*next*&nbsp;tile&nbsp;in&nbsp;the&nbsp;chain&nbsp;to&nbsp;which&nbsp;this&nbsp;one&nbsp;connects&nbsp;(0-3)</tt></dd></dl>
@@ -611,6 +619,10 @@ Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;pa
 <dl><dt><a name="TileB-neighborOnSide"><strong>neighborOnSide</strong></a>(self, side)</dt><dd><tt>hasNeighborOnSide:&nbsp;int&nbsp;-&gt;&nbsp;<a href="#Tile">Tile</a><br>
 Fetches&nbsp;the&nbsp;tile&nbsp;bordering&nbsp;the&nbsp;specified&nbsp;side&nbsp;of&nbsp;this&nbsp;one<br>
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;to&nbsp;check&nbsp;(0-3)</tt></dd></dl>
+
+<dl><dt><a name="TileB-nextTileSide"><strong>nextTileSide</strong></a>(self, previousTileSide)</dt><dd><tt>nextTileSide:&nbsp;int&nbsp;-&gt;&nbsp;int<br>
+Calculates&nbsp;on&nbsp;which&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;the&nbsp;next&nbsp;tile&nbsp;in&nbsp;the&nbsp;route&nbsp;starting&nbsp;on&nbsp;previousTileSide&nbsp;is.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;previousTileSide&nbsp;-&nbsp;the&nbsp;starting&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;(0-3)</tt></dd></dl>
 
 <dl><dt><a name="TileB-reverseFollowRoute"><strong>reverseFollowRoute</strong></a>(self, caller, visited<font color="#909090">=[]</font>)</dt><dd><tt>reverseFollowRoute:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;*&nbsp;list(<a href="#ConnectedTile">ConnectedTile</a>)&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
 This&nbsp;method&nbsp;returns&nbsp;the&nbsp;tile&nbsp;from&nbsp;which&nbsp;the&nbsp;route&nbsp;of&nbsp;which&nbsp;this&nbsp;tile&nbsp;is&nbsp;a&nbsp;member&nbsp;originates,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;position&nbsp;where&nbsp;the&nbsp;route&nbsp;is&nbsp;attached.&nbsp;&nbsp;An&nbsp;infinite&nbsp;loop&nbsp;in&nbsp;the&nbsp;route&nbsp;will&nbsp;cause&nbsp;a&nbsp;sentinel&nbsp;side&nbsp;value&nbsp;of&nbsp;-1&nbsp;to&nbsp;be&nbsp;returned.<br>
@@ -703,6 +715,10 @@ Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;pa
 Fetches&nbsp;the&nbsp;tile&nbsp;bordering&nbsp;the&nbsp;specified&nbsp;side&nbsp;of&nbsp;this&nbsp;one<br>
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;to&nbsp;check&nbsp;(0-3)</tt></dd></dl>
 
+<dl><dt><a name="TileC-nextTileSide"><strong>nextTileSide</strong></a>(self, previousTileSide)</dt><dd><tt>nextTileSide:&nbsp;int&nbsp;-&gt;&nbsp;int<br>
+Calculates&nbsp;on&nbsp;which&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;the&nbsp;next&nbsp;tile&nbsp;in&nbsp;the&nbsp;route&nbsp;starting&nbsp;on&nbsp;previousTileSide&nbsp;is.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;previousTileSide&nbsp;-&nbsp;the&nbsp;starting&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;(0-3)</tt></dd></dl>
+
 <dl><dt><a name="TileC-reverseFollowRoute"><strong>reverseFollowRoute</strong></a>(self, caller, visited<font color="#909090">=[]</font>)</dt><dd><tt>reverseFollowRoute:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;*&nbsp;list(<a href="#ConnectedTile">ConnectedTile</a>)&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
 This&nbsp;method&nbsp;returns&nbsp;the&nbsp;tile&nbsp;from&nbsp;which&nbsp;the&nbsp;route&nbsp;of&nbsp;which&nbsp;this&nbsp;tile&nbsp;is&nbsp;a&nbsp;member&nbsp;originates,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;position&nbsp;where&nbsp;the&nbsp;route&nbsp;is&nbsp;attached.&nbsp;&nbsp;An&nbsp;infinite&nbsp;loop&nbsp;in&nbsp;the&nbsp;route&nbsp;will&nbsp;cause&nbsp;a&nbsp;sentinel&nbsp;side&nbsp;value&nbsp;of&nbsp;-1&nbsp;to&nbsp;be&nbsp;returned.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;*next*&nbsp;<a href="#Tile">Tile</a>&nbsp;in&nbsp;this&nbsp;route&nbsp;or&nbsp;the&nbsp;side&nbsp;of&nbsp;the&nbsp;*next*&nbsp;tile&nbsp;in&nbsp;the&nbsp;chain&nbsp;to&nbsp;which&nbsp;this&nbsp;one&nbsp;connects&nbsp;(0-3)</tt></dd></dl>
@@ -793,6 +809,10 @@ Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;pa
 <dl><dt><a name="TileD-neighborOnSide"><strong>neighborOnSide</strong></a>(self, side)</dt><dd><tt>hasNeighborOnSide:&nbsp;int&nbsp;-&gt;&nbsp;<a href="#Tile">Tile</a><br>
 Fetches&nbsp;the&nbsp;tile&nbsp;bordering&nbsp;the&nbsp;specified&nbsp;side&nbsp;of&nbsp;this&nbsp;one<br>
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;to&nbsp;check&nbsp;(0-3)</tt></dd></dl>
+
+<dl><dt><a name="TileD-nextTileSide"><strong>nextTileSide</strong></a>(self, previousTileSide)</dt><dd><tt>nextTileSide:&nbsp;int&nbsp;-&gt;&nbsp;int<br>
+Calculates&nbsp;on&nbsp;which&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;the&nbsp;next&nbsp;tile&nbsp;in&nbsp;the&nbsp;route&nbsp;starting&nbsp;on&nbsp;previousTileSide&nbsp;is.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;previousTileSide&nbsp;-&nbsp;the&nbsp;starting&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;(0-3)</tt></dd></dl>
 
 <dl><dt><a name="TileD-reverseFollowRoute"><strong>reverseFollowRoute</strong></a>(self, caller, visited<font color="#909090">=[]</font>)</dt><dd><tt>reverseFollowRoute:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;*&nbsp;list(<a href="#ConnectedTile">ConnectedTile</a>)&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
 This&nbsp;method&nbsp;returns&nbsp;the&nbsp;tile&nbsp;from&nbsp;which&nbsp;the&nbsp;route&nbsp;of&nbsp;which&nbsp;this&nbsp;tile&nbsp;is&nbsp;a&nbsp;member&nbsp;originates,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;position&nbsp;where&nbsp;the&nbsp;route&nbsp;is&nbsp;attached.&nbsp;&nbsp;An&nbsp;infinite&nbsp;loop&nbsp;in&nbsp;the&nbsp;route&nbsp;will&nbsp;cause&nbsp;a&nbsp;sentinel&nbsp;side&nbsp;value&nbsp;of&nbsp;-1&nbsp;to&nbsp;be&nbsp;returned.<br>
@@ -885,6 +905,10 @@ Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;pa
 Fetches&nbsp;the&nbsp;tile&nbsp;bordering&nbsp;the&nbsp;specified&nbsp;side&nbsp;of&nbsp;this&nbsp;one<br>
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;to&nbsp;check&nbsp;(0-3)</tt></dd></dl>
 
+<dl><dt><a name="TileE-nextTileSide"><strong>nextTileSide</strong></a>(self, previousTileSide)</dt><dd><tt>nextTileSide:&nbsp;int&nbsp;-&gt;&nbsp;int<br>
+Calculates&nbsp;on&nbsp;which&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;the&nbsp;next&nbsp;tile&nbsp;in&nbsp;the&nbsp;route&nbsp;starting&nbsp;on&nbsp;previousTileSide&nbsp;is.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;previousTileSide&nbsp;-&nbsp;the&nbsp;starting&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;(0-3)</tt></dd></dl>
+
 <dl><dt><a name="TileE-reverseFollowRoute"><strong>reverseFollowRoute</strong></a>(self, caller, visited<font color="#909090">=[]</font>)</dt><dd><tt>reverseFollowRoute:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;*&nbsp;list(<a href="#ConnectedTile">ConnectedTile</a>)&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
 This&nbsp;method&nbsp;returns&nbsp;the&nbsp;tile&nbsp;from&nbsp;which&nbsp;the&nbsp;route&nbsp;of&nbsp;which&nbsp;this&nbsp;tile&nbsp;is&nbsp;a&nbsp;member&nbsp;originates,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;position&nbsp;where&nbsp;the&nbsp;route&nbsp;is&nbsp;attached.&nbsp;&nbsp;An&nbsp;infinite&nbsp;loop&nbsp;in&nbsp;the&nbsp;route&nbsp;will&nbsp;cause&nbsp;a&nbsp;sentinel&nbsp;side&nbsp;value&nbsp;of&nbsp;-1&nbsp;to&nbsp;be&nbsp;returned.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;*next*&nbsp;<a href="#Tile">Tile</a>&nbsp;in&nbsp;this&nbsp;route&nbsp;or&nbsp;the&nbsp;side&nbsp;of&nbsp;the&nbsp;*next*&nbsp;tile&nbsp;in&nbsp;the&nbsp;chain&nbsp;to&nbsp;which&nbsp;this&nbsp;one&nbsp;connects&nbsp;(0-3)</tt></dd></dl>
@@ -975,6 +999,10 @@ Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;pa
 <dl><dt><a name="TileF-neighborOnSide"><strong>neighborOnSide</strong></a>(self, side)</dt><dd><tt>hasNeighborOnSide:&nbsp;int&nbsp;-&gt;&nbsp;<a href="#Tile">Tile</a><br>
 Fetches&nbsp;the&nbsp;tile&nbsp;bordering&nbsp;the&nbsp;specified&nbsp;side&nbsp;of&nbsp;this&nbsp;one<br>
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;to&nbsp;check&nbsp;(0-3)</tt></dd></dl>
+
+<dl><dt><a name="TileF-nextTileSide"><strong>nextTileSide</strong></a>(self, previousTileSide)</dt><dd><tt>nextTileSide:&nbsp;int&nbsp;-&gt;&nbsp;int<br>
+Calculates&nbsp;on&nbsp;which&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;the&nbsp;next&nbsp;tile&nbsp;in&nbsp;the&nbsp;route&nbsp;starting&nbsp;on&nbsp;previousTileSide&nbsp;is.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;previousTileSide&nbsp;-&nbsp;the&nbsp;starting&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;(0-3)</tt></dd></dl>
 
 <dl><dt><a name="TileF-reverseFollowRoute"><strong>reverseFollowRoute</strong></a>(self, caller, visited<font color="#909090">=[]</font>)</dt><dd><tt>reverseFollowRoute:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;*&nbsp;list(<a href="#ConnectedTile">ConnectedTile</a>)&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
 This&nbsp;method&nbsp;returns&nbsp;the&nbsp;tile&nbsp;from&nbsp;which&nbsp;the&nbsp;route&nbsp;of&nbsp;which&nbsp;this&nbsp;tile&nbsp;is&nbsp;a&nbsp;member&nbsp;originates,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;position&nbsp;where&nbsp;the&nbsp;route&nbsp;is&nbsp;attached.&nbsp;&nbsp;An&nbsp;infinite&nbsp;loop&nbsp;in&nbsp;the&nbsp;route&nbsp;will&nbsp;cause&nbsp;a&nbsp;sentinel&nbsp;side&nbsp;value&nbsp;of&nbsp;-1&nbsp;to&nbsp;be&nbsp;returned.<br>
@@ -1067,6 +1095,10 @@ Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;pa
 Fetches&nbsp;the&nbsp;tile&nbsp;bordering&nbsp;the&nbsp;specified&nbsp;side&nbsp;of&nbsp;this&nbsp;one<br>
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;to&nbsp;check&nbsp;(0-3)</tt></dd></dl>
 
+<dl><dt><a name="TileG-nextTileSide"><strong>nextTileSide</strong></a>(self, previousTileSide)</dt><dd><tt>nextTileSide:&nbsp;int&nbsp;-&gt;&nbsp;int<br>
+Calculates&nbsp;on&nbsp;which&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;the&nbsp;next&nbsp;tile&nbsp;in&nbsp;the&nbsp;route&nbsp;starting&nbsp;on&nbsp;previousTileSide&nbsp;is.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;previousTileSide&nbsp;-&nbsp;the&nbsp;starting&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;(0-3)</tt></dd></dl>
+
 <dl><dt><a name="TileG-reverseFollowRoute"><strong>reverseFollowRoute</strong></a>(self, caller, visited<font color="#909090">=[]</font>)</dt><dd><tt>reverseFollowRoute:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;*&nbsp;list(<a href="#ConnectedTile">ConnectedTile</a>)&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
 This&nbsp;method&nbsp;returns&nbsp;the&nbsp;tile&nbsp;from&nbsp;which&nbsp;the&nbsp;route&nbsp;of&nbsp;which&nbsp;this&nbsp;tile&nbsp;is&nbsp;a&nbsp;member&nbsp;originates,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;position&nbsp;where&nbsp;the&nbsp;route&nbsp;is&nbsp;attached.&nbsp;&nbsp;An&nbsp;infinite&nbsp;loop&nbsp;in&nbsp;the&nbsp;route&nbsp;will&nbsp;cause&nbsp;a&nbsp;sentinel&nbsp;side&nbsp;value&nbsp;of&nbsp;-1&nbsp;to&nbsp;be&nbsp;returned.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;*next*&nbsp;<a href="#Tile">Tile</a>&nbsp;in&nbsp;this&nbsp;route&nbsp;or&nbsp;the&nbsp;side&nbsp;of&nbsp;the&nbsp;*next*&nbsp;tile&nbsp;in&nbsp;the&nbsp;chain&nbsp;to&nbsp;which&nbsp;this&nbsp;one&nbsp;connects&nbsp;(0-3)</tt></dd></dl>
@@ -1157,6 +1189,10 @@ Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;pa
 <dl><dt><a name="TileH-neighborOnSide"><strong>neighborOnSide</strong></a>(self, side)</dt><dd><tt>hasNeighborOnSide:&nbsp;int&nbsp;-&gt;&nbsp;<a href="#Tile">Tile</a><br>
 Fetches&nbsp;the&nbsp;tile&nbsp;bordering&nbsp;the&nbsp;specified&nbsp;side&nbsp;of&nbsp;this&nbsp;one<br>
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;to&nbsp;check&nbsp;(0-3)</tt></dd></dl>
+
+<dl><dt><a name="TileH-nextTileSide"><strong>nextTileSide</strong></a>(self, previousTileSide)</dt><dd><tt>nextTileSide:&nbsp;int&nbsp;-&gt;&nbsp;int<br>
+Calculates&nbsp;on&nbsp;which&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;the&nbsp;next&nbsp;tile&nbsp;in&nbsp;the&nbsp;route&nbsp;starting&nbsp;on&nbsp;previousTileSide&nbsp;is.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;previousTileSide&nbsp;-&nbsp;the&nbsp;starting&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;(0-3)</tt></dd></dl>
 
 <dl><dt><a name="TileH-reverseFollowRoute"><strong>reverseFollowRoute</strong></a>(self, caller, visited<font color="#909090">=[]</font>)</dt><dd><tt>reverseFollowRoute:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;*&nbsp;list(<a href="#ConnectedTile">ConnectedTile</a>)&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
 This&nbsp;method&nbsp;returns&nbsp;the&nbsp;tile&nbsp;from&nbsp;which&nbsp;the&nbsp;route&nbsp;of&nbsp;which&nbsp;this&nbsp;tile&nbsp;is&nbsp;a&nbsp;member&nbsp;originates,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;position&nbsp;where&nbsp;the&nbsp;route&nbsp;is&nbsp;attached.&nbsp;&nbsp;An&nbsp;infinite&nbsp;loop&nbsp;in&nbsp;the&nbsp;route&nbsp;will&nbsp;cause&nbsp;a&nbsp;sentinel&nbsp;side&nbsp;value&nbsp;of&nbsp;-1&nbsp;to&nbsp;be&nbsp;returned.<br>
@@ -1249,6 +1285,10 @@ Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;pa
 Fetches&nbsp;the&nbsp;tile&nbsp;bordering&nbsp;the&nbsp;specified&nbsp;side&nbsp;of&nbsp;this&nbsp;one<br>
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;to&nbsp;check&nbsp;(0-3)</tt></dd></dl>
 
+<dl><dt><a name="TileI-nextTileSide"><strong>nextTileSide</strong></a>(self, previousTileSide)</dt><dd><tt>nextTileSide:&nbsp;int&nbsp;-&gt;&nbsp;int<br>
+Calculates&nbsp;on&nbsp;which&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;the&nbsp;next&nbsp;tile&nbsp;in&nbsp;the&nbsp;route&nbsp;starting&nbsp;on&nbsp;previousTileSide&nbsp;is.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;previousTileSide&nbsp;-&nbsp;the&nbsp;starting&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;(0-3)</tt></dd></dl>
+
 <dl><dt><a name="TileI-reverseFollowRoute"><strong>reverseFollowRoute</strong></a>(self, caller, visited<font color="#909090">=[]</font>)</dt><dd><tt>reverseFollowRoute:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;*&nbsp;list(<a href="#ConnectedTile">ConnectedTile</a>)&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
 This&nbsp;method&nbsp;returns&nbsp;the&nbsp;tile&nbsp;from&nbsp;which&nbsp;the&nbsp;route&nbsp;of&nbsp;which&nbsp;this&nbsp;tile&nbsp;is&nbsp;a&nbsp;member&nbsp;originates,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;position&nbsp;where&nbsp;the&nbsp;route&nbsp;is&nbsp;attached.&nbsp;&nbsp;An&nbsp;infinite&nbsp;loop&nbsp;in&nbsp;the&nbsp;route&nbsp;will&nbsp;cause&nbsp;a&nbsp;sentinel&nbsp;side&nbsp;value&nbsp;of&nbsp;-1&nbsp;to&nbsp;be&nbsp;returned.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;caller&nbsp;-&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;*next*&nbsp;<a href="#Tile">Tile</a>&nbsp;in&nbsp;this&nbsp;route&nbsp;or&nbsp;the&nbsp;side&nbsp;of&nbsp;the&nbsp;*next*&nbsp;tile&nbsp;in&nbsp;the&nbsp;chain&nbsp;to&nbsp;which&nbsp;this&nbsp;one&nbsp;connects&nbsp;(0-3)</tt></dd></dl>
@@ -1339,6 +1379,10 @@ Determines&nbsp;to&nbsp;which&nbsp;other&nbsp;tile&nbsp;this&nbsp;tile's&nbsp;pa
 <dl><dt><a name="TileJ-neighborOnSide"><strong>neighborOnSide</strong></a>(self, side)</dt><dd><tt>hasNeighborOnSide:&nbsp;int&nbsp;-&gt;&nbsp;<a href="#Tile">Tile</a><br>
 Fetches&nbsp;the&nbsp;tile&nbsp;bordering&nbsp;the&nbsp;specified&nbsp;side&nbsp;of&nbsp;this&nbsp;one<br>
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;the&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;to&nbsp;check&nbsp;(0-3)</tt></dd></dl>
+
+<dl><dt><a name="TileJ-nextTileSide"><strong>nextTileSide</strong></a>(self, previousTileSide)</dt><dd><tt>nextTileSide:&nbsp;int&nbsp;-&gt;&nbsp;int<br>
+Calculates&nbsp;on&nbsp;which&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;the&nbsp;next&nbsp;tile&nbsp;in&nbsp;the&nbsp;route&nbsp;starting&nbsp;on&nbsp;previousTileSide&nbsp;is.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;previousTileSide&nbsp;-&nbsp;the&nbsp;starting&nbsp;side&nbsp;of&nbsp;this&nbsp;tile&nbsp;(0-3)</tt></dd></dl>
 
 <dl><dt><a name="TileJ-reverseFollowRoute"><strong>reverseFollowRoute</strong></a>(self, caller, visited<font color="#909090">=[]</font>)</dt><dd><tt>reverseFollowRoute:&nbsp;(<a href="#Tile">Tile</a>&nbsp;or&nbsp;int)&nbsp;*&nbsp;list(<a href="#ConnectedTile">ConnectedTile</a>)&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>
 This&nbsp;method&nbsp;returns&nbsp;the&nbsp;tile&nbsp;from&nbsp;which&nbsp;the&nbsp;route&nbsp;of&nbsp;which&nbsp;this&nbsp;tile&nbsp;is&nbsp;a&nbsp;member&nbsp;originates,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;position&nbsp;where&nbsp;the&nbsp;route&nbsp;is&nbsp;attached.&nbsp;&nbsp;An&nbsp;infinite&nbsp;loop&nbsp;in&nbsp;the&nbsp;route&nbsp;will&nbsp;cause&nbsp;a&nbsp;sentinel&nbsp;side&nbsp;value&nbsp;of&nbsp;-1&nbsp;to&nbsp;be&nbsp;returned.<br>

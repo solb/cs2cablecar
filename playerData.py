@@ -36,7 +36,7 @@ def stationScore(remainingStationsMember, newValue=-1):
     return remainingStationsMember[1]
 
 class PlayerData(object):
-    __slots__ = ('logger', 'playerId', 'currentTile', 'numPlayers', 'board', 'stationOwners', 'ourRemainingStations', 'opponentsTiles', 'mayMoveIllegally')
+    __slots__ = ('logger', 'playerId', 'currentTile', 'numPlayers', 'board', 'stationOwners', 'ourRemainingStations', 'opponentsTiles', 'mayMoveIllegally', 'POWER_STATION_THRESHOLD')
     """
     Our data members:
         board - stores the tiles
@@ -47,6 +47,7 @@ class PlayerData(object):
         opponentsTiles - a list of our opponents' next tile letters, indexed by player ID
             NOTE: our tile and any eliminated opponents' tiles are set to ''
         mayMoveIllegally - a list of who may legally make an invalid move, indexed by player ID
+        POWER_STATION_THRESHOLD - the gain we'd need to see before we'd complete one of our routes to a power station
     """
     
     def __init__(self, logger, playerId, currentTile, numPlayers):
@@ -141,17 +142,18 @@ class PlayerData(object):
         """
         return self.stationOwners[trackId-1]
     
-    def routeInDanger(self, track, attacker=-1): #TODO We currently allow others to connect our routes to PowerStation s; should we make this optional?
+    def routeInDanger(self, track, attacker=-1, disallowLowScore=False):
         """
         routeInDanger: int * int -> bool
-        Returns whether the specified attacker--or any player besides us if none specified--could connect the specified track--in its current state--to the board's edge in a single turn
+        Returns whether the specified attacker--or any player besides us if none specified--could connect the specified track--in its current state--to the board's edge in a single turn.  If we are the attacker or we are checking all opponents, we also check whether someone could connect us to a power station for a low score.
             track - the ID of the track about which we're worried
             attacker - the ID of the player who might end the track, or all other players by default
+            disallowLowScore - whether to prevent low-scoring powerstation connections
         pre: The specified route is not yet complete, and the specified player actually has another move.
         """
         if attacker==-1: #we'll need to check all players
             for enemy in range(self.numPlayers):
-                if self.opponentsTiles[enemy] and self.routeInDanger(track, enemy): #this player is an opponent with a move to make, and poses a threat to this route
+                if self.opponentsTiles[enemy] and self.routeInDanger(track, enemy, True): #this player is an opponent with a move to make, and poses a threat to this route
                     return True
             return False
         else:
@@ -166,18 +168,22 @@ class PlayerData(object):
                 tile=self.makeTile(tileType, rotation)
                 if self.board.validPlacement(tile, row, column) or self.mayMoveIllegally[attacker]: #move would be valid or would have just cause not to be
                     self.board.addTile(tile, row, column)
-                    vulnerable=isinstance(tile.followRoute(side)[0], OuterStations)
+                    endpoint=tile.followRoute(side)[0]
+                    vulnerable=isinstance(endpoint, OuterStations)
+                    if disallowLowScore or attacker==self.playerId:
+                        vulnerable=vulnerable or (isinstance(endpoint, PowerStation) and self.board.calculateTrackScore(track)/2<self.POWER_STATION_THRESHOLD)
                     self.board.removeTile(row, column)
                     if vulnerable:
                         return True
             return False
     
-    def tileJeopardizesOurRoutes(self, row, column, allowCompletion=-1): #TODO We currently allow others to connect our routes to PowerStation s; should we make this optional?  Won't we sometimes want to be able to complete multiple tracks at once?
+    def tileJeopardizesOurRoutes(self, row, column, acceptableGain=0, allowCompletion=-1): #TODO Won't we sometimes want to be able to complete multiple tracks at once?
         """
-        tileJeopardizesOurRoutes: int * int * int -> bool
+        tileJeopardizesOurRoutes: int * int * int * int -> bool
         Returns whether the placement of the tile at the specified coordinates connected any of our routes to the edge or even placed any of them in danger's way
             row - r-coord (0-7)
             col - c-coord (0-7)
+            acceptableGain - only connect this route to a power station if it would score at least this many points for each of our tracks that it completes
             allowCompletion - the side--if any--on which to permit a completion
         pre: A tile has already been placed at the specified coordinates.
         """
@@ -203,19 +209,20 @@ class PlayerData(object):
     def possibleTrackExtensions(self, track, completeTrack):
         """
         possibleTrackExtensions: int * bool -> list(int, int, int, int)
-        Returns a list of the permissible uses of the current tile in order to extend the specified track and either complete or not complete it, all while maintaining the completeness and safety of our own stations; the list is of the form (row, column, rotation, new_score)
+        Returns a list of the permissible uses of the current tile in order to extend the specified track and either complete or not complete it, all while maintaining the completeness and safety of our own stations; the list is of the form (row, column, rotation, old_score, delta_score)
             track - the track to extend
             completeTrack - our goal, whether it be to complete the track or not to complete it
         """
         row, column=self.board.lookupTileCoordinates(self.board.followRoute(track)[0])
+        oldScore=self.board.calculateTrackScore(track)
         options=[] #stores (rotation, score)
         for rotation in range(4):
             ourTile=self.makeTile(rotation=rotation)
             if self.board.validPlacement(ourTile, row, column) or (not self.board.lookupTile(row, column) and self.mayMoveIllegally[self.playerId]): #we're legal or allowed not to be
                 self.board.addTile(ourTile, row, column)
                 if isinstance(self.board.followRoute(track)[0], OuterStations)==completeTrack: #this rotation completes it
-                    if not self.tileJeopardizesOurRoutes(row, column): #we haven't done anything significant to our own routes at the same time
-                        options.append([row, column, rotation, self.board.calculateTrackScore(track)])
+                    if not self.tileJeopardizesOurRoutes(row, column, self.POWER_STATION_THRESHOLD): #we haven't done anything significant to our own routes at the same time
+                        options.append([row, column, rotation, oldScore, self.board.calculateTrackScore(track)-oldScore])
                     #else:
                         #print 'NB: Placing at '+str((row, column))+' w/ rotation '+str(rotation)+' would jeopardize our own route'
                 self.board.removeTile(row, column)

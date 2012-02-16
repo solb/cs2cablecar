@@ -56,20 +56,22 @@ Returns&nbsp;an&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;to&nbsp;r
 &nbsp;&nbsp;&nbsp;&nbsp;rotation&nbsp;-&nbsp;the&nbsp;tile's&nbsp;rotation,&nbsp;0-3</tt></dd></dl>
 
 <dl><dt><a name="PlayerData-possibleTrackExtensions"><strong>possibleTrackExtensions</strong></a>(self, track, completeTrack)</dt><dd><tt>possibleTrackExtensions:&nbsp;int&nbsp;*&nbsp;bool&nbsp;-&gt;&nbsp;list(int,&nbsp;int,&nbsp;int,&nbsp;int)<br>
-Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;the&nbsp;permissible&nbsp;uses&nbsp;of&nbsp;the&nbsp;current&nbsp;tile&nbsp;in&nbsp;order&nbsp;to&nbsp;extend&nbsp;the&nbsp;specified&nbsp;track&nbsp;and&nbsp;either&nbsp;complete&nbsp;or&nbsp;not&nbsp;complete&nbsp;it,&nbsp;all&nbsp;while&nbsp;maintaining&nbsp;the&nbsp;completeness&nbsp;and&nbsp;safety&nbsp;of&nbsp;our&nbsp;own&nbsp;stations;&nbsp;the&nbsp;list&nbsp;is&nbsp;of&nbsp;the&nbsp;form&nbsp;(row,&nbsp;column,&nbsp;rotation,&nbsp;new_score)<br>
+Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;the&nbsp;permissible&nbsp;uses&nbsp;of&nbsp;the&nbsp;current&nbsp;tile&nbsp;in&nbsp;order&nbsp;to&nbsp;extend&nbsp;the&nbsp;specified&nbsp;track&nbsp;and&nbsp;either&nbsp;complete&nbsp;or&nbsp;not&nbsp;complete&nbsp;it,&nbsp;all&nbsp;while&nbsp;maintaining&nbsp;the&nbsp;completeness&nbsp;and&nbsp;safety&nbsp;of&nbsp;our&nbsp;own&nbsp;stations;&nbsp;the&nbsp;list&nbsp;is&nbsp;of&nbsp;the&nbsp;form&nbsp;(row,&nbsp;column,&nbsp;rotation,&nbsp;old_score,&nbsp;delta_score)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;track&nbsp;-&nbsp;the&nbsp;track&nbsp;to&nbsp;extend<br>
 &nbsp;&nbsp;&nbsp;&nbsp;completeTrack&nbsp;-&nbsp;our&nbsp;goal,&nbsp;whether&nbsp;it&nbsp;be&nbsp;to&nbsp;complete&nbsp;the&nbsp;track&nbsp;or&nbsp;not&nbsp;to&nbsp;complete&nbsp;it</tt></dd></dl>
 
-<dl><dt><a name="PlayerData-routeInDanger"><strong>routeInDanger</strong></a>(self, track, attacker<font color="#909090">=-1</font>)</dt><dd><tt>routeInDanger:&nbsp;int&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;bool<br>
-Returns&nbsp;whether&nbsp;the&nbsp;specified&nbsp;attacker--or&nbsp;any&nbsp;player&nbsp;besides&nbsp;us&nbsp;if&nbsp;none&nbsp;specified--could&nbsp;connect&nbsp;the&nbsp;specified&nbsp;track--in&nbsp;its&nbsp;current&nbsp;state--to&nbsp;the&nbsp;board's&nbsp;edge&nbsp;in&nbsp;a&nbsp;single&nbsp;turn<br>
+<dl><dt><a name="PlayerData-routeInDanger"><strong>routeInDanger</strong></a>(self, track, attacker<font color="#909090">=-1</font>, disallowLowScore<font color="#909090">=False</font>)</dt><dd><tt>routeInDanger:&nbsp;int&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;bool<br>
+Returns&nbsp;whether&nbsp;the&nbsp;specified&nbsp;attacker--or&nbsp;any&nbsp;player&nbsp;besides&nbsp;us&nbsp;if&nbsp;none&nbsp;specified--could&nbsp;connect&nbsp;the&nbsp;specified&nbsp;track--in&nbsp;its&nbsp;current&nbsp;state--to&nbsp;the&nbsp;board's&nbsp;edge&nbsp;in&nbsp;a&nbsp;single&nbsp;turn.&nbsp;&nbsp;If&nbsp;we&nbsp;are&nbsp;the&nbsp;attacker&nbsp;or&nbsp;we&nbsp;are&nbsp;checking&nbsp;all&nbsp;opponents,&nbsp;we&nbsp;also&nbsp;check&nbsp;whether&nbsp;someone&nbsp;could&nbsp;connect&nbsp;us&nbsp;to&nbsp;a&nbsp;power&nbsp;station&nbsp;for&nbsp;a&nbsp;low&nbsp;score.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;track&nbsp;-&nbsp;the&nbsp;ID&nbsp;of&nbsp;the&nbsp;track&nbsp;about&nbsp;which&nbsp;we're&nbsp;worried<br>
 &nbsp;&nbsp;&nbsp;&nbsp;attacker&nbsp;-&nbsp;the&nbsp;ID&nbsp;of&nbsp;the&nbsp;player&nbsp;who&nbsp;might&nbsp;end&nbsp;the&nbsp;track,&nbsp;or&nbsp;all&nbsp;other&nbsp;players&nbsp;by&nbsp;default<br>
+&nbsp;&nbsp;&nbsp;&nbsp;disallowLowScore&nbsp;-&nbsp;whether&nbsp;to&nbsp;prevent&nbsp;low-scoring&nbsp;powerstation&nbsp;connections<br>
 pre:&nbsp;The&nbsp;specified&nbsp;route&nbsp;is&nbsp;not&nbsp;yet&nbsp;complete,&nbsp;and&nbsp;the&nbsp;specified&nbsp;player&nbsp;actually&nbsp;has&nbsp;another&nbsp;move.</tt></dd></dl>
 
-<dl><dt><a name="PlayerData-tileJeopardizesOurRoutes"><strong>tileJeopardizesOurRoutes</strong></a>(self, row, column, allowCompletion<font color="#909090">=-1</font>)</dt><dd><tt>tileJeopardizesOurRoutes:&nbsp;int&nbsp;*&nbsp;int&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;bool<br>
+<dl><dt><a name="PlayerData-tileJeopardizesOurRoutes"><strong>tileJeopardizesOurRoutes</strong></a>(self, row, column, acceptableGain<font color="#909090">=0</font>, allowCompletion<font color="#909090">=-1</font>)</dt><dd><tt>tileJeopardizesOurRoutes:&nbsp;int&nbsp;*&nbsp;int&nbsp;*&nbsp;int&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;bool<br>
 Returns&nbsp;whether&nbsp;the&nbsp;placement&nbsp;of&nbsp;the&nbsp;tile&nbsp;at&nbsp;the&nbsp;specified&nbsp;coordinates&nbsp;connected&nbsp;any&nbsp;of&nbsp;our&nbsp;routes&nbsp;to&nbsp;the&nbsp;edge&nbsp;or&nbsp;even&nbsp;placed&nbsp;any&nbsp;of&nbsp;them&nbsp;in&nbsp;danger's&nbsp;way<br>
 &nbsp;&nbsp;&nbsp;&nbsp;row&nbsp;-&nbsp;r-coord&nbsp;(0-7)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;col&nbsp;-&nbsp;c-coord&nbsp;(0-7)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;acceptableGain&nbsp;-&nbsp;only&nbsp;connect&nbsp;this&nbsp;route&nbsp;to&nbsp;a&nbsp;power&nbsp;station&nbsp;if&nbsp;it&nbsp;would&nbsp;score&nbsp;at&nbsp;least&nbsp;this&nbsp;many&nbsp;points&nbsp;for&nbsp;each&nbsp;of&nbsp;our&nbsp;tracks&nbsp;that&nbsp;it&nbsp;completes<br>
 &nbsp;&nbsp;&nbsp;&nbsp;allowCompletion&nbsp;-&nbsp;the&nbsp;side--if&nbsp;any--on&nbsp;which&nbsp;to&nbsp;permit&nbsp;a&nbsp;completion<br>
 pre:&nbsp;A&nbsp;tile&nbsp;has&nbsp;already&nbsp;been&nbsp;placed&nbsp;at&nbsp;the&nbsp;specified&nbsp;coordinates.</tt></dd></dl>
 
@@ -87,6 +89,8 @@ post:&nbsp;ourRemainingStations&nbsp;is&nbsp;sorted&nbsp;in&nbsp;descending&nbsp
 
 <hr>
 Data descriptors defined here:<br>
+<dl><dt><strong>POWER_STATION_THRESHOLD</strong></dt>
+</dl>
 <dl><dt><strong>board</strong></dt>
 </dl>
 <dl><dt><strong>currentTile</strong></dt>

@@ -325,14 +325,14 @@ class PotentialMove(object):
         tracks - PotentialTrack objects for each route that goes through this tile
     """
     
-    def __init__(data, row, column, rotation):
+    def __init__(self, data, row, column, rotation):
         """
         Creates a PotentialMove instance and calculates the statistics for the proposed move
             playerData - PlayerData instance
             row, column - coordinates of new move
             rotation - rotation of our tile
         """
-        self.data, self.row, self.column, self.rotation=data, row
+        self.row, self.column, self.rotation=row, column, rotation
         
         tile=data.makeTile(data.currentTile, rotation)
         data.board.addTile(tile, row, column, False)
@@ -341,27 +341,32 @@ class PotentialMove(object):
         self.tracks=[]
         for border in range(4):
             if isinstance(tile.neighborOnSide(border), OuterStations):
-                self.tracks.append(PotentialTrack(data.board.lookupTrackNumber(tile, border)))
+                self.tracks.append(PotentialTrack(data.board.lookupTrackNumber(data.board.lookupTile(row, column, True), border)))
             elif isinstance(tile.neighborOnSide(border), ConnectedTile):
-                self.tracks.append(PotentialTrack(data.board.lookupTrackNumber(tile.neighborOnSide(border), border)))
+                trackNum=data.board.lookupTrackNumber(tile.neighborOnSide(border), border)
+                if trackNum!=-1:
+                    self.tracks.append(PotentialTrack(trackNum))
+                else: #there are places where routes could be, but no track connects to them
+                    continue
             else: #no routes through this tile
                 continue
             self.tracks[-1].ours=data.trackOwner(self.tracks[-1].number)==data.playerId #do we own this?
             if self.tracks[-1].ours:
-                self.tracks[-1].wasVulnerable=data.routeInDanger(track)
+                self.tracks[-1].wasVulnerable=data.routeInDanger(self.tracks[-1].number)
             self.tracks[-1].oldScore=data.board.calculateTrackScore(self.tracks[-1].number) #store the old score
         
         #collect data on the surrounding routes:
         data.board.addTile(tile, row, column)
         for changedTrack in self.tracks:
             changedTrack.completed=data.board.routeIsComplete(changedTrack.number)
-            if changedTrack.ours:
-                changedTrack.nowVulnerable=data.routeInDanger(track) #someone else could attack this
-            elif data.numPlayers>2: #someone else's; can anyone else harm it?
-                for enemy in range(data.numPlayers):
-                    if enemy!=data.playerId and emeny!=data.trackOwner(changedTrack.num) and data.routeInDanger(track, enemy): #someone could connect this straight to the edge
-                        changedTrack.nowVulnerable=True
-                        break
+            if not changedTrack.completed:
+                if changedTrack.ours:
+                    changedTrack.nowVulnerable=data.routeInDanger(changedTrack.number) #someone else could attack this
+                elif data.numPlayers>2: #someone else's; can anyone else harm it?
+                    for enemy in range(data.numPlayers):
+                        if enemy!=data.playerId and enemy!=data.trackOwner(changedTrack.number) and data.routeInDanger(changedTrack.number, enemy): #someone could connect this straight to the edge
+                            changedTrack.nowVulnerable=True
+                            break
             changedTrack.deltaScore=data.board.calculateTrackScore(changedTrack.number)-changedTrack.oldScore
         data.board.removeTile(row, column)
         
@@ -378,12 +383,19 @@ class PotentialMove(object):
                     self.deltaEndangerment-=1
                 #otherwise we're neither more in danger not less in danger than we were
                 
-                self.ourGains+=changedTrackdeltaScore
+                self.ourGains+=changedTrack.deltaScore
             else: #enemy track
                 if changedTrack.completed:
                     self.enemyLosses+=1
                 
                 self.enemyGains+=changedTrack.deltaScore
+    
+    def __repr__(self):
+        """
+        __repr__ -> str
+        Returns a string representation of this thing
+        """
+        return str((self.row, self.column))+' '+str(self.rotation)+': '+'LOSSES: us '+str(self.ourLosses)+' them '+str(self.enemyLosses)+'; ENDANGERMENT: '+str(self.deltaEndangerment)+'; GAINS: us '+str(self.ourGains)+' them '+str(self.enemyGains)+'\n'
 
 class PotentialTrack(object):
     __slots__=('number', 'ours', 'completed', 'wasVulnerable', 'nowVulnerable', 'oldScore', 'deltaScore')

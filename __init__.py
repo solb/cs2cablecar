@@ -61,7 +61,6 @@ def move(playerData):
     for track in range(1, 33):
         if not playerData.board.routeIsComplete(track):
             if playerData.trackOwner(track)==playerData.playerId: #our track
-                currentScore=playerData.board.calculateTrackScore(track)
                 possibleFutures=playerData.possibleTrackExtensions(track, False) #avoid edges
                 if possibleFutures: #we came up with an option
                     if playerData.routeInDanger(track): #this track needs defense
@@ -71,7 +70,6 @@ def move(playerData):
             else: #someone else's
                 if playerData.routeInDanger(track, playerData.playerId): #WE pose a threat
                     #print 'NB: We could harm their track '+str(track)
-                    currentScore=playerData.board.calculateTrackScore(track)
                     possibleFutures=playerData.possibleTrackExtensions(track, True) #aim to complete their tracks
                     if possibleFutures: #we came up with an option
                         attacks+=possibleFutures
@@ -95,7 +93,6 @@ def move(playerData):
         for track in range(1, 33):
             if not playerData.board.routeIsComplete(track):
                 if playerData.trackOwner(track)!=playerData.playerId: #not our track
-                    currentScore=playerData.board.calculateTrackScore(track)
                     possibleFutures=playerData.possibleTrackExtensions(track, False) #look for edges
                     if possibleFutures: #we came up with an option
                         options+=possibleFutures
@@ -151,20 +148,22 @@ def move(playerData):
     validPlacements = []
     for location in unoccupiedCoordinates: #attempt 2: put wherever it's valid
         for rotation in range(4):
-            tile=playerData.makeTile(rotation=rotation)
-<<<<<<< Updated upstream
-            if playerData.board.validPlacement(tile, location[0], location[1]):
-#                validPlacements.append(playerData.potentialMove(location[0],location[1],rotation))           
-=======
-            if playerData.board.validPlacement(tile, location[0], location[1]) or playerData.mayMoveIllegally[playerData.playerId]: #legal or exempt
->>>>>>> Stashed changes
-                playerData.board.addTile(tile, location[0], location[1])
-#                print 'NB: Making a legal move.'
-                return playerData, PlayerMove(playerData.playerId, (location[0], location[1]), playerData.currentTile, rotation)
+            if playerData.mayMoveIllegally[playerData.playerId] or playerData.board.validPlacement(playerData.makeTile(rotation=rotation), location[0], location[1]):
+                validPlacements.append(PotentialMove(playerData,location[0],location[1],rotation))
+    validPlacements.sort(key=lambda movement: movement.ourGains, reverse=True)
+    validPlacements.sort(key=lambda movement: movement.enemyGains, reverse=False)
+    validPlacements.sort(key=lambda movement: movement.deltaEndangerment, reverse=False)
+    validPlacements.sort(key=lambda movement: movement.ourLosses, reverse=False)
+    validPlacements.sort(key=lambda movement: movement.enemyLosses, reverse=True)    
+    #print(validPlacements)
     
-    playerData.board.addTile(playerData.makeTile(rotation=rotation), unoccupiedCoordinates[0][0], unoccupiedCoordinates[0][1])
-    #print 'NB: Making an illegal move!'
-    return playerData, PlayerMove(playerData.playerId, (unoccupiedCoordinates[0][0], unoccupiedCoordinates[0][1]), playerData.currentTile, rotation) #final attempt: stick it somewhere it shouldn't be
+    playerData.board.addTile(playerData.makeTile(rotation=validPlacements[0].rotation), validPlacements[0].row, validPlacements[0].column)
+#                print 'NB: Making a legal move.'
+    return playerData, PlayerMove(playerData.playerId, (validPlacements[0].row, validPlacements[0].column), playerData.currentTile, validPlacements[0].rotation)
+    
+#    playerData.board.addTile(playerData.makeTile(rotation=rotation), unoccupiedCoordinates[0][0], unoccupiedCoordinates[0][1])
+#    #print 'NB: Making an illegal move!'
+#    return playerData, PlayerMove(playerData.playerId, (unoccupiedCoordinates[0][0], unoccupiedCoordinates[0][1]), playerData.currentTile, rotation) #final attempt: stick it somewhere it shouldn't be
 
 def move_info(playerData, playerMove, nextTile):
     """The engine calls this function to notify you of:

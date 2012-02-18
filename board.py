@@ -26,7 +26,7 @@ class Board(object):
         self.board=[[None for _ in range(8)] for _ in range(8)]
         for row in range(len(self.board)):
             for col in range(len(self.board[row])):
-                for side in range(4):
+                for _ in range(4):
                     if (row==3 or row==4) and (col==3 or col==4):
                         self.board[row][col]=PowerStation()
                     else:

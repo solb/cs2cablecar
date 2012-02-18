@@ -202,7 +202,8 @@ class PlayerData(object):
                 if route==-1 or self.trackOwner(route)!=self.playerId: #this isn't a real route (yet) or someone we don't care about owns it
                     continue
                 else: #this is one of our hard-earned routes
-                    if isinstance(self.board.followRoute(route)[0], OuterStations) or self.routeInDanger(route): #one of our hard-earned stations was either inadvertently completed or is now at risk
+                    endpoint=self.board.followRoute(route)[0]
+                    if isinstance(endpoint, OuterStations) or (isinstance(endpoint, PowerStation) and self.board.calculateTrackScore(route)/2<self.POWER_STATION_THRESHOLD) or self.routeInDanger(route): #one of our hard-earned stations was either inadvertently completed or is now at risk
                         return True
         return False
     
@@ -220,7 +221,8 @@ class PlayerData(object):
             ourTile=self.makeTile(rotation=rotation)
             if self.board.validPlacement(ourTile, row, column) or (not self.board.lookupTile(row, column) and self.mayMoveIllegally[self.playerId]): #we're legal or allowed not to be
                 self.board.addTile(ourTile, row, column)
-                if isinstance(self.board.followRoute(track)[0], OuterStations)==completeTrack: #this rotation completes it
+                endpoint=self.board.followRoute(track)[0]
+                if isinstance(endpoint, OuterStations)==completeTrack or isinstance(endpoint, PowerStation)==completeTrack: #this rotation completes it
                     if not self.tileJeopardizesOurRoutes(row, column, self.POWER_STATION_THRESHOLD): #we haven't done anything significant to our own routes at the same time
                         options.append([row, column, rotation, oldScore, self.board.calculateTrackScore(track)-oldScore])
                     #else:

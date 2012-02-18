@@ -66,7 +66,7 @@ def move(playerData):
                 if possibleFutures: #we came up with an option
                     if playerData.routeInDanger(track): #this track needs defense
                         defenses+=possibleFutures
-                    elif playerData.board.calculateTrackScore(track): #it this track has already been started, lengthen it (possibly connecting it to a power station)
+                    else: #if playerData.board.calculateTrackScore(track): #it this track has already been started, lengthen it (possibly connecting it to a power station)
                         extensions+=possibleFutures
             else: #someone else's
                 if playerData.routeInDanger(track, playerData.playerId): #WE pose a threat
@@ -155,7 +155,7 @@ def move(playerData):
             if playerData.board.validPlacement(tile, location[0], location[1]):
 #                validPlacements.append(playerData.potentialMove(location[0],location[1],rotation))           
                 playerData.board.addTile(tile, location[0], location[1])
-                #print 'NB: Making a legal move.'
+#                print 'NB: Making a legal move.'
                 return playerData, PlayerMove(playerData.playerId, (location[0], location[1]), playerData.currentTile, rotation)
     
     playerData.board.addTile(playerData.makeTile(rotation=rotation), unoccupiedCoordinates[0][0], unoccupiedCoordinates[0][1])

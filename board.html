@@ -99,9 +99,9 @@ Returns&nbsp;the&nbsp;<a href="#ConnectedTile">ConnectedTile</a>&nbsp;attached&n
 &nbsp;&nbsp;&nbsp;&nbsp;whichStation&nbsp;-&nbsp;the&nbsp;cable&nbsp;car&nbsp;station&nbsp;(1-32)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;giveEmpty&nbsp;-&nbsp;whether&nbsp;to&nbsp;return&nbsp;the&nbsp;tile&nbsp;even&nbsp;if&nbsp;it's&nbsp;just&nbsp;a&nbsp;placeholder</tt></dd></dl>
 
-<dl><dt><a name="Board-lookupTrackNumber"><strong>lookupTrackNumber</strong></a>(self, tile, side)</dt><dd><tt>lookupTrackNumber:&nbsp;<a href="#ConnectedTile">ConnectedTile</a>&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;int<br>
+<dl><dt><a name="Board-lookupTrackNumber"><strong>lookupTrackNumber</strong></a>(self, tile, side)</dt><dd><tt>lookupTrackNumber:&nbsp;<a href="#Tile">Tile</a>&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;int<br>
 Returns&nbsp;the&nbsp;cable&nbsp;car&nbsp;station&nbsp;(1-32)&nbsp;of&nbsp;the&nbsp;from&nbsp;which&nbsp;the&nbsp;track&nbsp;ending&nbsp;on&nbsp;the&nbsp;specified&nbsp;side&nbsp;of&nbsp;the&nbsp;specified&nbsp;tile&nbsp;originates.&nbsp;&nbsp;If&nbsp;the&nbsp;route&nbsp;doesn't&nbsp;touch&nbsp;the&nbsp;edge&nbsp;of&nbsp;the&nbsp;board,&nbsp;the&nbsp;sentinel&nbsp;-1&nbsp;is&nbsp;returned.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;tile&nbsp;-&nbsp;the&nbsp;<a href="#ConnectedTile">ConnectedTile</a>&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;the&nbsp;route<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tile&nbsp;-&nbsp;the&nbsp;<a href="#ConnectedTile">ConnectedTile</a>&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;the&nbsp;route,&nbsp;or&nbsp;an&nbsp;empty&nbsp;<a href="#Tile">Tile</a>&nbsp;on&nbsp;the&nbsp;edge&nbsp;of&nbsp;the&nbsp;board<br>
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;the&nbsp;side&nbsp;of&nbsp;the&nbsp;next&nbsp;tile&nbsp;in&nbsp;the&nbsp;route&nbsp;(after&nbsp;the&nbsp;last&nbsp;one)&nbsp;to&nbsp;which&nbsp;the&nbsp;route&nbsp;connects&nbsp;(0-3)<br>
 pre:&nbsp;tile&nbsp;must&nbsp;be&nbsp;on&nbsp;this&nbsp;board!</tt></dd></dl>
 
@@ -160,9 +160,9 @@ Links&nbsp;a&nbsp;<a href="#Tile">Tile</a>&nbsp;that's&nbsp;being&nbsp;placed&nb
 &nbsp;&nbsp;&nbsp;&nbsp;rememberTile&nbsp;-&nbsp;whether&nbsp;to&nbsp;retain&nbsp;the&nbsp;reference&nbsp;to&nbsp;this&nbsp;tile;&nbsp;alternative&nbsp;is&nbsp;to&nbsp;only&nbsp;tell&nbsp;the&nbsp;tile&nbsp;about&nbsp;us<br>
 NOTE:&nbsp;At&nbsp;this&nbsp;level,&nbsp;the&nbsp;cable&nbsp;car&nbsp;station&nbsp;is&nbsp;represented&nbsp;using&nbsp;a&nbsp;0-based&nbsp;indexing&nbsp;system;&nbsp;this&nbsp;contrasts&nbsp;with&nbsp;the&nbsp;1-based&nbsp;scheme&nbsp;used&nbsp;at&nbsp;all&nbsp;levels&nbsp;higher!</tt></dd></dl>
 
-<dl><dt><a name="Cars-reverseFollowRoute"><strong>reverseFollowRoute</strong></a>(self, tile, side)</dt><dd><tt>reverseFollowRoute:&nbsp;<a href="#ConnectedTile">ConnectedTile</a>&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;int<br>
+<dl><dt><a name="Cars-reverseFollowRoute"><strong>reverseFollowRoute</strong></a>(self, tile, side)</dt><dd><tt>reverseFollowRoute:&nbsp;<a href="#Tile">Tile</a>&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;int<br>
 Returns&nbsp;the&nbsp;cable&nbsp;car&nbsp;station&nbsp;*(0-31)*&nbsp;from&nbsp;which&nbsp;the&nbsp;track&nbsp;ending&nbsp;at&nbsp;the&nbsp;specified&nbsp;tile&nbsp;originates.&nbsp;&nbsp;If&nbsp;the&nbsp;route&nbsp;doesn't&nbsp;touch&nbsp;any&nbsp;of&nbsp;these&nbsp;stations,&nbsp;the&nbsp;sentinel&nbsp;-1&nbsp;is&nbsp;returned.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;tile&nbsp;-&nbsp;the&nbsp;<a href="#ConnectedTile">ConnectedTile</a>&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;the&nbsp;track<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tile&nbsp;-&nbsp;the&nbsp;<a href="#ConnectedTile">ConnectedTile</a>&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;the&nbsp;track,&nbsp;or&nbsp;an&nbsp;empty&nbsp;<a href="#Tile">Tile</a>&nbsp;on&nbsp;the&nbsp;edge&nbsp;of&nbsp;the&nbsp;board<br>
 &nbsp;&nbsp;&nbsp;&nbsp;side&nbsp;-&nbsp;the&nbsp;side&nbsp;of&nbsp;the&nbsp;next&nbsp;tile&nbsp;in&nbsp;the&nbsp;route&nbsp;(after&nbsp;the&nbsp;last&nbsp;one)&nbsp;to&nbsp;which&nbsp;the&nbsp;route&nbsp;connects&nbsp;(0-3)<br>
 NOTE:&nbsp;At&nbsp;this&nbsp;level,&nbsp;the&nbsp;cable&nbsp;car&nbsp;station&nbsp;is&nbsp;represented&nbsp;using&nbsp;a&nbsp;0-based&nbsp;indexing&nbsp;system;&nbsp;this&nbsp;contrasts&nbsp;with&nbsp;the&nbsp;1-based&nbsp;scheme&nbsp;used&nbsp;at&nbsp;all&nbsp;levels&nbsp;higher!</tt></dd></dl>
 
@@ -297,8 +297,8 @@ Adds&nbsp;a&nbsp;<a href="#Tile">Tile</a>&nbsp;that&nbsp;is&nbsp;being&nbsp;plac
 &nbsp;&nbsp;&nbsp;&nbsp;substation&nbsp;-&nbsp;the&nbsp;index&nbsp;of&nbsp;the&nbsp;station&nbsp;to&nbsp;which&nbsp;the&nbsp;tile&nbsp;should&nbsp;be&nbsp;linked&nbsp;(0-7)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;rememberTile&nbsp;-&nbsp;whether&nbsp;to&nbsp;retain&nbsp;the&nbsp;reference&nbsp;to&nbsp;this&nbsp;tile;&nbsp;alternative&nbsp;is&nbsp;to&nbsp;only&nbsp;tell&nbsp;the&nbsp;tile&nbsp;about&nbsp;us</tt></dd></dl>
 
-<dl><dt><a name="OuterStations-lookupSource"><strong>lookupSource</strong></a>(self, substation)</dt><dd><tt>lookupSource:&nbsp;int&nbsp;-&gt;&nbsp;<a href="#ConnectedTile">ConnectedTile</a><br>
-Returns&nbsp;the&nbsp;<a href="#ConnectedTile">ConnectedTile</a>&nbsp;at&nbsp;this&nbsp;station<br>
+<dl><dt><a name="OuterStations-lookupSource"><strong>lookupSource</strong></a>(self, substation)</dt><dd><tt>lookupSource:&nbsp;int&nbsp;-&gt;&nbsp;<a href="#Tile">Tile</a><br>
+Returns&nbsp;the&nbsp;<a href="#Tile">Tile</a>&nbsp;at&nbsp;this&nbsp;station<br>
 &nbsp;&nbsp;&nbsp;&nbsp;substation&nbsp;-&nbsp;the&nbsp;index&nbsp;of&nbsp;the&nbsp;station&nbsp;containing&nbsp;the&nbsp;desired&nbsp;tile&nbsp;(0-7)</tt></dd></dl>
 
 <dl><dt><a name="OuterStations-reverseFollowRoute"><strong>reverseFollowRoute</strong></a>(self, caller, _<font color="#909090">=None</font>)</dt><dd><tt>reverseFollowRoute:&nbsp;<a href="#Tile">Tile</a>&nbsp;-&gt;&nbsp;tuple(<a href="#Tile">Tile</a>,&nbsp;int)<br>

@@ -313,3 +313,95 @@ class PlayerData(object):
         # add any more string concatenation for your other slots here
         
         return result
+
+class PotentialMove(object):
+    __slots__=('row', 'column', 'rotation', 'tracks', 'ourLosses', 'enemyLosses', 'deltaEndangerment', 'ourGains', 'enemyGains')
+    """
+    PotentialMove: PlayerData * int * int * int * list(PotentialTrack)
+    Represents a move that we could make and contains its repercussions
+        row - r-coordinate of move
+        column - c-coordinate of move
+        rotation - rotation of our current tile
+        tracks - PotentialTrack objects for each route that goes through this tile
+    """
+    
+    def __init__(data, row, column, rotation):
+        """
+        Creates a PotentialMove instance and calculates the statistics for the proposed move
+            playerData - PlayerData instance
+            row, column - coordinates of new move
+            rotation - rotation of our tile
+        """
+        self.data, self.row, self.column, self.rotation=data, row
+        
+        tile=data.makeTile(data.currentTile, rotation)
+        data.board.addTile(tile, row, column, False)
+        
+        #scope the area to discover routes through this track:
+        self.tracks=[]
+        for border in range(4):
+            if isinstance(tile.neighborOnSide(border), OuterStations):
+                self.tracks.append(PotentialTrack(data.board.lookupTrackNumber(tile, border)))
+            elif isinstance(tile.neighborOnSide(border), ConnectedTile):
+                self.tracks.append(PotentialTrack(data.board.lookupTrackNumber(tile.neighborOnSide(border), border)))
+            else: #no routes through this tile
+                continue
+            self.tracks[-1].ours=data.trackOwner(self.tracks[-1].number)==data.playerId #do we own this?
+            if self.tracks[-1].ours:
+                self.tracks[-1].wasVulnerable=data.routeInDanger(track)
+            self.tracks[-1].oldScore=data.board.calculateTrackScore(self.tracks[-1].number) #store the old score
+        
+        #collect data on the surrounding routes:
+        data.board.addTile(tile, row, column)
+        for changedTrack in self.tracks:
+            changedTrack.completed=data.board.routeIsComplete(changedTrack.number)
+            if changedTrack.ours:
+                changedTrack.nowVulnerable=data.routeInDanger(track) #someone else could attack this
+            elif data.numPlayers>2: #someone else's; can anyone else harm it?
+                for enemy in range(data.numPlayers):
+                    if enemy!=data.playerId and emeny!=data.trackOwner(changedTrack.num) and data.routeInDanger(track, enemy): #someone could connect this straight to the edge
+                        changedTrack.nowVulnerable=True
+                        break
+            changedTrack.deltaScore=data.board.calculateTrackScore(changedTrack.number)-changedTrack.oldScore
+        data.board.removeTile(row, column)
+        
+        self.ourLosses, self.enemyLosses, self.deltaEndangerment, self.ourGains, self.enemyGains=0, 0, 0, 0, 0
+        #summarize our findings:
+        for changedTrack in self.tracks:
+            if changedTrack.ours:
+                if changedTrack.completed:
+                    self.ourLosses+=1
+                
+                if not changedTrack.wasVulnerable and changedTrack.nowVulnerable:
+                    self.deltaEndangerment+=1
+                elif changedTrack.wasVulnerable and not changedTrack.nowVulnerable:
+                    self.deltaEndangerment-=1
+                #otherwise we're neither more in danger not less in danger than we were
+                
+                self.ourGains+=changedTrackdeltaScore
+            else: #enemy track
+                if changedTrack.completed:
+                    self.enemyLosses+=1
+                
+                self.enemyGains+=changedTrack.deltaScore
+
+class PotentialTrack(object):
+    __slots__=('number', 'ours', 'completed', 'wasVulnerable', 'nowVulnerable', 'oldScore', 'deltaScore')
+    """
+    PotentialTrack: int * bool * bool * bool * int * int
+    Represents the possible new state of a track
+        number - the track number
+        ours - whether the track belongs to us
+        completed - whether the track was completed
+        vulnerable - whether the track is now vulnerable to emeny attack
+        oldScore - the track's original score
+        deltaScore - the difference in the track's score
+    """
+    def __init__(self, number):
+        """
+        Creates a PotentialTrack instance
+            number - the track number
+        """
+        self.number=number
+        self.ours, self.completed, self.wasVulnerable, self.nowVulnerable=False, False, False, False
+        self.oldScore, self.deltaScore=0, 0

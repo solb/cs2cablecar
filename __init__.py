@@ -152,8 +152,12 @@ def move(playerData):
     for location in unoccupiedCoordinates: #attempt 2: put wherever it's valid
         for rotation in range(4):
             tile=playerData.makeTile(rotation=rotation)
+<<<<<<< Updated upstream
             if playerData.board.validPlacement(tile, location[0], location[1]):
 #                validPlacements.append(playerData.potentialMove(location[0],location[1],rotation))           
+=======
+            if playerData.board.validPlacement(tile, location[0], location[1]) or playerData.mayMoveIllegally[playerData.playerId]: #legal or exempt
+>>>>>>> Stashed changes
                 playerData.board.addTile(tile, location[0], location[1])
 #                print 'NB: Making a legal move.'
                 return playerData, PlayerMove(playerData.playerId, (location[0], location[1]), playerData.currentTile, rotation)

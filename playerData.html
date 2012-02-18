@@ -27,6 +27,8 @@ Author:&nbsp;Brad&nbsp;Bensch&nbsp;(brb7020@rit.edu)</tt></p>
 </font></dt><dd>
 <dl>
 <dt><font face="helvetica, arial"><a href="playerData.html#PlayerData">PlayerData</a>
+</font></dt><dt><font face="helvetica, arial"><a href="playerData.html#PotentialMove">PotentialMove</a>
+</font></dt><dt><font face="helvetica, arial"><a href="playerData.html#PotentialTrack">PotentialTrack</a>
 </font></dt></dl>
 </dd>
 </dl>
@@ -49,6 +51,9 @@ Constructs&nbsp;and&nbsp;returns&nbsp;an&nbsp;instance&nbsp;of&nbsp;<a href="#Pl
 <dl><dt><a name="PlayerData-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>__str__:&nbsp;<a href="#PlayerData">PlayerData</a>&nbsp;-&gt;&nbsp;string<br>
 Returns&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;the&nbsp;<a href="#PlayerData">PlayerData</a>&nbsp;<a href="__builtin__.html#object">object</a>.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;self&nbsp;-&nbsp;the&nbsp;<a href="#PlayerData">PlayerData</a>&nbsp;<a href="__builtin__.html#object">object</a></tt></dd></dl>
+
+<dl><dt><a name="PlayerData-firstTurn"><strong>firstTurn</strong></a>(self)</dt><dd><tt>firstTurn<br>
+Returns&nbsp;True&nbsp;or&nbsp;False&nbsp;if&nbsp;we&nbsp;have&nbsp;the&nbsp;first&nbsp;turn</tt></dd></dl>
 
 <dl><dt><a name="PlayerData-makeTile"><strong>makeTile</strong></a>(self, tileName<font color="#909090">=''</font>, rotation<font color="#909090">=0</font>)</dt><dd><tt>makeTile:&nbsp;str&nbsp;*&nbsp;int&nbsp;-&gt;&nbsp;ConnectedTile<br>
 Returns&nbsp;an&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;to&nbsp;represent&nbsp;the&nbsp;specified&nbsp;tile&nbsp;and&nbsp;rotation<br>
@@ -79,7 +84,7 @@ pre:&nbsp;A&nbsp;tile&nbsp;has&nbsp;already&nbsp;been&nbsp;placed&nbsp;at&nbsp;t
 Returns&nbsp;the&nbsp;player&nbsp;ID&nbsp;of&nbsp;the&nbsp;owner&nbsp;of&nbsp;the&nbsp;track&nbsp;with&nbsp;the&nbsp;specified&nbsp;track&nbsp;ID,&nbsp;or&nbsp;-1&nbsp;if&nbsp;no&nbsp;one&nbsp;owns&nbsp;this&nbsp;track.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;trackId&nbsp;-&nbsp;the&nbsp;track&nbsp;ID&nbsp;(1-32)</tt></dd></dl>
 
-<dl><dt><a name="PlayerData-updateLegalConstraints"><strong>updateLegalConstraints</strong></a>(self)</dt><dd><tt>updateLegalConstratins<br>
+<dl><dt><a name="PlayerData-updateLegalConstraints"><strong>updateLegalConstraints</strong></a>(self)</dt><dd><tt>updateLegalConstraints<br>
 Updates&nbsp;the&nbsp;list&nbsp;of&nbsp;who&nbsp;may&nbsp;legally&nbsp;make&nbsp;an&nbsp;invalid&nbsp;move<br>
 post:&nbsp;mayMoveIllegally&nbsp;is&nbsp;up&nbsp;to&nbsp;date.</tt></dd></dl>
 
@@ -108,6 +113,66 @@ Data descriptors defined here:<br>
 <dl><dt><strong>playerId</strong></dt>
 </dl>
 <dl><dt><strong>stationOwners</strong></dt>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="PotentialMove">class <strong>PotentialMove</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="PotentialMove-__init__"><strong>__init__</strong></a>(data, row, column, rotation)</dt><dd><tt>Creates&nbsp;a&nbsp;<a href="#PotentialMove">PotentialMove</a>&nbsp;instance&nbsp;and&nbsp;calculates&nbsp;the&nbsp;statistics&nbsp;for&nbsp;the&nbsp;proposed&nbsp;move<br>
+&nbsp;&nbsp;&nbsp;&nbsp;playerData&nbsp;-&nbsp;<a href="#PlayerData">PlayerData</a>&nbsp;instance<br>
+&nbsp;&nbsp;&nbsp;&nbsp;row,&nbsp;column&nbsp;-&nbsp;coordinates&nbsp;of&nbsp;new&nbsp;move<br>
+&nbsp;&nbsp;&nbsp;&nbsp;rotation&nbsp;-&nbsp;rotation&nbsp;of&nbsp;our&nbsp;tile</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>column</strong></dt>
+</dl>
+<dl><dt><strong>deltaEndangerment</strong></dt>
+</dl>
+<dl><dt><strong>enemyGains</strong></dt>
+</dl>
+<dl><dt><strong>enemyLosses</strong></dt>
+</dl>
+<dl><dt><strong>ourGains</strong></dt>
+</dl>
+<dl><dt><strong>ourLosses</strong></dt>
+</dl>
+<dl><dt><strong>rotation</strong></dt>
+</dl>
+<dl><dt><strong>row</strong></dt>
+</dl>
+<dl><dt><strong>tracks</strong></dt>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="PotentialTrack">class <strong>PotentialTrack</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="PotentialTrack-__init__"><strong>__init__</strong></a>(self, number)</dt><dd><tt>Creates&nbsp;a&nbsp;<a href="#PotentialTrack">PotentialTrack</a>&nbsp;instance<br>
+&nbsp;&nbsp;&nbsp;&nbsp;number&nbsp;-&nbsp;the&nbsp;track&nbsp;number</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>completed</strong></dt>
+</dl>
+<dl><dt><strong>deltaScore</strong></dt>
+</dl>
+<dl><dt><strong>nowVulnerable</strong></dt>
+</dl>
+<dl><dt><strong>number</strong></dt>
+</dl>
+<dl><dt><strong>oldScore</strong></dt>
+</dl>
+<dl><dt><strong>ours</strong></dt>
+</dl>
+<dl><dt><strong>wasVulnerable</strong></dt>
 </dl>
 </td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">

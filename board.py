@@ -134,9 +134,9 @@ class Board(object):
     
     def lookupTrackNumber(self, tile, side):
         """
-        lookupTrackNumber: ConnectedTile * int -> int
+        lookupTrackNumber: Tile * int -> int
         Returns the cable car station (1-32) of the from which the track ending on the specified side of the specified tile originates.  If the route doesn't touch the edge of the board, the sentinel -1 is returned.
-            tile - the ConnectedTile at the end of the route
+            tile - the ConnectedTile at the end of the route, or an empty Tile on the edge of the board
             side - the side of the next tile in the route (after the last one) to which the route connects (0-3)
         pre: tile must be on this board!
         """
@@ -268,17 +268,24 @@ class Cars(object):
     
     def reverseFollowRoute(self, tile, side):
         """
-        reverseFollowRoute: ConnectedTile * int -> int
+        reverseFollowRoute: Tile * int -> int
         Returns the cable car station *(0-31)* from which the track ending at the specified tile originates.  If the route doesn't touch any of these stations, the sentinel -1 is returned.
-            tile - the ConnectedTile at the end of the track
+            tile - the ConnectedTile at the end of the track, or an empty Tile on the edge of the board
             side - the side of the next tile in the route (after the last one) to which the route connects (0-3)
         NOTE: At this level, the cable car station is represented using a 0-based indexing system; this contrasts with the 1-based scheme used at all levels higher!
         """
-        station, substation=tile.reverseFollowRoute(side)
-        if isinstance(station, OuterStations): #this route actually touches the edge
-            return self.stations.index(station)*8+substation
-        else:
-            return -1
+        if isinstance(tile, ConnectedTile): #follow this route back
+            station, substation=tile.reverseFollowRoute(side)
+            if isinstance(station, OuterStations): #this route actually touches the edge
+                return self.stations.index(station)*8+substation
+            else:
+                return -1
+        else: #we were given a blank tile on the edge of the board
+            station=self.stations[side]
+            for substation in range(8):
+                if station.lookupSource(substation)==tile: #we found the substation connected to this tile
+                    return side*8+substation
+            return -1 #didn't find it
 
 class Tile(object):
     """
@@ -398,8 +405,8 @@ class OuterStations(Tile):
     
     def lookupSource(self, substation):
         """
-        lookupSource: int -> ConnectedTile
-        Returns the ConnectedTile at this station
+        lookupSource: int -> Tile
+        Returns the Tile at this station
             substation - the index of the station containing the desired tile (0-7)
         """
         return self.borderedTiles[substation]

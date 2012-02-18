@@ -80,9 +80,9 @@ def move(playerData):
     attacks.sort(key=lambda wideOpen: wideOpen[3], reverse=True) #their longest first
     extensions.sort(key=lambda needsWork: needsWork[4], reverse=True) #our highest gain first
     
-    print 'NB: Our best defenses are:\n'+str(defenses)
-    print 'NB: Our best attacks are:\n'+str(attacks)
-    print 'NB: Our best extensions are:\n'+str(extensions)
+#    print 'NB: Our best defenses are:\n'+str(defenses)
+#    print 'NB: Our best attacks are:\n'+str(attacks)
+#    print 'NB: Our best extensions are:\n'+str(extensions)
     
     #observations after watching GoodComputer:
     #TODO if we go first, consider extending their track
@@ -90,6 +90,21 @@ def move(playerData):
     #TODO random should be used to create additional sinks to the edge
     
     #TODO weigh DEFENSE against OFFENSE
+    if playerData.firstTurn():
+        options = []
+        for track in range(1, 33):
+            if not playerData.board.routeIsComplete(track):
+                if playerData.trackOwner(track)!=playerData.playerId: #not our track
+                    currentScore=playerData.board.calculateTrackScore(track)
+                    possibleFutures=playerData.possibleTrackExtensions(track, False) #look for edges
+                    if possibleFutures: #we came up with an option
+                        options+=possibleFutures
+                        #if playerData.routeInDanger(track,playerData.playerId):
+#                            options+=possibleFutures
+        if len(options):
+            playerData.board.addTile(playerData.makeTile(playerData.currentTile, options[0][2]), options[0][0], options[0][1])
+            return playerData, PlayerMove(playerData.playerId, (options[0][0], options[0][1]), playerData.currentTile, options[0][2])
+                    
     if len(attacks):
         #print 'NB: Commencing attack run...'
         #print 'I think I\'m going to find this there: '+str(playerData.board.lookupTile(attacks[0][0], attacks[0][1]))
@@ -104,7 +119,7 @@ def move(playerData):
         playerData.board.addTile(playerData.makeTile(playerData.currentTile, extensions[0][2]), extensions[0][0], extensions[0][1])
         return playerData, PlayerMove(playerData.playerId, (extensions[0][0], extensions[0][1]), playerData.currentTile, extensions[0][2])
     
-    #TODO if we can't find a good move to make, extend one of our opponent's tracks, prefereably so that it is vulnerable
+    #TODO if we can't find a good move to make, extend one of our opponent's tracks, preferably so that it is vulnerable
     #TODO find each opponent's best-scoring move and block it
     #TODO puppy guard opponents' stations
     #FIXME choose the best-scoring rotation whenever we choose a tile
@@ -124,16 +139,21 @@ def move(playerData):
     #END GOOD CODE!
     
     #give up: put it wherever it's valid #TODO make this smarter/absent, or at least more efficient
-    print 'NB: Making a random move!'
+#    print 'NB: Making a random move!'
+    
+
     unoccupiedCoordinates=[]
     for row in range(8): #where are the vacancies on the board?
         for column in range(8):
             if not playerData.board.lookupTile(row, column): #there's nothing here
-                unoccupiedCoordinates.append((row, column))
+                unoccupiedCoordinates.append((row, column))             
+                
+    validPlacements = []
     for location in unoccupiedCoordinates: #attempt 2: put wherever it's valid
         for rotation in range(4):
             tile=playerData.makeTile(rotation=rotation)
             if playerData.board.validPlacement(tile, location[0], location[1]):
+#                validPlacements.append(playerData.potentialMove(location[0],location[1],rotation))           
                 playerData.board.addTile(tile, location[0], location[1])
                 #print 'NB: Making a legal move.'
                 return playerData, PlayerMove(playerData.playerId, (location[0], location[1]), playerData.currentTile, rotation)

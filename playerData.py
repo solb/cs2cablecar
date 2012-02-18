@@ -250,7 +250,7 @@ class PlayerData(object):
     
     def updateLegalConstraints(self):
         """
-        updateLegalConstratins
+        updateLegalConstraints
         Updates the list of who may legally make an invalid move
         post: mayMoveIllegally is up to date.
         """
@@ -271,7 +271,32 @@ class PlayerData(object):
                             break
                     if not self.mayMoveIllegally[player]:
                         break
-    
+                    
+    def firstTurn(self):
+        """
+        firstTurn
+        Returns True or False if we have the first turn
+        """
+        occupiedFlag = True
+        for row in range(8): #Are any tiles placed yet?
+            if occupiedFlag == False:
+                break
+            for column in range(8):
+                if occupiedFlag == False:
+                    break
+                if self.board.lookupTile(row, column) != None:
+                    if row == 3 and column == 3:
+                        break
+                    elif row == 3 and column == 4:
+                        break
+                    elif row == 4 and column == 3:
+                        break
+                    elif row == 4 and column == 4:
+                        break
+                    else:
+                        occupiedFlag = False
+        return occupiedFlag
+            
     def __str__(self):
         """
         __str__: PlayerData -> string

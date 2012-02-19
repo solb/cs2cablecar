@@ -36,7 +36,7 @@ def stationScore(remainingStationsMember, newValue=-1):
     return remainingStationsMember[1]
 
 class PlayerData(object):
-    __slots__ = ('logger', 'playerId', 'currentTile', 'numPlayers', 'board', 'stationOwners', 'ourRemainingStations', 'opponentsTiles', 'mayMoveIllegally', 'POWER_STATION_THRESHOLD')
+    __slots__ = ('logger', 'playerId', 'currentTile', 'numPlayers', 'board', 'stationOwners', 'ourRemainingStations', 'opponentsTiles', 'mayMoveIllegally', 'POWER_STATION_THRESHOLD', 'totalKills', 'totalHits', 'dangerousness', 'ourGift', 'ourGains')
     """
     Our data members:
         board - stores the tiles
@@ -60,7 +60,6 @@ class PlayerData(object):
             currentTile - my current hand tile (initially None)
             numPlayers - number of players in game (1-6)
         """
-        
         self.logger = logger
         self.playerId = playerId
         self.currentTile = currentTile

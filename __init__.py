@@ -38,7 +38,14 @@ def init(playerId, numPlayers, startTile, logger, arg = "None"):
     playerData = PlayerData(logger, playerId, startTile, numPlayers)
 
     #Our "constants":
-    playerData.POWER_STATION_THRESHOLD=15
+    playerData.POWER_STATION_THRESHOLD=20
+    
+    #statistics collection:
+    playerData.totalKills=0
+    playerData.totalHits=0
+    playerData.dangerousness=0
+    playerData.ourGift=0
+    playerData.ourGains=0
     
     return playerData
 
@@ -85,8 +92,15 @@ def move(playerData):
     validPlacements.sort(key=lambda movement: movement.enemyGains, reverse=False)
     validPlacements.sort(key=lambda movement: movement.deltaEndangerment, reverse=False)
     validPlacements.sort(key=lambda movement: movement.ourLosses, reverse=False)
-    validPlacements.sort(key=lambda movement: movement.enemyLosses, reverse=True)    
+    validPlacements.sort(key=lambda movement: movement.enemyLosses, reverse=True)
     #print(validPlacements)
+    
+    playerData.totalKills+=validPlacements[0].enemyLosses
+    playerData.totalHits+=validPlacements[0].ourLosses
+    if validPlacements[0].deltaEndangerment>0:
+        playerData.dangerousness+=1
+    playerData.ourGift+=validPlacements[0].enemyGains
+    playerData.ourGains+=validPlacements[0].ourGains
     
     playerData.board.addTile(playerData.makeTile(rotation=validPlacements[0].rotation), validPlacements[0].row, validPlacements[0].column)
     return playerData, PlayerMove(playerData.playerId, (validPlacements[0].row, validPlacements[0].column), playerData.currentTile, validPlacements[0].rotation)
@@ -110,7 +124,6 @@ def move_info(playerData, playerMove, nextTile):
         playerData - your player data, 
             which contains whatever you need to keep track of
     """
-    
     playerData.logger.write("move_info() called")
     
     if not playerMove: #we've just moved; here's our next tile
@@ -125,7 +138,6 @@ def move_info(playerData, playerMove, nextTile):
         playerData.updateLegalConstraints()
     
     return playerData
-
 
 ################################# PART ONE FUNCTIONS #######################
 # These functions are called by the engine during part 1 to verify your board 
@@ -198,7 +210,13 @@ def game_over(playerData, historyFileName = None):
         historyFileName - name of the current history file, 
             or None if not being used 
     """
-    playerScores=[0 for _ in range(playerData.numPlayers)]
+    print 'Times we screwed our opponent: '+str(playerData.totalKills)
+    print 'Times we screwed ourselves: '+str(playerData.totalHits)
+    print 'Times we left ourselves open: '+str(playerData.dangerousness)
+    print 'Points we scored for our opponent: '+str(playerData.ourGift)
+    print 'Points we claimed for ourselves: '+str(playerData.ourGains)
+    
+    '''playerScores=[0 for _ in range(playerData.numPlayers)]
     for track in range(1, 33):
         owner=playerData.trackOwner(track)
         if owner!=-1:
@@ -224,4 +242,4 @@ def game_over(playerData, historyFileName = None):
         for player in range(1, len(winners)):
             output+=', #'+str(winners[player])
         output+=' have won.'
-        print output
+        print output'''

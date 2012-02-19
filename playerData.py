@@ -177,7 +177,7 @@ class PlayerData(object):
                         return True
             return False
     
-    def tileJeopardizesOurRoutes(self, row, column, acceptableGain=0, allowCompletion=-1): #TODO Won't we sometimes want to be able to complete multiple tracks at once?
+    def tileJeopardizesOurRoutes(self, row, column, acceptableGain=0, allowCompletion=-1):
         """
         tileJeopardizesOurRoutes: int * int * int * int -> bool
         Returns whether the placement of the tile at the specified coordinates connected any of our routes to the edge or even placed any of them in danger's way
@@ -188,17 +188,9 @@ class PlayerData(object):
         pre: A tile has already been placed at the specified coordinates.
         """
         for side in range(4):
-            if side!=allowCompletion: #this isn't the side we were aiming to complete...
-                #if isinstance(self.board.lookupTile(row, column).followRoute(side)[0], OuterStations): #this opened a new path to the edge, so we need to reaffirm the safety of *all* our stations
-                #we're worried about opening an available sink to the edge (not the case if reverseFollowRoute(side)[0] and followRoute8-
-                    #for track in self.ourRemainingStations:
-                        #if isinstance(self.board.followRoute(stationId(track))[0], OuterStations) or self.routeInDanger(stationId(track)): #one of our remaining stations was either inadvertently completed or is now at risk
-                            #return True
-                #else: #we only need to check those of our stations that pass through this tile
-                    #route=self.board.lookupTrackNumber(self.board.lookupTile(row, column), self.board.lookupTile(row, column).adjacentSide(side))
+            if side!=allowCompletion:
                 tile=self.board.lookupTile(row, column)
                 route=self.board.lookupTrackNumber(tile, tile.adjacentSide(tile.nextTileSide(side)))
-                
                 if route==-1 or self.trackOwner(route)!=self.playerId: #this isn't a real route (yet) or someone we don't care about owns it
                     continue
                 else: #this is one of our hard-earned routes

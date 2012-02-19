@@ -54,40 +54,6 @@ def move(playerData):
             which contains whatever you need to keep track of
         playerMove - your next move
     """
-    #TODO we currently don't count PowerStation connections as completions at all; should we?
-    defenses=[] #our tracks in need of saving: stores [row, column, rotation, deltaScore]
-    attacks=[] #opponents' vulnerable tracks: stores [row, column, rotation, deltaScore]
-    extensions=[] #our tracks that could be extended: stores [row, column, rotation, deltaScore]
-    for track in range(1, 33):
-        if not playerData.board.routeIsComplete(track):
-            if playerData.trackOwner(track)==playerData.playerId: #our track
-                possibleFutures=playerData.possibleTrackExtensions(track, False) #avoid edges
-                if possibleFutures: #we came up with an option
-                    if playerData.routeInDanger(track): #this track needs defense
-                        defenses+=possibleFutures
-                    else: #if playerData.board.calculateTrackScore(track): #it this track has already been started, lengthen it (possibly connecting it to a power station)
-                        extensions+=possibleFutures
-            else: #someone else's
-                if playerData.routeInDanger(track, playerData.playerId): #WE pose a threat
-                    #print 'NB: We could harm their track '+str(track)
-                    possibleFutures=playerData.possibleTrackExtensions(track, True) #aim to complete their tracks
-                    if possibleFutures: #we came up with an option
-                        attacks+=possibleFutures
-    defenses.sort(key=lambda inNeed: inNeed[4], reverse=True) #our highest gain first
-    attacks.sort(key=lambda wideOpen: wideOpen[4]) #their lowest gain first
-    attacks.sort(key=lambda wideOpen: wideOpen[3], reverse=True) #their longest first
-    extensions.sort(key=lambda needsWork: needsWork[4], reverse=True) #our highest gain first
-    
-#    print 'NB: Our best defenses are:\n'+str(defenses)
-#    print 'NB: Our best attacks are:\n'+str(attacks)
-#    print 'NB: Our best extensions are:\n'+str(extensions)
-    
-    #observations after watching GoodComputer:
-    #TODO if we go first, consider extending their track
-    #TODO when extending our tracks (not defending them), consider the longest first
-    #TODO random should be used to create additional sinks to the edge
-    
-    #TODO weigh DEFENSE against OFFENSE
     if playerData.firstTurn():
         options = []
         for track in range(1, 33):
@@ -101,44 +67,9 @@ def move(playerData):
         if len(options):
             playerData.board.addTile(playerData.makeTile(playerData.currentTile, options[0][2]), options[0][0], options[0][1])
             return playerData, PlayerMove(playerData.playerId, (options[0][0], options[0][1]), playerData.currentTile, options[0][2])
-                    
-    if len(attacks):
-        #print 'NB: Commencing attack run...'
-        #print 'I think I\'m going to find this there: '+str(playerData.board.lookupTile(attacks[0][0], attacks[0][1]))
-        playerData.board.addTile(playerData.makeTile(playerData.currentTile, attacks[0][2]), attacks[0][0], attacks[0][1])
-        return playerData, PlayerMove(playerData.playerId, (attacks[0][0], attacks[0][1]), playerData.currentTile, attacks[0][2])
-    elif len(defenses):
-        #print 'NB: On guard!'
-        playerData.board.addTile(playerData.makeTile(playerData.currentTile, defenses[0][2]), defenses[0][0], defenses[0][1])
-        return playerData, PlayerMove(playerData.playerId, (defenses[0][0], defenses[0][1]), playerData.currentTile, defenses[0][2])
-    elif len(extensions):
-        #print 'NB: Adding onto one of our tracks...'
-        playerData.board.addTile(playerData.makeTile(playerData.currentTile, extensions[0][2]), extensions[0][0], extensions[0][1])
-        return playerData, PlayerMove(playerData.playerId, (extensions[0][0], extensions[0][1]), playerData.currentTile, extensions[0][2])
     
-    #TODO if we can't find a good move to make, extend one of our opponent's tracks, preferably so that it is vulnerable
-    #TODO find each opponent's best-scoring move and block it
-    #TODO puppy guard opponents' stations
-    #FIXME choose the best-scoring rotation whenever we choose a tile
-    #FIXME do a better job of starting out our tracks: if nothing is in danger, don't randomly start any!
-    #FIXME end their longer tracks over their shorter ones, instead of just looking at the deltas?
+    #TODO end their longer tracks over their shorter ones, instead of just looking at the deltas?
     
-    
-    #code for optimized choice of route to extend:
-    '''currentScore=playerData.board.calculateTrackScore(track)
-                    row, column=playerData.board.lookupTileCoordinates(playerData.board.followRoute(track)[0])
-                    for rotation in range(4):
-                        ourTile=playerData.makeTile(rotation=rotation)
-                        playerData.board.addTile(ourTile, row, column)
-                        
-                        playerData.board.removeTile(ourTile, row, column)'''
-    
-    #END GOOD CODE!
-    
-    #give up: put it wherever it's valid #TODO make this smarter/absent, or at least more efficient
-#    print 'NB: Making a random move!'
-    
-
     unoccupiedCoordinates=[]
     for row in range(8): #where are the vacancies on the board?
         for column in range(8):
@@ -158,12 +89,7 @@ def move(playerData):
     #print(validPlacements)
     
     playerData.board.addTile(playerData.makeTile(rotation=validPlacements[0].rotation), validPlacements[0].row, validPlacements[0].column)
-#                print 'NB: Making a legal move.'
     return playerData, PlayerMove(playerData.playerId, (validPlacements[0].row, validPlacements[0].column), playerData.currentTile, validPlacements[0].rotation)
-    
-#    playerData.board.addTile(playerData.makeTile(rotation=rotation), unoccupiedCoordinates[0][0], unoccupiedCoordinates[0][1])
-#    #print 'NB: Making an illegal move!'
-#    return playerData, PlayerMove(playerData.playerId, (unoccupiedCoordinates[0][0], unoccupiedCoordinates[0][1]), playerData.currentTile, rotation) #final attempt: stick it somewhere it shouldn't be
 
 def move_info(playerData, playerMove, nextTile):
     """The engine calls this function to notify you of:

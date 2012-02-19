@@ -88,11 +88,8 @@ def move(playerData):
         for rotation in range(4):
             if playerData.mayMoveIllegally[playerData.playerId] or playerData.board.validPlacement(playerData.makeTile(rotation=rotation), location[0], location[1]):
                 validPlacements.append(PotentialMove(playerData,location[0],location[1],rotation))
-    validPlacements.sort(key=lambda movement: movement.ourGains, reverse=True)
-    validPlacements.sort(key=lambda movement: movement.enemyGains, reverse=False)
-    validPlacements.sort(key=lambda movement: movement.deltaEndangerment, reverse=False)
-    validPlacements.sort(key=lambda movement: movement.ourLosses, reverse=False)
-    validPlacements.sort(key=lambda movement: movement.enemyLosses, reverse=True)
+    
+    validPlacements.sort(key=lambda choice: choice.enemyLosses*20+choice.ourLosses*-20+choice.deltaEndangerment*-20+choice.enemyGains*-1+choice.ourGains, reverse=True)
     #print(validPlacements)
     
     playerData.totalKills+=validPlacements[0].enemyLosses

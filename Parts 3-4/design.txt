@@ -1,0 +1,29 @@
+Team Name: GroupA
+Author: Sol Boucher (slb1566@rit.edu)
+Author: Brad Bensch (brb7020@rit.edu)
+
+Our Strategy
+============
+If we are the first player, we cannot see any of our opponents' tiles, so we place a tile to start one of their routes in the hope that we'll later be able to complete it while it's still short.  In all other cases, we consider every possible move we could legally make and store five benchmark values for each.  We then sort the list of all our possible moves using a comparison key derived from a series of multiplication and addition operations on these benchmark values.  If we have a choice of ending multiple routes belonging to our opponents, we choose the longest one, provided all other benchmarks are equal.  Our approach leads to a very aggressive AI that is willing to sacrifice many of its own tracks for the sake of cutting its opponents' short.
+
+Data Structure Changes
+======================
+The big change to our board data structures for this part of the project was the addition of the ability to remove tiles we have already placed in the board.  This functionality is in addition to our longstanding ability to temporarily place a tile, making it aware of its surroundings from the board without modifying the board structure at all; both implementations are used in various places to compare moves' desirabilities.
+We also made significant changes to our PlayerData implementation: although we kept the ourRemainingStations list that stores those of our stations that have not yet been finished, we added several additional things:
+-POWER_STATION_THRESHOLD - a "constant" representing the minimum number of points we'd have to gain from an opponent's completing one of our tracks to a power station before we no longer consider their ability to do so a threat
+-mayMoveIllegally - a list of which players are currently allowed to make moves that would normally be illegal (because they have no other option)
+-stationOwners - a (now-accurate) depiction of who own what track
+We also added two additional classes in the playerData module in order to store the specifications of every possible move: PotentialMove, which contains the benchmarks discussed below for each move we consider, and PotentialTrack, which contains information specific to each route that passes through any given PotentialMove's tile.
+
+Algorithm Changes
+=================
+Our initial strategy for the game was to shut down our opponent's tracks as soon as the option was available.  If that was not a viable move, our second option was to extend our longest track to maximize point gain.  If none of our tracks was started, we began a new one in the safest spot.  During all of the calculations, if our move were to put a route of our own in danger of being completed by the computer's next move, we would skip that move. If none of these cases were met, a move was originally placed randomly.  However, these random moves tended to suck quite badly, and seemed to hurt us more often than conventional probability should have allowed, leading us to suspect that we had entered a frame of reference in which Murphy's Law applied.
+In order to diminish our problems with these random moves, we implemented a bruteforce style AI routine that considered all allowable moves we could possibly make and sorted our options ascending and descending, as appropriate, by five benchmarks: how the number of our tracks that were in danger of closure by an opponent would change, how many points our opponents would gain, how many tracks of our opponents' would be ended, how many points we would gain, and how many of our own tracks would be ended.  After noticing a significant improvement when using this bruteforce instead of making random moves, we replaced our entire prior strategy with the bruteforce approach.
+Because during our first move we were unaware of our opponents' tiles, we were unable to guarantee the safety of any route that we started on the first turn of the game, so we created a special case that automatically extended one of our opponents' tracks--hopefully putting it in harm's way--if we were the first player to make a move.  We also modified our ranking system so that, instead of prioritizing the sorts individually, we sorted based on an integral magic number that was the sum of various multiples of the composing benchmark values.  To top it all off with a scoop of ice cream, we added logic that chose to complete the longest of the opponents' tracks when all other benchmarks were equal.
+To summarize the preceding narrative, we replaced our algorithm for deciding on our next move with one that computes the following five factors for each of the possible moves we could make:
+-ourGain (our gain in points)
+-ourLosses (how many of our own tracks are completed by a move)
+-enemyGains (Enemy point gain)
+-enemyLosses ( enemy tracks completed by a move)
+-deltaEndangerment (how many of our tracks are in danger of being completed next turn)
+We weigh these against each other by importance to our strategy, and our brute force placement method picks the best move accordingly. The best move is sorted to the front of a list and the AI takes the first item in the list as its move.

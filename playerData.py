@@ -352,13 +352,24 @@ class PotentialMove(object):
         for changedTrack in self.tracks:
             changedTrack.completed=data.board.routeIsComplete(changedTrack.number)
             if not changedTrack.completed:
-                if changedTrack.ours:
-                    changedTrack.nowVulnerable=data.routeInDanger(changedTrack.number) #someone else could attack this
-                elif data.numPlayers>2: #someone else's; can anyone else harm it?
-                    for enemy in range(data.numPlayers):
-                        if enemy!=data.playerId and enemy!=data.trackOwner(changedTrack.number) and data.routeInDanger(changedTrack.number, enemy): #someone could connect this straight to the edge
-                            changedTrack.nowVulnerable=True
-                            break
+                #check whether we've cornered this track, effectively "ending" it:
+                endCoordinates=data.board.lookupTileCoordinates(data.board.followRoute(changedTrack.number)[0])
+                testTile=TileA(0) #will be used solely to discover what borders the endpoint
+                data.board.addTile(testTile, endCoordinates[0], endCoordinates[1], False)
+                changedTrack.completed=True
+                for side in range(4):
+                    if not testTile.routeComplete(side): #there's a way out of this hole
+                        changedTrack.completed=False
+                        break
+                
+                if not changedTrack.completed: #this track is STILL considered incomplete
+                    if changedTrack.ours:
+                        changedTrack.nowVulnerable=data.routeInDanger(changedTrack.number) #someone else could attack this
+                    elif data.numPlayers>2: #someone else's; can anyone else harm it?
+                        for enemy in range(data.numPlayers):
+                            if enemy!=data.playerId and enemy!=data.trackOwner(changedTrack.number) and data.routeInDanger(changedTrack.number, enemy): #someone could connect this straight to the edge
+                                changedTrack.nowVulnerable=True
+                                break
             changedTrack.deltaScore=data.board.calculateTrackScore(changedTrack.number)-changedTrack.oldScore
         data.board.removeTile(row, column)
         

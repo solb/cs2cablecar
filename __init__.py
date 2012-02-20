@@ -92,15 +92,24 @@ def move(playerData):
     validPlacements.sort(key=lambda choice: choice.enemyLosses*20+choice.ourLosses*-25+choice.deltaEndangerment*-15+choice.enemyGains*-1+choice.ourGains, reverse=True)
     #print(validPlacements)
     
-    playerData.totalKills+=validPlacements[0].enemyLosses
-    playerData.totalHits+=validPlacements[0].ourLosses
-    if validPlacements[0].deltaEndangerment>0:
-        playerData.dangerousness+=1
-    playerData.ourGift+=validPlacements[0].enemyGains
-    playerData.ourGains+=validPlacements[0].ourGains
+    #if we have a good choice, complete their longest route:
+    favoriteMove=validPlacements[0]
+    index=1
+    while index<len(validPlacements) and validPlacements[index].enemyLosses==favoriteMove.enemyLosses and validPlacements[index].ourLosses==favoriteMove.ourLosses and validPlacements[index].deltaEndangerment==favoriteMove.deltaEndangerment and validPlacements[index].ourGains==favoriteMove.ourGains: #we haven't hit anything that was unequal yet
+        if (validPlacements[index].row!=favoriteMove.row or validPlacements[index].column!=favoriteMove.column) and validPlacements[index].enemyGains>favoriteMove.enemyGains: #this is a different location than our favorite move's, and it gains more points for our enemy
+            favoriteMove=validPlacements[index]
+            #print 'I found a longer route!'
+        index+=1
     
-    playerData.board.addTile(playerData.makeTile(rotation=validPlacements[0].rotation), validPlacements[0].row, validPlacements[0].column)
-    return playerData, PlayerMove(playerData.playerId, (validPlacements[0].row, validPlacements[0].column), playerData.currentTile, validPlacements[0].rotation)
+    playerData.totalKills+=favoriteMove.enemyLosses
+    playerData.totalHits+=favoriteMove.ourLosses
+    if favoriteMove.deltaEndangerment>0:
+        playerData.dangerousness+=1
+    playerData.ourGift+=favoriteMove.enemyGains
+    playerData.ourGains+=favoriteMove.ourGains
+    
+    playerData.board.addTile(playerData.makeTile(rotation=favoriteMove.rotation), favoriteMove.row, favoriteMove.column)
+    return playerData, PlayerMove(playerData.playerId, (favoriteMove.row, favoriteMove.column), playerData.currentTile, favoriteMove.rotation)
 
 def move_info(playerData, playerMove, nextTile):
     """The engine calls this function to notify you of:

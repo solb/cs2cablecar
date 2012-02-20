@@ -94,12 +94,13 @@ def move(playerData):
     
     #if we have a good choice, complete their longest route:
     favoriteMove=validPlacements[0]
-    index=1
-    while index<len(validPlacements) and validPlacements[index].enemyLosses==favoriteMove.enemyLosses and validPlacements[index].ourLosses==favoriteMove.ourLosses and validPlacements[index].deltaEndangerment==favoriteMove.deltaEndangerment and validPlacements[index].ourGains==favoriteMove.ourGains: #we haven't hit anything that was unequal yet
-        if (validPlacements[index].row!=favoriteMove.row or validPlacements[index].column!=favoriteMove.column) and validPlacements[index].enemyGains>favoriteMove.enemyGains: #this is a different location than our favorite move's, and it gains more points for our enemy
-            favoriteMove=validPlacements[index]
-            #print 'I found a longer route!'
-        index+=1
+    if favoriteMove.enemyLosses: #we're trying to hurt them
+        index=1
+        while index<len(validPlacements) and validPlacements[index].enemyLosses==favoriteMove.enemyLosses and validPlacements[index].ourLosses==favoriteMove.ourLosses and validPlacements[index].deltaEndangerment==favoriteMove.deltaEndangerment and validPlacements[index].ourGains==favoriteMove.ourGains: #we haven't hit anything that was unequal yet
+            if (validPlacements[index].row!=favoriteMove.row or validPlacements[index].column!=favoriteMove.column) and validPlacements[index].enemyGains>favoriteMove.enemyGains: #this is a different location than our favorite move's, and it gains more points for our enemy
+                favoriteMove=validPlacements[index]
+                #print 'I found a longer route!'
+            index+=1
     
     playerData.totalKills+=favoriteMove.enemyLosses
     playerData.totalHits+=favoriteMove.ourLosses

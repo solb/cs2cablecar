@@ -234,6 +234,7 @@ class PlayerData(object):
         for station in range(len(self.ourRemainingStations)):
             if(self.board.routeIsComplete(stationId(self.ourRemainingStations[station]))):
                 deletionStack.append(station) #flag this track for deletion
+                #print 'They\'ve given us a broadside!'
             else: #track may still be extended
                 stationScore(self.ourRemainingStations[station], self.board.calculateTrackScore(stationId(self.ourRemainingStations[station]))) #update our record of the track's score
         
